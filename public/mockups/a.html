@@ -16,8 +16,9 @@
 .nav__logo{width:186px}
 .nav__links{display:flex;gap:32px;margin-left:auto}
 .nav__links a{font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--violeta);position:relative;padding-block:4px}
-.nav__links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--naranja);transition:width 200ms var(--ease-brand)}
-.nav__links a:hover::after,.nav__links a.is-active::after{width:100%}
+.nav__links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:100%;background:var(--naranja);
+  transform:scaleX(0);transform-origin:left;transition:transform 200ms var(--ease-brand)}
+.nav__links a:hover::after,.nav__links a.is-active::after{transform:scaleX(1)}
 
 /* Hero: fondo violeta con formas (manual p.28) + silueteada (p.37) */
 .hero{position:relative;background:var(--violeta);color:#fff;overflow:hidden;isolation:isolate}
@@ -52,8 +53,10 @@
 .spec{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
 .spec__list{border-top:1px solid var(--gris-100)}
 .spec__row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:20px;
-  padding:22px 4px;border-bottom:1px solid var(--gris-100);transition:background 200ms var(--ease-hover),padding-left 200ms var(--ease-hover)}
-.spec__row:hover{background:var(--hueso);padding-left:14px}
+  padding:22px 4px;border-bottom:1px solid var(--gris-100);transition:background 200ms var(--ease-hover)}
+.spec__row > *{transition:transform 200ms var(--ease-hover)}
+.spec__row:hover{background:var(--hueso)}
+.spec__row:hover > *{transform:translateX(10px)}
 .spec__num{font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.1em;color:var(--gris-400)}
 .spec__row:hover .spec__num{color:var(--naranja)}
 .spec__name{font-family:var(--display);font-weight:400;font-size:clamp(17px,1.6vw,21px);letter-spacing:-.01em}
@@ -63,9 +66,10 @@
 .duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
 .card{position:relative;background:#fff;border:1px solid var(--gris-100);padding:clamp(28px,3vw,44px);
   transition:border-color 220ms var(--ease-hover)}
-.card::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--accent,var(--violeta));transition:width 220ms var(--ease-brand)}
+.card::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--accent,var(--violeta));
+  transform-origin:left;transition:transform 220ms var(--ease-brand)}
 .card:hover{border-color:var(--violeta)}
-.card:hover::before{width:5px}
+.card:hover::before{transform:scaleX(1.667)}
 .card h3{margin-bottom:14px}
 .card .body-s{margin-bottom:24px}
 

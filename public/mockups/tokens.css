@@ -70,8 +70,9 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .btn:hover .arw{transform:translateX(3px)}
 
 .link{display:inline-block;font-weight:600;font-size:13px;letter-spacing:.04em;position:relative;padding-bottom:3px}
-.link::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--naranja);transition:width 220ms var(--ease-brand)}
-.link:hover::after{width:100%}
+.link::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--naranja);
+  transform:scaleX(0);transform-origin:left;transition:transform 220ms var(--ease-brand)}
+.link:hover::after{transform:scaleX(1)}
 
 /* ---------- Utilidades ---------- */
 .u-violeta{background:var(--violeta);color:#fff}

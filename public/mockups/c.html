@@ -46,25 +46,27 @@ body{background:var(--violeta-950);color:#fff;overflow-x:hidden}
 /* Índice de especialidades */
 .idx{border-top:1px solid rgba(255,255,255,.12)}
 .idx__row{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) auto;gap:24px;align-items:center;
-  padding:26px 0;border-bottom:1px solid rgba(255,255,255,.12);position:relative;transition:padding-left 260ms var(--ease-brand)}
+  padding:26px 0;border-bottom:1px solid rgba(255,255,255,.12);position:relative}
+.idx__row > *{transition:transform 260ms var(--ease-brand)}
+.idx__row:hover > *{transform:translateX(12px)}
 .idx__row::before{content:"";position:absolute;left:-100vw;right:-100vw;top:0;bottom:0;background:rgba(255,255,255,.045);opacity:0;transition:opacity 200ms var(--ease-hover);z-index:-1}
 .idx__row:hover::before{opacity:1}
-.idx__row:hover{padding-left:16px}
 .idx__n{font-family:var(--display);font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.4)}
 .idx__row:hover .idx__n{color:var(--naranja)}
 .idx__name{font-family:var(--display);font-weight:400;font-size:clamp(18px,1.8vw,24px);letter-spacing:-.015em}
 .idx__meta{font-size:14px;color:rgba(255,255,255,.5)}
 .idx__go{font-size:18px;color:rgba(255,255,255,.4);transition:transform 200ms var(--ease-hover),color 200ms var(--ease-hover)}
-.idx__row:hover .idx__go{color:var(--naranja);transform:translateX(4px)}
+.idx__row:hover .idx__go{color:var(--naranja);transform:translateX(20px)}
 
 /* Bloque claro insertado (respiro) */
 .light{background:#fff;color:var(--ink)}
 .light .body-s{color:var(--gris-600)}
 .tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
 .tcard{border:1px solid var(--gris-100);padding:clamp(26px,2.6vw,38px);position:relative;transition:border-color 220ms var(--ease-hover)}
-.tcard::before{content:"";position:absolute;top:0;left:0;height:3px;width:100%;background:var(--accent);transition:height 220ms var(--ease-brand)}
+.tcard::before{content:"";position:absolute;top:0;left:0;height:3px;width:100%;background:var(--accent);
+  transform-origin:top;transition:transform 220ms var(--ease-brand)}
 .tcard:hover{border-color:var(--violeta)}
-.tcard:hover::before{height:5px}
+.tcard:hover::before{transform:scaleY(1.667)}
 .tcard h3{margin:20px 0 12px}
 
 /* Marcas */
