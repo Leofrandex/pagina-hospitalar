@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hospitalar · Dirección C — Sistema</title>
+<link rel="icon" href="/brand/logo/isotipo-cp.png">
+<link rel="stylesheet" href="/mockups/tokens.css">
+<style>
+/* ===== Dirección C — "Sistema": violeta profundo, técnico, forma 4, índice de datos ===== */
+
+body{background:var(--violeta-950);color:#fff;overflow-x:hidden}
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:rgba(30,26,77,.86);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.1)}
+.nav__in{max-width:var(--max);margin:0 auto;padding:18px var(--pad);display:flex;align-items:center;gap:40px}
+.nav__logo{width:174px}
+.nav__links{display:flex;gap:30px;margin-left:auto}
+.nav__links a{font-weight:600;font-size:13px;letter-spacing:.04em;color:rgba(255,255,255,.72);transition:color 160ms var(--ease-hover)}
+.nav__links a:hover,.nav__links a.is-active{color:#fff}
+.nav__links a.is-active{position:relative}
+.nav__links a.is-active::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:2px;background:var(--naranja)}
+
+/* Hero técnico */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.1)}
+.hero__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.34;z-index:0;
+  filter:saturate(.6) contrast(1.05)}
+.hero::after{content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(90deg,var(--violeta-950) 26%,rgba(30,26,77,.65) 62%,rgba(30,26,77,.25))}
+.hero__forma{position:absolute;z-index:2;left:0;bottom:0;width:min(40%,520px);opacity:.32;pointer-events:none;
+  -webkit-mask-image:linear-gradient(0deg,#000 40%,transparent);mask-image:linear-gradient(0deg,#000 40%,transparent)}
+.hero__in{position:relative;z-index:3;max-width:var(--max);margin:0 auto;padding:clamp(96px,12vw,168px) var(--pad) clamp(72px,9vw,120px)}
+.hero h1{max-width:13ch;text-transform:lowercase;font-size:clamp(30px,4.8vw,60px);line-height:1;letter-spacing:-.03em}
+.hero h1 .n{color:var(--naranja)}
+.hero .lead{margin-top:28px;color:rgba(255,255,255,.76)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+
+/* Ticker de datos */
+.ticker{border-bottom:1px solid rgba(255,255,255,.1);overflow:hidden}
+.ticker__in{display:flex;gap:64px;padding:16px var(--pad);animation:slide 38s linear infinite;white-space:nowrap;
+  font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.ticker__in b{color:var(--naranja-3);font-weight:600}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.ticker__in{animation:none}}
+
+/* Índice de especialidades */
+.idx{border-top:1px solid rgba(255,255,255,.12)}
+.idx__row{display:grid;grid-template-columns:64px minmax(0,1fr) minmax(0,1fr) auto;gap:24px;align-items:center;
+  padding:26px 0;border-bottom:1px solid rgba(255,255,255,.12);position:relative;transition:padding-left 260ms var(--ease-brand)}
+.idx__row::before{content:"";position:absolute;left:-100vw;right:-100vw;top:0;bottom:0;background:rgba(255,255,255,.045);opacity:0;transition:opacity 200ms var(--ease-hover);z-index:-1}
+.idx__row:hover::before{opacity:1}
+.idx__row:hover{padding-left:16px}
+.idx__n{font-family:var(--display);font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,.4)}
+.idx__row:hover .idx__n{color:var(--naranja)}
+.idx__name{font-family:var(--display);font-weight:400;font-size:clamp(18px,1.8vw,24px);letter-spacing:-.015em}
+.idx__meta{font-size:14px;color:rgba(255,255,255,.5)}
+.idx__go{font-size:18px;color:rgba(255,255,255,.4);transition:transform 200ms var(--ease-hover),color 200ms var(--ease-hover)}
+.idx__row:hover .idx__go{color:var(--naranja);transform:translateX(4px)}
+
+/* Bloque claro insertado (respiro) */
+.light{background:#fff;color:var(--ink)}
+.light .body-s{color:var(--gris-600)}
+.tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.tcard{border:1px solid var(--gris-100);padding:clamp(26px,2.6vw,38px);position:relative;transition:border-color 220ms var(--ease-hover)}
+.tcard::before{content:"";position:absolute;top:0;left:0;height:3px;width:100%;background:var(--accent);transition:height 220ms var(--ease-brand)}
+.tcard:hover{border-color:var(--violeta)}
+.tcard:hover::before{height:5px}
+.tcard h3{margin:20px 0 12px}
+
+/* Marcas */
+.marq{display:flex;gap:56px;align-items:center;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marq img{height:26px;width:auto;filter:grayscale(1);opacity:.5;transition:filter 200ms var(--ease-hover),opacity 200ms var(--ease-hover)}
+.marq img:hover{filter:none;opacity:1}
+
+/* CTA */
+.cta{position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.12)}
+.cta__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.28;filter:saturate(.5)}
+.cta__in{position:relative;max-width:var(--max);margin:0 auto;padding:clamp(80px,9vw,132px) var(--pad);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:end}
+
+/* Footer */
+.foot__in{max-width:var(--max);margin:0 auto;padding:clamp(56px,6vw,88px) var(--pad) 36px;display:grid;grid-template-columns:minmax(0,3fr) repeat(3,minmax(0,2fr));gap:40px;border-top:1px solid rgba(255,255,255,.12)}
+.foot h4{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--naranja-3);margin-bottom:14px}
+.foot li{font-size:15px;line-height:1.85;color:rgba(255,255,255,.62)}
+.foot__logo{width:200px;margin-bottom:18px}
+.foot__bar div{max-width:var(--max);margin:0 auto;padding:18px var(--pad);display:flex;gap:20px;font-size:13px;color:rgba(255,255,255,.42);border-top:1px solid rgba(255,255,255,.1)}
+
+@media (max-width:900px){
+  .nav__links{display:none}
+  .idx__row{grid-template-columns:44px 1fr auto}.idx__meta{display:none}
+  .tri,.cta__in,.foot__in{grid-template-columns:1fr}
+  .hero__forma{opacity:.28}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__in">
+    <img class="nav__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+    <div class="nav__links">
+      <a href="#" class="is-active">Inicio</a>
+      <a href="#idx">Especialidades</a>
+      <a href="#serv">Servicios</a>
+      <a href="#">Marcas</a>
+      <a href="#">Novedades</a>
+    </div>
+    <a class="btn btn--primary" href="#cta">COTIZAR <span class="arw">→</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <img class="hero__img" src="/brand/img/tech-abstract.webp" alt="">
+  <img class="hero__forma" src="/brand/formas/Hospitalar_forma4.png" alt="">
+  <div class="hero__in">
+    <p class="eyebrow" style="color:var(--naranja-3);margin-bottom:24px">Desde 1985 · Venezuela</p>
+    <h1 class="display-xl">la red que sostiene la <span class="n">tecnología médica</span> del país</h1>
+    <p class="lead">Equipos, repuestos, ingeniería biomédica y formación. Un solo aliado para todo el ciclo de vida de la tecnología de su institución.</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary" href="#cta">Solicitar cotización <span class="arw">→</span></a>
+      <a class="btn btn--ghost-light" href="#idx">Explorar especialidades</a>
+    </div>
+  </div>
+</header>
+
+<div class="ticker"><div class="ticker__in">
+  <span><b>40</b> años de operación continua</span><span><b>3</b> sedes nacionales</span><span><b>15+</b> marcas representadas</span><span><b>24h</b> tiempo de respuesta</span><span>Ingeniería biomédica certificada</span>
+  <span><b>40</b> años de operación continua</span><span><b>3</b> sedes nacionales</span><span><b>15+</b> marcas representadas</span><span><b>24h</b> tiempo de respuesta</span><span>Ingeniería biomédica certificada</span>
+</div></div>
+
+<section class="section" id="idx">
+  <div class="wrap">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:48px;flex-wrap:wrap">
+      <div>
+        <p class="eyebrow" style="color:var(--naranja-3)">Índice de especialidades</p>
+        <h2 class="display-l" style="margin-top:16px;text-transform:lowercase">doce áreas cubiertas</h2>
+      </div>
+      <p class="body-s" style="color:rgba(255,255,255,.6);max-width:34ch">Cada área con línea de equipos, consumibles y respaldo técnico propio.</p>
+    </div>
+    <div class="idx reveal">
+      <a class="idx__row" href="#"><span class="idx__n">01</span><span class="idx__name">Imagenología</span><span class="idx__meta">Resonancia · TAC · Rayos X · Ultrasonido</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">02</span><span class="idx__name">Anestesiología</span><span class="idx__meta">Máquinas de anestesia · Vaporizadores</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">03</span><span class="idx__name">Cuidados intensivos</span><span class="idx__meta">Ventilación mecánica · Monitoreo</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">04</span><span class="idx__name">Cardiología</span><span class="idx__meta">Ecocardiografía · Holter · Electrofisiología</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">05</span><span class="idx__name">Ginecología y obstetricia</span><span class="idx__meta">Ultrasonido 4D · Colposcopía</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">06</span><span class="idx__name">Laboratorio clínico</span><span class="idx__meta">Analizadores · Centrífugas · Reactivos</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">07</span><span class="idx__name">Otorrinolaringología</span><span class="idx__meta">Implantes cocleares · Endoscopía</span><span class="idx__go">→</span></a>
+      <a class="idx__row" href="#"><span class="idx__n">08</span><span class="idx__name">Dermatología estética</span><span class="idx__meta">Plataformas láser · Radiofrecuencia</span><span class="idx__go">→</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="light section" id="serv">
+  <div class="wrap">
+    <p class="eyebrow reveal" style="color:var(--naranja)">Ciclo completo</p>
+    <h2 class="display-l reveal" style="margin:16px 0 44px;text-transform:lowercase">antes, durante y después de la compra</h2>
+    <div class="tri">
+      <article class="tcard reveal" style="--accent:var(--violeta)">
+        <p class="label" style="color:var(--gris-400)">01 — ASESORÍA</p>
+        <h3 class="display-m">Proyectos especiales</h3>
+        <p class="body-s">Estudio del espacio, selección técnica y equipamiento integral del servicio, hasta la puesta en marcha.</p>
+      </article>
+      <article class="tcard reveal" style="--accent:var(--naranja)">
+        <p class="label" style="color:var(--gris-400)">02 — OPERACIÓN</p>
+        <h3 class="display-m">Soporte técnico</h3>
+        <p class="body-s">Ingenieros biomédicos certificados por fábrica, repuestos originales y mantenimiento preventivo programado.</p>
+      </article>
+      <article class="tcard reveal" style="--accent:var(--verde)">
+        <p class="label" style="color:var(--gris-400)">03 — FUTURO</p>
+        <h3 class="display-m">Educación continua</h3>
+        <p class="body-s">Formación permanente para las nuevas generaciones médicas y actualización del personal en cada tecnología.</p>
+      </article>
+    </div>
+    <div style="margin-top:clamp(56px,6vw,88px)">
+      <p class="label reveal" style="color:var(--gris-400);margin-bottom:26px">REPRESENTACIONES</p>
+      <div class="marq reveal" style="filter:none">
+        <img src="/brand/logos-dark/siemens-logo-diapo-REV-1-400x143.png" alt="Siemens" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/Drager-logo-diapo-400x143.png" alt="Dräger" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/medtronic-logo-diapo-400x143.png" alt="Medtronic" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/Olympud-logo-rev-1-400x143.png" alt="Olympus" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/esaote-logo-diapo-400x143.png" alt="Esaote" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/Cochlear-logo-diapo-rev-2-400x143.png" alt="Cochlear" style="filter:grayscale(1);opacity:.5">
+        <img src="/brand/logos-dark/Sony-logo-diapo-400x143.png" alt="Sony" style="filter:grayscale(1);opacity:.5">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="cta">
+  <img class="cta__img" src="/brand/img/manos-estetoscopio.webp" alt="">
+  <div class="cta__in">
+    <div class="reveal">
+      <p class="eyebrow" style="color:var(--naranja-3)">Cotización</p>
+      <h2 class="display-l" style="margin:18px 0 20px;text-transform:lowercase">hablemos de lo que su servicio necesita</h2>
+      <p class="lead" style="color:rgba(255,255,255,.78)">Respuesta técnica y comercial en menos de 24 horas hábiles.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a class="btn btn--primary" href="#">Cotizar <span class="arw">→</span></a>
+      <a class="btn btn--ghost-light" href="#">Servicio técnico</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot__in">
+    <div>
+      <img class="foot__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+      <p class="body-s" style="color:rgba(255,255,255,.6);max-width:30ch">Unimos tecnología y vida.</p>
+    </div>
+    <div><h4>Caracas</h4><ul><li>Av. Principal de Los Ruices</li><li>+58 212 000 0000</li></ul></div>
+    <div><h4>Barquisimeto</h4><ul><li>Av. Los Leones</li><li>+58 251 000 0000</li></ul></div>
+    <div><h4>Maturín</h4><ul><li>Av. Alirio Ugarte Pelayo</li><li>+58 291 000 0000</li></ul></div>
+  </div>
+  <div class="foot__bar"><div><span>© 2026 Hospitalar</span><span>Aviso legal</span><span>Privacidad</span></div></div>
+</footer>
+
+<nav class="labbar">
+  <span>MOCKUP LAB</span>
+  <a href="/mockups/">Índice</a>
+  <a href="/mockups/a.html">A · Apoyo</a>
+  <a href="/mockups/b.html">B · Contenedor</a>
+  <a href="/mockups/c.html" aria-current="page">C · Sistema</a>
+  <span class="sp">Dirección C — violeta profundo técnico · forma 4 · índice de datos</span>
+</nav>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*60)+'ms';io.observe(el)});
+</script>
+</body>
+</html>

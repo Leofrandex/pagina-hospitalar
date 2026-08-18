@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hospitalar · Mockup Lab</title>
+<link rel="icon" href="/brand/logo/isotipo-cp.png">
+<link rel="stylesheet" href="/mockups/tokens.css">
+<style>
+body{background:var(--hueso)}
+.head{background:var(--violeta);color:#fff;position:relative;overflow:hidden}
+.head__forma{position:absolute;right:0;top:0;height:100%;filter:brightness(0) invert(1);opacity:.1}
+.head__in{position:relative;max-width:var(--max);margin:0 auto;padding:clamp(48px,6vw,84px) var(--pad)}
+.head img.logo{width:200px;margin-bottom:32px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:12px}
+.dir{background:#fff;border:1px solid var(--gris-100);display:flex;flex-direction:column;transition:border-color 200ms var(--ease-hover),transform 200ms var(--ease-hover)}
+.dir:hover{border-color:var(--violeta);transform:translateY(-2px)}
+.dir__thumb{aspect-ratio:16/10;position:relative;overflow:hidden;border-bottom:1px solid var(--gris-100)}
+.dir__thumb img{width:100%;height:100%;object-fit:cover}
+.dir__thumb .veil{position:absolute;inset:0}
+.dir__b{padding:26px}
+.dir h3{margin-bottom:10px}
+.dir ul{margin-top:16px}
+.dir li{font-size:14px;color:var(--gris-600);padding-left:16px;position:relative;line-height:1.8}
+.dir li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:1.5px;background:var(--naranja)}
+.dir__go{margin-top:22px}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--gris-100)}
+.sw{padding:20px 16px;color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;min-height:96px;display:flex;flex-direction:column;justify-content:space-between}
+.sw small{opacity:.8;font-weight:400}
+.type-row{display:flex;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--gris-100)}
+.type-row .k{flex:0 0 130px;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
+.forms{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
+.forms figure{margin:0;background:#fff;border:1px solid var(--gris-100);padding:18px;text-align:center}
+.forms img{height:96px;width:auto;margin:0 auto 12px;object-fit:contain}
+.forms figcaption{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
+@media (max-width:900px){.cards,.swatches,.forms{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+
+<header class="head">
+  <img class="head__forma" src="/brand/formas/Hospitalar_forma1.png" alt="">
+  <div class="head__in">
+    <img class="logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+    <p class="eyebrow" style="color:var(--naranja-3)">Mockup Lab · rediseño 2026</p>
+    <h1 class="display-l" style="margin-top:18px;text-transform:lowercase">tres direcciones visuales, un mismo design system</h1>
+    <p class="lead" style="margin-top:22px;color:rgba(255,255,255,.85)">Las tres cumplen al 100% el manual de marca (colores, tipografías, formas complementarias y fondos aprobados). Lo que cambia es la <strong>dirección</strong>: densidad, punto de entrada y temperatura. Elija una — o dígame qué tomar de cada una.</p>
+  </div>
+</header>
+
+<section class="section--tight" style="padding-top:clamp(48px,5vw,72px)">
+  <div class="wrap">
+    <div class="cards">
+
+      <a class="dir" href="/mockups/a.html">
+        <div class="dir__thumb"><img src="/brand/img/silueta-3.png" alt="" style="object-fit:contain;background:var(--violeta)"><div class="veil" style="background:linear-gradient(180deg,transparent 40%,rgba(53,46,135,.9))"></div></div>
+        <div class="dir__b">
+          <p class="eyebrow" style="color:var(--naranja)">Dirección A</p>
+          <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">apoyo</h3>
+          <p class="body-s">Editorial institucional. Hero violeta pleno con médico silueteado, titulares enormes en minúsculas, especialidades como lista indexada.</p>
+          <ul>
+            <li>Fondo violeta con formas (manual p.28)</li>
+            <li>Fotografía silueteada (p.37)</li>
+            <li>Autoridad y trayectoria por delante</li>
+          </ul>
+          <span class="btn btn--secondary dir__go">Ver mockup <span class="arw">→</span></span>
+        </div>
+      </a>
+
+      <a class="dir" href="/mockups/b.html">
+        <div class="dir__thumb"><img src="/brand/img/lab-biotech.webp" alt=""><div class="veil" style="background:var(--violeta);opacity:.6"></div></div>
+        <div class="dir__b">
+          <p class="eyebrow" style="color:var(--naranja)">Dirección B</p>
+          <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">contenedor</h3>
+          <p class="body-s">Grilla suiza clara y utilitaria. Buscador protagonista, grilla de 12 especialidades, muro de marcas. Orientada a que el cliente encuentre y cotice.</p>
+          <ul>
+            <li>Fondo 1: foto + violeta 60% (manual p.29)</li>
+            <li>Contenedor de la “h” como etiqueta (p.27)</li>
+            <li>Conversión y catálogo por delante</li>
+          </ul>
+          <span class="btn btn--secondary dir__go">Ver mockup <span class="arw">→</span></span>
+        </div>
+      </a>
+
+      <a class="dir" href="/mockups/c.html">
+        <div class="dir__thumb"><img src="/brand/img/tech-abstract.webp" alt=""><div class="veil" style="background:var(--violeta-950);opacity:.66"></div></div>
+        <div class="dir__b">
+          <p class="eyebrow" style="color:var(--naranja)">Dirección C</p>
+          <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">sistema</h3>
+          <p class="body-s">Violeta profundo, temperatura tecnológica. Índice de datos, ticker, un bloque blanco de respiro. La cara más innovadora de los tres atributos.</p>
+          <ul>
+            <li>Forma 4 sangrada a la izquierda (p.26)</li>
+            <li>Fotografía tecnológica (p.36)</li>
+            <li>Innovación y escala por delante</li>
+          </ul>
+          <span class="btn btn--secondary dir__go">Ver mockup <span class="arw">→</span></span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section class="section--tight" style="padding-top:0">
+  <div class="wrap">
+    <p class="eyebrow" style="color:var(--naranja)">Tokens · color</p>
+    <h2 class="display-m" style="margin:14px 0 22px;text-transform:lowercase">paleta del manual</h2>
+    <div class="swatches">
+      <div class="sw" style="background:#352E87"><span>Violeta</span><small>#352E87 · PANTONE 2736 C</small></div>
+      <div class="sw" style="background:#473B90"><span>Nivel 2</span><small>#473B90</small></div>
+      <div class="sw" style="background:#594E9C"><span>Nivel 3</span><small>#594E9C</small></div>
+      <div class="sw" style="background:#6C62A9"><span>Nivel 4</span><small>#6C62A9</small></div>
+      <div class="sw" style="background:#F26A36"><span>Naranja</span><small>#F26A36 · PANTONE 172 C</small></div>
+      <div class="sw" style="background:#F08250"><span>Nivel 2</span><small>#F08250</small></div>
+      <div class="sw" style="background:#F39969"><span>Nivel 3</span><small>#F39969</small></div>
+      <div class="sw" style="background:#F6AF83;color:#5b2b12"><span>Nivel 4</span><small>#F6AF83</small></div>
+      <div class="sw" style="background:#009639"><span>Verde</span><small>#009639 · PANTONE 355 C</small></div>
+      <div class="sw" style="background:#3AAC54"><span>Nivel 2</span><small>#3AAC54</small></div>
+      <div class="sw" style="background:#63B667"><span>Nivel 3</span><small>#63B667</small></div>
+      <div class="sw" style="background:#84C17B;color:#0a4a20"><span>Nivel 4</span><small>#84C17B</small></div>
+    </div>
+
+    <p class="eyebrow" style="color:var(--naranja);margin-top:56px">Tokens · tipografía</p>
+    <h2 class="display-m" style="margin:14px 0 22px;text-transform:lowercase">syncopate + myriad</h2>
+    <div style="background:#fff;border:1px solid var(--gris-100);padding:28px">
+      <div class="type-row"><span class="k">display-xl</span><span class="display-xl" style="font-family:var(--display);font-weight:700">hospitalar</span></div>
+      <div class="type-row"><span class="k">display-l</span><span class="display-l" style="font-family:var(--display);font-weight:700">unimos tecnología</span></div>
+      <div class="type-row"><span class="k">title-s</span><span class="title-s">Imagenología</span></div>
+      <div class="type-row"><span class="k">eyebrow</span><span class="eyebrow">ESPECIALIDADES</span></div>
+      <div class="type-row"><span class="k">lead</span><span class="lead">Myriad Light 21px — párrafo de entrada de sección.</span></div>
+      <div class="type-row"><span class="k">body</span><span class="body">Myriad Regular 17px — texto corrido de la página, medida de 60 a 75 caracteres.</span></div>
+      <div class="type-row" style="border:0"><span class="k">label</span><span class="label">BOTONES Y CHIPS</span></div>
+    </div>
+
+    <p class="eyebrow" style="color:var(--naranja);margin-top:56px">Sistema gráfico</p>
+    <h2 class="display-m" style="margin:14px 0 0;text-transform:lowercase">formas complementarias</h2>
+    <p class="body-s" style="margin-top:12px">Una sola por composición. Nunca combinarlas (manual p.22).</p>
+    <div class="forms">
+      <figure><img src="/brand/formas/Hospitalar_forma1.png" alt="Forma 1"><figcaption>Forma 1 · espacios reducidos</figcaption></figure>
+      <figure><img src="/brand/formas/Hospitalar_forma2.png" alt="Forma 2"><figcaption>Forma 2 · alargados</figcaption></figure>
+      <figure><img src="/brand/formas/Hospitalar_forma3.png" alt="Forma 3"><figcaption>Forma 3 · cuadrados</figcaption></figure>
+      <figure><img src="/brand/formas/Hospitalar_forma4.png" alt="Forma 4"><figcaption>Forma 4 · amplios</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<nav class="labbar">
+  <span>MOCKUP LAB</span>
+  <a href="/mockups/" aria-current="page">Índice</a>
+  <a href="/mockups/a.html">A · Apoyo</a>
+  <a href="/mockups/b.html">B · Contenedor</a>
+  <a href="/mockups/c.html">C · Sistema</a>
+  <span class="sp">DESIGN.md · rama redesign</span>
+</nav>
+</body>
+</html>

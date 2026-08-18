@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hospitalar · Dirección A — Apoyo</title>
+<link rel="icon" href="/brand/logo/isotipo-cp.png">
+<link rel="stylesheet" href="/mockups/tokens.css">
+<style>
+/* ===== Dirección A — "Apoyo": editorial institucional, asimetría, forma 1 sangrada ===== */
+
+/* Nav */
+.nav{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid transparent;transition:border-color 200ms var(--ease-hover)}
+.nav.is-stuck{border-color:var(--gris-100)}
+.nav__in{max-width:var(--max);margin:0 auto;padding:22px var(--pad);display:flex;align-items:center;gap:40px}
+.nav__logo{width:186px}
+.nav__links{display:flex;gap:32px;margin-left:auto}
+.nav__links a{font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--violeta);position:relative;padding-block:4px}
+.nav__links a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--naranja);transition:width 200ms var(--ease-brand)}
+.nav__links a:hover::after,.nav__links a.is-active::after{width:100%}
+
+/* Hero: fondo violeta con formas (manual p.28) + silueteada (p.37) */
+.hero{position:relative;background:var(--violeta);color:#fff;overflow:hidden;isolation:isolate}
+.hero__forma{position:absolute;z-index:0;right:0;top:0;height:100%;width:auto;opacity:.9;
+  filter:brightness(0) invert(1) opacity(.12);pointer-events:none}
+.hero__sil{position:absolute;z-index:1;right:0;bottom:0;height:78%;width:auto;object-fit:contain;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 42%),linear-gradient(180deg,transparent,#000 22%);
+  mask-image:linear-gradient(90deg,transparent,#000 42%),linear-gradient(180deg,transparent,#000 22%);
+  -webkit-mask-composite:source-in;mask-composite:intersect;
+  opacity:.9;pointer-events:none}
+.hero__in{position:relative;z-index:2;max-width:var(--max);margin:0 auto;padding:clamp(72px,9vw,132px) var(--pad) clamp(64px,8vw,112px);
+  display:block}
+.hero h1{max-width:13ch;text-transform:lowercase;font-size:clamp(30px,4.6vw,58px);line-height:1;letter-spacing:-.03em}
+.hero h1 em{font-style:normal;color:var(--naranja-3)}
+.hero .lead{margin-top:28px;max-width:42ch;color:rgba(255,255,255,.86)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+.hero__eyebrow{color:var(--naranja-3);margin-bottom:22px}
+.hero__meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;max-width:640px;margin-top:clamp(44px,5vw,64px);
+  padding-top:26px;border-top:1px solid rgba(255,255,255,.22)}
+.hero__meta .data{color:#fff}
+.hero__meta span{display:block;font-size:13px;letter-spacing:.04em;font-weight:600;color:rgba(255,255,255,.7);margin-top:6px}
+
+/* Marcas */
+.brands{border-bottom:1px solid var(--gris-100)}
+.brands__in{max-width:var(--max);margin:0 auto;padding:34px var(--pad);display:flex;align-items:center;gap:44px}
+.brands__label{flex:0 0 auto;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-400)}
+.brands__track{display:flex;align-items:center;gap:52px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.brands__track img{height:26px;width:auto;filter:grayscale(1);opacity:.55;transition:filter 200ms var(--ease-hover),opacity 200ms var(--ease-hover)}
+.brands__track img:hover{filter:none;opacity:1}
+
+/* Especialidades — lista indexada editorial */
+.spec{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:clamp(40px,6vw,96px)}
+.spec__list{border-top:1px solid var(--gris-100)}
+.spec__row{display:grid;grid-template-columns:56px 1fr auto;align-items:center;gap:20px;
+  padding:22px 4px;border-bottom:1px solid var(--gris-100);transition:background 200ms var(--ease-hover),padding-left 200ms var(--ease-hover)}
+.spec__row:hover{background:var(--hueso);padding-left:14px}
+.spec__num{font-family:var(--display);font-weight:400;font-size:12px;letter-spacing:.1em;color:var(--gris-400)}
+.spec__row:hover .spec__num{color:var(--naranja)}
+.spec__name{font-family:var(--display);font-weight:400;font-size:clamp(17px,1.6vw,21px);letter-spacing:-.01em}
+.spec__tag{font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
+
+/* Servicio: dos bloques con barra de acento */
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.card{position:relative;background:#fff;border:1px solid var(--gris-100);padding:clamp(28px,3vw,44px);
+  transition:border-color 220ms var(--ease-hover)}
+.card::before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--accent,var(--violeta));transition:width 220ms var(--ease-brand)}
+.card:hover{border-color:var(--violeta)}
+.card:hover::before{width:5px}
+.card h3{margin-bottom:14px}
+.card .body-s{margin-bottom:24px}
+
+/* Testimonial con contenedor de la "h" (manual p.27) */
+.quote{position:relative;background:var(--violeta);color:#fff;overflow:hidden}
+.quote__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;opacity:.55}
+.quote__in{position:relative;max-width:var(--max);margin:0 auto;padding:clamp(72px,8vw,120px) var(--pad)}
+.quote blockquote{margin:0;max-width:24ch;font-family:var(--display);font-weight:400;font-size:clamp(22px,2.6vw,34px);line-height:1.25;letter-spacing:-.02em}
+.quote figcaption{margin-top:28px;font-size:13px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.75)}
+
+/* CTA de cierre */
+.cta{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:end}
+
+/* Footer */
+.foot{background:var(--violeta-950);color:#fff}
+.foot__in{max-width:var(--max);margin:0 auto;padding:clamp(56px,6vw,88px) var(--pad) 40px;
+  display:grid;grid-template-columns:minmax(0,3fr) repeat(3,minmax(0,2fr));gap:40px}
+.foot h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--naranja-3);margin-bottom:16px}
+.foot li{font-size:15px;line-height:1.9;color:rgba(255,255,255,.72)}
+.foot__logo{width:210px;margin-bottom:20px}
+.foot__bar{border-top:1px solid rgba(255,255,255,.14);margin-top:8px}
+.foot__bar div{max-width:var(--max);margin:0 auto;padding:20px var(--pad);display:flex;gap:20px;font-size:13px;color:rgba(255,255,255,.5)}
+
+@media (max-width:900px){
+  .nav__links{display:none}
+  .hero__in,.spec,.cta,.duo,.foot__in{grid-template-columns:1fr}
+  .hero__sil{display:none}
+  .hero__meta{grid-template-columns:repeat(2,1fr);max-width:none}
+  .brands__label{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav__in">
+    <img class="nav__logo" src="/brand/logo/hospitalar-cp.svg" alt="Hospitalar">
+    <div class="nav__links">
+      <a href="#" class="is-active">Inicio</a>
+      <a href="#spec">Especialidades</a>
+      <a href="#serv">Servicios</a>
+      <a href="#">Novedades</a>
+    </div>
+    <a class="btn btn--primary" href="#cta">COTIZAR <span class="arw">→</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <img class="hero__forma" src="/brand/formas/Hospitalar_forma1.png" alt="">
+  <img class="hero__sil" src="/brand/img/silueta-3.png" alt="">
+  <div class="hero__in">
+    <div>
+      <p class="eyebrow hero__eyebrow">40 años uniendo tecnología y vida</p>
+      <h1 class="display-xl">tecnología médica que <em>sostiene</em> decisiones críticas</h1>
+      <p class="lead">Venta, distribución, asesoría y servicios biomédicos para clínicas privadas, especialistas e instituciones públicas en toda Venezuela.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#cta">Solicitar cotización <span class="arw">→</span></a>
+        <a class="btn btn--ghost-light" href="#spec">Ver especialidades</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero__in" style="padding-top:0">
+    <div class="hero__meta">
+      <div><p class="data">40</p><span>años de trayectoria</span></div>
+      <div><p class="data">12</p><span>especialidades atendidas</span></div>
+      <div><p class="data">3</p><span>sedes: Caracas · Barquisimeto · Maturín</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="brands">
+  <div class="brands__in">
+    <p class="brands__label">Representaciones</p>
+    <div class="brands__track">
+      <img src="/brand/logos-dark/siemens-logo-diapo-REV-1-400x143.png" alt="Siemens">
+      <img src="/brand/logos-dark/Drager-logo-diapo-400x143.png" alt="Dräger">
+      <img src="/brand/logos-dark/medtronic-logo-diapo-400x143.png" alt="Medtronic">
+      <img src="/brand/logos-dark/Olympud-logo-rev-1-400x143.png" alt="Olympus">
+      <img src="/brand/logos-dark/esaote-logo-diapo-400x143.png" alt="Esaote">
+      <img src="/brand/logos-dark/Cochlear-logo-diapo-rev-2-400x143.png" alt="Cochlear">
+      <img src="/brand/logos-dark/Sony-logo-diapo-400x143.png" alt="Sony">
+      <img src="/brand/logos-dark/Barco-logo-diapo-400x143.png" alt="Barco">
+    </div>
+  </div>
+</section>
+
+<section class="section" id="spec">
+  <div class="wrap spec">
+    <div class="reveal">
+      <p class="eyebrow" style="color:var(--naranja)">Especialidades</p>
+      <h2 class="display-l" style="margin-top:18px;text-transform:lowercase">doce áreas, un mismo estándar</h2>
+      <p class="body-s" style="margin-top:22px;max-width:36ch">Equipamiento, consumibles y soporte biomédico especializado por área clínica. Cada línea con respaldo técnico local certificado.</p>
+      <a class="link" href="#" style="margin-top:26px;color:var(--violeta)">Descargar catálogo completo</a>
+    </div>
+    <div class="spec__list reveal">
+      <a class="spec__row" href="#"><span class="spec__num">01</span><span class="spec__name">Imagenología</span><span class="spec__tag">Resonancia · TAC · Rayos X</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">02</span><span class="spec__name">Anestesiología</span><span class="spec__tag">Máquinas · Monitoreo</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">03</span><span class="spec__name">Cardiología</span><span class="spec__tag">Ecocardiografía · Holter</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">04</span><span class="spec__name">Ginecología y obstetricia</span><span class="spec__tag">Ultrasonido · Colposcopía</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">05</span><span class="spec__name">Cuidados intensivos</span><span class="spec__tag">Ventilación · Monitoreo</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">06</span><span class="spec__name">Otorrinolaringología</span><span class="spec__tag">Implantes · Endoscopía</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">07</span><span class="spec__name">Dermatología estética</span><span class="spec__tag">Láser · Plataformas</span></a>
+      <a class="spec__row" href="#"><span class="spec__num">08</span><span class="spec__name">Laboratorio clínico</span><span class="spec__tag">Analizadores · Reactivos</span></a>
+    </div>
+  </div>
+</section>
+
+<section class="section u-hueso" id="serv">
+  <div class="wrap">
+    <div class="duo">
+      <article class="card reveal" style="--accent:var(--naranja)">
+        <p class="chip" style="background:var(--naranja-4);color:var(--naranja-dark)">Comercial</p>
+        <h3 class="display-m" style="margin-top:18px">Proyectos especiales</h3>
+        <p class="body-s">Diseñamos e implementamos el equipamiento completo de servicios clínicos: desde el estudio del espacio hasta la puesta en marcha y el entrenamiento del personal.</p>
+        <a class="link" href="#" style="color:var(--violeta)">Hablar con un asesor</a>
+      </article>
+      <article class="card reveal" style="--accent:var(--verde)">
+        <p class="chip" style="background:var(--verde-4);color:#0a5c27">Servicio</p>
+        <h3 class="display-m" style="margin-top:18px">Soporte técnico y educación continua</h3>
+        <p class="body-s">Ingenieros biomédicos certificados por fábrica, repuestos originales y formación permanente para las nuevas generaciones médicas del país.</p>
+        <a class="link" href="#" style="color:var(--violeta)">Solicitar servicio técnico</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<figure class="quote">
+  <img class="quote__img" src="/brand/img/manos.webp" alt="">
+  <div class="quote__in">
+    <p class="eyebrow" style="color:var(--naranja-3);margin-bottom:26px">Confianza</p>
+    <blockquote>“La respuesta técnica de Hospitalar sostiene la operación diaria de nuestro servicio.”</blockquote>
+    <figcaption>Lic. Charlo Andrade — Clínica Santa Sofía, Caracas</figcaption>
+  </div>
+</figure>
+
+<section class="section" id="cta">
+  <div class="wrap cta">
+    <div class="reveal">
+      <p class="eyebrow" style="color:var(--naranja)">Cotización</p>
+      <h2 class="display-l" style="margin-top:18px;text-transform:lowercase">cuéntenos qué necesita su servicio</h2>
+      <p class="lead" style="margin-top:22px;color:var(--gris-600)">Respondemos en menos de 24 horas hábiles con una propuesta técnica y comercial.</p>
+    </div>
+    <div class="reveal" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a class="btn btn--primary" href="#">Cotizar equipos <span class="arw">→</span></a>
+      <a class="btn btn--secondary" href="#">Servicio técnico</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot__in">
+    <div>
+      <img class="foot__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+      <p class="body-s" style="color:rgba(255,255,255,.6);max-width:30ch">Unimos tecnología y vida. Equipos médicos, asesoría y servicios biomédicos desde 1985.</p>
+    </div>
+    <div><h4>Caracas</h4><ul><li>Av. Principal de Los Ruices</li><li>+58 212 000 0000</li></ul></div>
+    <div><h4>Barquisimeto</h4><ul><li>Av. Los Leones</li><li>+58 251 000 0000</li></ul></div>
+    <div><h4>Maturín</h4><ul><li>Av. Alirio Ugarte Pelayo</li><li>+58 291 000 0000</li></ul></div>
+  </div>
+  <div class="foot__bar"><div><span>© 2026 Hospitalar</span><span>Aviso legal</span><span>Privacidad</span></div></div>
+</footer>
+
+<nav class="labbar">
+  <span>MOCKUP LAB</span>
+  <a href="/mockups/">Índice</a>
+  <a href="/mockups/a.html" aria-current="page">A · Apoyo</a>
+  <a href="/mockups/b.html">B · Contenedor</a>
+  <a href="/mockups/c.html">C · Sistema</a>
+  <span class="sp">Dirección A — editorial institucional · fondo violeta con formas · silueteada</span>
+</nav>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*60)+'ms';io.observe(el)});
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('is-stuck',scrollY>8),{passive:true});
+</script>
+</body>
+</html>

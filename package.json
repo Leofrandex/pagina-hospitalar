@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lab": "python -m http.server 4321 --directory public"
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
