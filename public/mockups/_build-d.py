@@ -401,14 +401,11 @@ def build(theme, note, current):
         return ' aria-current="page"' if f == current else ''
     bar = """
 <nav class="labbar">
-  <span>MOCKUP LAB</span>
-  <a href="/lab">Índice</a>
-  <a href="/lab/a">A</a>
-  <a href="/lab/b">B</a>
-  <a href="/lab/c">C</a>
-  <a href="/lab/d"%s>D · híbrido</a>
-  <a href="/lab/d-dark"%s>D · oscuro</a>
-  <a href="/lab/d-light"%s>D · claro</a>
+  <span>HOSPITALAR · REDISEÑO</span>
+  <a href="/lab">Inicio</a>
+  <a href="/lab/d"%s>Híbrido</a>
+  <a href="/lab/d-dark"%s>Oscuro</a>
+  <a href="/lab/d-light"%s>Claro</a>
   <span class="sp">%s</span>
 </nav>""" % (mark("hybrid", current), mark("dark", current), mark("light", current), note)
     boot = """(function(){var t='%s';try{var v=localStorage.getItem('hosp-theme-page-%s');if(v)t=v}catch(e){}

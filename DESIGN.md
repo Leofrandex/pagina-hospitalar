@@ -376,7 +376,7 @@ Reglas nuevas que trae esta dirección y que rigen de aquí en adelante:
 2. **Los recursos visuales se usan de verdad**: formas como máscara recolorable, contenedor de la "h" en etiquetas y testimonial, Fondo 2 del manual en el testimonial.
 3. **Sistema de movimiento explícito** (§8), con las curvas y reglas de Emil Kowalski.
 
-Mockup: `public/mockups/d.html`.
+Mockup: `public/mockups/d.html` → publicado en `/lab/d`.
 
 ---
 
@@ -390,16 +390,16 @@ python -m http.server 4321 --directory public     # o: npm run lab
 
 | URL | Contenido |
 |---|---|
-| `http://127.0.0.1:4321/mockups/` | Índice: las 3 direcciones + swatches de color, escala tipográfica y las 4 formas |
-| `…/mockups/a.html` | **A · Apoyo** — editorial institucional, fondo violeta con formas, foto silueteada |
-| `…/mockups/b.html` | **B · Contenedor** — grilla suiza clara, Fondo 1 (foto + violeta 60%), buscador protagonista |
-| `…/mockups/c.html` | **C · Sistema** — violeta profundo técnico, forma 4, índice de datos |
-| `…/mockups/d.html` | **D · híbrido** — la dirección elegida (§11): secciones claras y oscuras alternadas |
-| `…/mockups/d-dark.html` | **D · oscuro** — variante pura |
-| `…/mockups/d-light.html` | **D · claro** — variante pura |
-| `…/mockups/resenas.html` | Tres propuestas de retícula para las reseñas, con su altura medida |
+| `/lab` | Portada: la propuesta y sus tres modos, más los swatches, la escala tipográfica y las 4 formas |
+| `/lab/d` | **Híbrido** — secciones claras y oscuras alternadas (§11) |
+| `/lab/d-dark` | **Oscuro** — variante pura |
+| `/lab/d-light` | **Claro** — variante pura |
 
-Las tres variantes de D se generan desde `public/mockups/_d-body.html` + `public/mockups/_build-d.py` (`python public/mockups/_build-d.py`): comparten estructura y sólo cambian los tokens de superficie, así no se desincronizan mientras se decide cuál queda.
+El Lab se sirve desde el propio proyecto: `next.config.ts` reescribe `/lab/<pieza>` a los HTML de `public/mockups/`, con cabecera `X-Robots-Tag: noindex, nofollow`. En local: `npm run dev` (3000) o `npm run lab` (4321).
+
+**Archivo.** Las direcciones A, B y C y la comparativa de retículas de reseñas cumplieron su función y ya no se muestran: viven en `design-archive/mockups/`, fuera de `public/`, así que quedan en el repo como registro pero no se sirven ni se comparten.
+
+Las tres variantes se generan desde `public/mockups/_d-body.html` + `public/mockups/_build-d.py` (`python public/mockups/_build-d.py`): comparten estructura y sólo cambian los tokens de superficie, así no se desincronizan mientras se decide cuál queda.
 
 Los tres comparten `public/mockups/tokens.css`, que es la implementación literal de los tokens de §9. Cuando se elija dirección, ese archivo se traduce al `@theme` de Tailwind y los mockups quedan como referencia congelada.
 
@@ -410,7 +410,7 @@ Los tres comparten `public/mockups/tokens.css`, que es la implementación litera
 1. ~~Dirección visual~~ — **resuelta**: dirección D (§11).
 2. ~~Patrón de recorte de botón (`h-notch`)~~ — **descartado**: el cliente pidió esquinas redondeadas (§6.1).
 2b. **Variante de superficie**: híbrida (`d.html`, por defecto), oscura pura o clara pura — el interruptor del header cicla los tres modos y el modo se recuerda por página.
-2c. ~~Retícula de reseñas~~ — **resuelta el 18/08/2026: propuesta 2, bento con revelado progresivo** (706px). La propuesta 1 (bento completo, 956px) queda descartada por altura; la 3 (fila horizontal de 330px fijos) queda en reserva para páginas interiores. Las tres siguen visibles en `resenas.html` como registro.
+2c. ~~Retícula de reseñas~~ — **resuelta el 18/08/2026: propuesta 2, bento con revelado progresivo** (706px). La propuesta 1 (bento completo, 956px) queda descartada por altura; la 3 (fila horizontal de 330px fijos) queda en reserva para páginas interiores. Las tres quedan registradas en `design-archive/mockups/resenas.html`.
 3. ~~Vectorización de las formas~~ — **resuelta** con máscara CSS (§5.1); vectorizar a SVG queda como mejora opcional de nitidez.
 4. **Licencia de Myriad Pro para web** vs. sustitución por Source Sans 3.
 5. **Densidad de la grilla de especialidades** (12 ítems: 4×3 vs. 6×2 vs. lista indexada).
