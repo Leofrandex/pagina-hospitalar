@@ -13,9 +13,9 @@ body{background:var(--hueso)}
 .head__in{position:relative;max-width:var(--max);margin:0 auto;padding:clamp(48px,6vw,84px) var(--pad)}
 .head img.logo{width:200px;margin-bottom:32px}
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:12px}
-.dir{background:#fff;border:1px solid var(--gris-100);display:flex;flex-direction:column;transition:border-color 200ms var(--ease-hover),transform 200ms var(--ease-hover)}
-.dir:hover{border-color:var(--violeta);transform:translateY(-2px)}
-.dir__thumb{aspect-ratio:16/10;position:relative;overflow:hidden;border-bottom:1px solid var(--gris-100)}
+.dir{background:#fff;display:flex;flex-direction:column;transition:border-color 200ms var(--ease-hover),transform 200ms var(--ease-hover)}
+.dir:hover{transform:translateY(-3px)}
+.dir__thumb{aspect-ratio:16/10;position:relative;overflow:hidden}
 .dir__thumb img{width:100%;height:100%;object-fit:cover}
 .dir__thumb .veil{position:absolute;inset:0}
 .dir__b{padding:26px}
@@ -24,13 +24,13 @@ body{background:var(--hueso)}
 .dir li{font-size:14px;color:var(--gris-600);padding-left:16px;position:relative;line-height:1.8}
 .dir li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:1.5px;background:var(--naranja)}
 .dir__go{margin-top:22px}
-.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--gris-100)}
+.swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
 .sw{padding:20px 16px;color:#fff;font-size:12px;font-weight:600;letter-spacing:.04em;min-height:96px;display:flex;flex-direction:column;justify-content:space-between}
 .sw small{opacity:.8;font-weight:400}
 .type-row{display:flex;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--gris-100)}
 .type-row .k{flex:0 0 130px;font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
 .forms{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}
-.forms figure{margin:0;background:#fff;border:1px solid var(--gris-100);padding:18px;text-align:center}
+.forms figure{margin:0;background:#fff;padding:18px;text-align:center}
 .forms img{height:96px;width:auto;margin:0 auto 12px;object-fit:contain}
 .forms figcaption{font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
 @media (max-width:900px){.cards,.swatches,.forms{grid-template-columns:repeat(2,1fr)}}
@@ -43,8 +43,8 @@ body{background:var(--hueso)}
   <div class="head__in">
     <img class="logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
     <p class="eyebrow" style="color:var(--naranja-3)">Mockup Lab · rediseño 2026</p>
-    <h1 class="display-l" style="margin-top:18px;text-transform:lowercase">tres direcciones visuales, un mismo design system</h1>
-    <p class="lead" style="margin-top:22px;color:rgba(255,255,255,.85)">Las tres cumplen al 100% el manual de marca (colores, tipografías, formas complementarias y fondos aprobados). Lo que cambia es la <strong>dirección</strong>: densidad, punto de entrada y temperatura. Elija una — o dígame qué tomar de cada una.</p>
+    <h1 class="display-l" style="margin-top:18px;text-transform:lowercase">cuatro direcciones, un mismo design system</h1>
+    <p class="lead" style="margin-top:22px;color:rgba(255,255,255,.85)">Las cuatro cumplen al 100% el manual de marca (colores, tipografías, formas complementarias y fondos aprobados). Lo que cambia es la <strong>dirección</strong>: densidad, punto de entrada y temperatura. Elija una — o dígame qué tomar de cada una.</p>
   </div>
 </header>
 
@@ -98,6 +98,21 @@ body{background:var(--hueso)}
       </a>
 
     </div>
+
+    <a class="dir" href="/mockups/d.html" style="margin-top:24px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:stretch">
+      <div class="dir__thumb" style="aspect-ratio:auto;border-bottom:0"><img src="/brand/img/silueta-3.png" alt="" style="object-fit:cover;object-position:left top;background:var(--violeta)"><div class="veil" style="background:linear-gradient(90deg,rgba(53,46,135,.15),var(--violeta))"></div></div>
+      <div class="dir__b" style="padding:clamp(28px,3vw,44px)">
+        <p class="eyebrow" style="color:var(--naranja)">Dirección D · seleccionada</p>
+        <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">mezcla refinada</h3>
+        <p class="body-s">Header de C, hero de A, carrusel automático de marcas, grilla de especialidades de B y el mundo oscuro de C para el resto. Sin bordes de 1px: la separación se hace con superficie, aire y recorte. Las formas del manual entran como máscara recolorable y el testimonial usa el Fondo 2 (foto dentro de la forma).</p>
+        <ul>
+          <li>Movimiento según Emil Kowalski: curvas fuertes, &lt;300ms, sólo transform y opacity</li>
+          <li>Carrusel infinito con pausa al hover y respeto a prefers-reduced-motion</li>
+          <li>Contenedor de la “h” en el testimonial (manual p.27)</li>
+        </ul>
+        <span class="btn btn--primary dir__go">Ver mockup <span class="arw">→</span></span>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -122,7 +137,7 @@ body{background:var(--hueso)}
 
     <p class="eyebrow" style="color:var(--naranja);margin-top:56px">Tokens · tipografía</p>
     <h2 class="display-m" style="margin:14px 0 22px;text-transform:lowercase">syncopate + myriad</h2>
-    <div style="background:#fff;border:1px solid var(--gris-100);padding:28px">
+    <div style="background:#fff;padding:28px">
       <div class="type-row"><span class="k">display-xl</span><span class="display-xl" style="font-family:var(--display);font-weight:700">hospitalar</span></div>
       <div class="type-row"><span class="k">display-l</span><span class="display-l" style="font-family:var(--display);font-weight:700">unimos tecnología</span></div>
       <div class="type-row"><span class="k">title-s</span><span class="title-s">Imagenología</span></div>
@@ -150,6 +165,7 @@ body{background:var(--hueso)}
   <a href="/mockups/a.html">A · Apoyo</a>
   <a href="/mockups/b.html">B · Contenedor</a>
   <a href="/mockups/c.html">C · Sistema</a>
+  <a href="/mockups/d.html">D · Mezcla</a>
   <span class="sp">DESIGN.md · rama redesign</span>
 </nav>
 </body>

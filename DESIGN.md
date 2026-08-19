@@ -148,7 +148,14 @@ Cuatro formas derivadas de la silueta de la "h". **Solo una por composición.**
 | **Forma 3** | Cuadrado | `Hospitalar_forma3.png` | Dos grupos de color (1 y 2): dos colores, o tonos secundarios de dos colores. Voltear H/V; **no rotar**. |
 | **Forma 4** | Rectangular amplio | `Hospitalar_forma4.png` | Grupo 1 y 2 en primarios distintos, grupo 3 en tres tonos de un color. **Siempre a la izquierda** del espacio, solo se voltea verticalmente. No rotar, no posicionar a la derecha. Las puntas derechas se alargan todas juntas. |
 
-En web: las formas son **elementos de sangrado de sección** (bleed), no decoración interior. Se implementan en SVG inline para poder colorearlas con `currentColor`/tokens (tarea de implementación pendiente: vectorizar los PNG).
+En web las formas son **elementos de sangrado de sección** (bleed), no decoración interior, y se implementan como **máscara CSS**: el PNG aporta la silueta y el color sale de los tokens.
+
+```css
+.forma{ -webkit-mask-image:url("/brand/formas/Hospitalar_forma1.png"); mask-image:url(...);
+        mask-size:contain; mask-repeat:no-repeat; background-color:var(--forma-color); }
+```
+
+Así una misma forma sirve en cualquier color principal o tono secundario sin generar un archivo por color, y sobre violeta puede ir en blanco o en tono nivel 4 como pide la p.28. Para el **Fondo 2** del manual se sustituye el `background-color` por la propia fotografía (`background-image` + `background-size:cover`): la foto queda literalmente dentro de la forma.
 
 ### 5.2 Fondos aprobados (manual p.28–29)
 
@@ -193,8 +200,9 @@ Tratamiento web: `object-fit: cover`, sin viñeteado negro; el oscurecimiento se
 
 ### 6.2 Profundidad y elevación
 
-**Sistema plano con separación por color y por línea, no por sombra.**
-- `elev-0` — plano sobre `hueso`, borde `1px gris-100`. Estado por defecto de cards.
+**Sistema plano, sin bordes y sin sombras. Decisión del cliente (18/08/2026): nada de recuadros con línea de 1px.**
+La separación se hace con **superficie** (blanco sobre `hueso`, `hueso` sobre blanco, violeta sobre violeta-950), **aire** y **recorte**. Un borde visible solo se admite si es un elemento de marca (barra de acento de 3px), nunca un contorno completo.
+- `elev-0` — plano sobre `hueso`, **sin borde**. Estado por defecto de cards.
 - `elev-1` — sombra apenas perceptible: `0 1px 2px rgba(20,17,58,.06)`. Solo dropdowns y elementos que se levantan al hover.
 - `elev-2` — `0 12px 32px rgba(20,17,58,.12)`. Exclusivo de menús flotantes y modales.
 - Prohibido: sombras coloreadas, glow, `box-shadow` difuso en cards estáticas.
@@ -209,7 +217,7 @@ Tratamiento web: `object-fit: cover`, sin viñeteado negro; el oscurecimiento se
 
 **Botón terciario / link** — texto violeta `label` con subrayado naranja de `2px` que se extiende de 0 → 100% al hover.
 
-**Cards / contenedores** — esquinas rectas, fondo blanco sobre `hueso`, borde `1px gris-100`, sin sombra. Acento de identidad: **barra de 3px** en el borde superior o izquierdo (naranja para comercial, verde para servicio/educación, violeta para institucional). Hover: el borde pasa a violeta y la barra crece a 5px.
+**Cards / contenedores** — esquinas rectas, superficie `hueso` sobre blanco (o blanco sobre `hueso`), **sin borde ni sombra**, separadas por un gap de 14px que dibuja la retícula por sí solo. Acento de identidad: **barra de 3px** en el borde superior o izquierdo (naranja para comercial, verde para servicio/educación, violeta para institucional). Hover: el borde pasa a violeta y la barra crece a 5px.
 
 **Cards de especialidad** — ícono lineal `1.5px` violeta, título `title-s`, sin descripción en grilla densa. Al hover, el ícono pasa a naranja.
 
@@ -242,7 +250,12 @@ Tratamiento web: `object-fit: cover`, sin viñeteado negro; el oscurecimiento se
 Motion como precisión clínica, no como espectáculo. (Skills de referencia: `emil-design-eng`, `animate`, `animation-vocabulary`.)
 
 - **Duraciones:** micro-interacción 120–180ms; entrada de elemento 320–420ms; transición de sección 480ms máximo.
-- **Easing:** `cubic-bezier(0.16, 1, 0.3, 1)` (out-expo suave) para entradas; `cubic-bezier(0.4, 0, 0.2, 1)` para hovers.
+- **Easing:** `cubic-bezier(0.23, 1, 0.32, 1)` (ease-out fuerte) para entradas y hovers con desplazamiento; `cubic-bezier(0.4, 0, 0.2, 1)` para cambios de color; `cubic-bezier(0.77, 0, 0.175, 1)` para movimiento en pantalla. Nunca `ease-in` en UI: retrasa justo el instante que el usuario está mirando.
+- **Sólo `transform` y `opacity`.** Nunca animar `width`, `height`, `padding` ni `margin`: un subrayado se anima con `scaleX` y origen a la izquierda, una barra de acento con `scaleX`/`scaleY`, un desplazamiento de fila con `translateX` sobre los hijos.
+- **Feedback de pulsación:** todo elemento presionable baja a `scale(.97)` en `:active` con 140ms.
+- **Nada entra desde `scale(0)`.** Si hay escala de entrada, arranca en `.95` con `opacity 0`.
+- **Hovers detrás de `@media (hover:hover) and (pointer:fine)`** para que el táctil no dispare estados falsos.
+- **Transiciones, no keyframes**, en todo lo que se pueda interrumpir (el marquee es la excepción legítima: movimiento constante y lineal).
 - **Entrada por scroll:** desplazamiento de `16px` + `opacity 0→1`, escalonado `60ms` por hijo. Nunca escala ni rotación al entrar.
 - **Formas complementarias:** parallax vertical máximo `40px` a lo largo de toda la sección.
 - **Prohibido:** rebotes, spring exagerado, contadores animados chillones, texto letra por letra, autoplay de carruseles > 6s sin control.
@@ -304,7 +317,28 @@ Originales sin tocar en `diseno/` (fuera del build). Fuente PDF de la marca en l
 
 ---
 
-## 11. Mockup Lab
+## 11. Dirección elegida — D · "Mezcla refinada"
+
+Decisión del cliente el **18 de agosto de 2026**, sobre los mockups A/B/C:
+
+| Bloque | Origen | Nota |
+|---|---|---|
+| Header | **C** | Oscuro, sticky, `backdrop-filter`, se compacta al hacer scroll |
+| Hero | **A** | Violeta pleno, forma 1 sangrada arriba a la derecha, foto silueteada, fila de datos |
+| Marcas | **carrusel automático** | Como el sitio actual: marquee infinito, pausa al hover, franja violeta-950 con los logos blancos originales |
+| Especialidades | **B** | Grilla de tiles, ahora sin bordes; la última celda es el llamado al catálogo |
+| Resto (ciclo, testimonial, CTA, footer) | **C** | Mundo oscuro violeta-950 |
+
+Reglas nuevas que trae esta dirección y que rigen de aquí en adelante:
+1. **Cero bordes de 1px** (ver §6.2).
+2. **Los recursos visuales se usan de verdad**: formas como máscara recolorable, contenedor de la "h" en etiquetas y testimonial, Fondo 2 del manual en el testimonial.
+3. **Sistema de movimiento explícito** (§8), con las curvas y reglas de Emil Kowalski.
+
+Mockup: `public/mockups/d.html`.
+
+---
+
+## 12. Mockup Lab
 
 Servidor dedicado, independiente del `next dev`, para revisar direcciones visuales **antes** de tocar `src/`.
 
@@ -318,16 +352,17 @@ python -m http.server 4321 --directory public     # o: npm run lab
 | `…/mockups/a.html` | **A · Apoyo** — editorial institucional, fondo violeta con formas, foto silueteada |
 | `…/mockups/b.html` | **B · Contenedor** — grilla suiza clara, Fondo 1 (foto + violeta 60%), buscador protagonista |
 | `…/mockups/c.html` | **C · Sistema** — violeta profundo técnico, forma 4, índice de datos |
+| `…/mockups/d.html` | **D · Mezcla refinada** — la dirección elegida (§11) |
 
 Los tres comparten `public/mockups/tokens.css`, que es la implementación literal de los tokens de §9. Cuando se elija dirección, ese archivo se traduce al `@theme` de Tailwind y los mockups quedan como referencia congelada.
 
 ---
 
-## 12. Decisiones abiertas (se resuelven en el Mockup Lab, no en este documento)
+## 13. Decisiones abiertas (se resuelven en el Mockup Lab, no en este documento)
 
-1. **Dirección visual del hero** — 3 propuestas en el Lab (ver `mockups/`).
+1. ~~Dirección visual~~ — **resuelta**: dirección D (§11).
 2. **Patrón de recorte de botón** (`h-notch`) — validar legibilidad y factura.
-3. **Vectorización de las formas complementarias** a SVG coloreable.
+3. ~~Vectorización de las formas~~ — **resuelta** con máscara CSS (§5.1); vectorizar a SVG queda como mejora opcional de nitidez.
 4. **Licencia de Myriad Pro para web** vs. sustitución por Source Sans 3.
 5. **Densidad de la grilla de especialidades** (12 ítems: 4×3 vs. 6×2 vs. lista indexada).
 6. **Logos de representadas** — solo tenemos knockouts blancos; pedir originales.

@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hospitalar · Dirección D — Mezcla refinada</title>
+<link rel="icon" href="/brand/logo/isotipo-cp.png">
+<link rel="stylesheet" href="/mockups/tokens.css">
+<style>
+/* =============================================================================
+   Dirección D — header de C + hero de A + carrusel de marcas + especialidades de B
+   + mundo oscuro de C para el resto.
+   Reglas propias de esta dirección:
+   · CERO bordes de 1px. La separación se hace con superficie, aire y recorte.
+   · Las formas del manual se pintan con máscara → color desde tokens.
+   · Movimiento: curvas fuertes, <300ms en UI, transform/opacity, stagger 60ms.
+   ============================================================================= */
+
+body{background:var(--violeta-950);color:#fff}
+
+/* ---------- Header (de C) ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(30,26,77,0);
+  transition:background var(--dur-hover) var(--ease-hover),backdrop-filter var(--dur-hover) linear}
+.nav.is-stuck{background:rgba(30,26,77,.82);backdrop-filter:blur(14px) saturate(1.2)}
+.nav__in{max-width:var(--max);margin:0 auto;padding:20px var(--pad);display:flex;align-items:center;gap:40px;
+  transition:padding 240ms var(--ease-out)}
+.nav.is-stuck .nav__in{padding-block:13px}
+.nav__logo{width:176px}
+.nav__links{display:flex;gap:30px;margin-left:auto}
+.nav__links a{position:relative;font-weight:600;font-size:13px;letter-spacing:.04em;color:rgba(255,255,255,.7);
+  padding-block:4px;transition:color var(--dur-hover) var(--ease-hover)}
+.nav__links a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--naranja);
+  transform:scaleX(0);transform-origin:left;transition:transform 220ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.nav__links a:hover{color:#fff}.nav__links a:hover::after{transform:scaleX(1)}}
+.nav__links a.is-active{color:#fff}
+.nav__links a.is-active::after{transform:scaleX(1)}
+
+/* ---------- Hero (de A) ---------- */
+.hero{position:relative;background:var(--violeta);overflow:hidden;margin-top:-84px;padding-top:84px}
+.hero__forma{position:absolute;z-index:0;right:-10%;top:-18%;width:min(62%,860px);aspect-ratio:1;
+  --forma-color:var(--violeta-4);opacity:.5;will-change:transform}
+.hero__sil{position:absolute;z-index:1;right:-2%;bottom:0;height:72%;width:auto;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 58%),linear-gradient(180deg,transparent,#000 30%);
+  mask-image:linear-gradient(90deg,transparent,#000 58%),linear-gradient(180deg,transparent,#000 30%);
+  -webkit-mask-composite:source-in;mask-composite:intersect;opacity:.78;pointer-events:none;
+  mix-blend-mode:luminosity}
+.hero__in{position:relative;z-index:2;max-width:var(--max);margin:0 auto;
+  padding:clamp(64px,8vw,116px) var(--pad) clamp(56px,7vw,96px)}
+.hero__eyebrow{color:var(--naranja-3);margin-bottom:22px}
+.hero h1{max-width:13ch;text-transform:lowercase;font-size:clamp(32px,4.9vw,62px);line-height:1;letter-spacing:-.035em}
+.hero h1 em{font-style:normal;color:var(--naranja-3)}
+.hero .lead{margin-top:26px;max-width:42ch;color:rgba(255,255,255,.85)}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;margin-top:38px}
+.hero__meta{position:relative;z-index:2;max-width:var(--max);margin:0 auto;padding:0 var(--pad) clamp(56px,6vw,80px);
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;max-width:min(var(--max),100%)}
+.hero__meta > div{max-width:280px}
+.hero__meta .data{color:#fff}
+.hero__meta span{display:block;margin-top:8px;font-size:13px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.65)}
+.hero__meta i{display:block;width:26px;height:3px;background:var(--naranja);margin-bottom:16px;
+  transform:scaleX(0);transform-origin:left;transition:transform 420ms var(--ease-out)}
+.hero__meta.is-in i{transform:scaleX(1)}
+
+/* ---------- Carrusel de marcas (automático, como el sitio actual) ---------- */
+.marcas{background:var(--violeta-950);padding:30px 0;overflow:hidden}
+.marcas__lbl{max-width:var(--max);margin:0 auto 20px;padding-inline:var(--pad);
+  font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.42)}
+.marquee{display:flex;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
+.marquee__track{display:flex;flex:0 0 auto;align-items:center;gap:64px;padding-right:64px;
+  animation:marquee 44s linear infinite}
+.marquee:hover .marquee__track{animation-play-state:paused}
+.marquee img{height:27px;width:auto;opacity:.62;transition:opacity var(--dur-hover) var(--ease-hover),transform var(--dur-hover) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.marquee img:hover{opacity:1;transform:scale(1.06)}}
+@keyframes marquee{to{transform:translateX(-100%)}}
+@media (prefers-reduced-motion:reduce){.marquee__track{animation:none}.marquee{overflow-x:auto}}
+
+/* ---------- Especialidades (grilla de B, sin bordes) ---------- */
+.light{background:#fff;color:var(--ink)}
+.light .body-s,.light .lead{color:var(--gris-600)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cell{position:relative;background:var(--hueso);padding:28px 24px 24px;min-height:184px;
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:background 200ms var(--ease-hover),transform 220ms var(--ease-out)}
+.cell__bar{position:absolute;left:0;top:0;width:100%;height:3px;background:var(--naranja);
+  transform:scaleX(0);transform-origin:left;transition:transform 260ms var(--ease-out)}
+.cell__ico{width:26px;height:26px;stroke:var(--violeta);stroke-width:1.5;fill:none;margin-bottom:auto;
+  transition:stroke 200ms var(--ease-hover),transform 260ms var(--ease-out)}
+.cell h3{margin-top:26px;overflow-wrap:anywhere;hyphens:auto}
+.cell p{margin-top:7px;font-size:13px;color:var(--gris-400);font-weight:600;letter-spacing:.03em}
+@media (hover:hover) and (pointer:fine){
+  .cell:hover{background:#F1EFF8;transform:translateY(-3px)}
+  .cell:hover .cell__bar{transform:scaleX(1)}
+  .cell:hover .cell__ico{stroke:var(--naranja);transform:translateY(-2px)}
+}
+/* la última celda es un llamado, no una especialidad */
+.cell--cta{background:var(--violeta);color:#fff;justify-content:flex-end}
+.cell--cta h3{color:#fff}
+.cell--cta .arw{display:inline-block;transition:transform var(--dur-hover) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.cell--cta:hover{background:var(--violeta-2)}.cell--cta:hover .arw{transform:translateX(4px)}}
+
+/* ---------- Ciclo completo (de C, sin bordes: superficie + recorte) ---------- */
+.tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.tcard{position:relative;background:var(--hueso);padding:clamp(28px,2.8vw,40px);overflow:hidden;
+  transition:background 220ms var(--ease-hover),transform 240ms var(--ease-out)}
+.tcard__forma{position:absolute;right:-18%;bottom:-28%;width:62%;aspect-ratio:1;--forma-color:var(--accent);
+  opacity:.10;transition:transform 520ms var(--ease-out),opacity 300ms var(--ease-hover)}
+.tcard__n{font-family:var(--display);font-size:11.5px;letter-spacing:.12em;color:var(--gris-400)}
+.tcard h3{margin:18px 0 12px;position:relative}
+.tcard .body-s{position:relative}
+@media (hover:hover) and (pointer:fine){
+  .tcard:hover{transform:translateY(-3px)}
+  .tcard:hover .tcard__forma{transform:translate(-6%,-6%) scale(1.06);opacity:.16}
+}
+
+/* ---------- Testimonial: Fondo 2 del manual (foto dentro de la forma) ---------- */
+.quote{position:relative;background:var(--violeta);overflow:hidden}
+.quote__bg{position:absolute;inset:0;background:url("/brand/img/manos.webp") center/cover;
+  mix-blend-mode:multiply;opacity:.6}
+.quote__forma{position:absolute;left:-9%;top:-12%;width:min(50%,640px);aspect-ratio:1;
+  background-image:url("/brand/img/lab-biotech.webp");
+  -webkit-mask-image:url("/brand/formas/Hospitalar_forma1.png");mask-image:url("/brand/formas/Hospitalar_forma1.png");
+  -webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background-size:cover;background-position:center}
+.quote__in{position:relative;max-width:var(--max);margin:0 auto;padding:clamp(80px,9vw,132px) var(--pad);
+  display:flex;justify-content:flex-end}
+.quote figure{margin:0;max-width:min(560px,58%)}
+.quote blockquote{margin:0;font-family:var(--display);font-weight:400;font-size:clamp(20px,2.3vw,30px);
+  line-height:1.28;letter-spacing:-.02em}
+.quote figcaption{margin-top:26px;font-size:13px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.72)}
+.quote .hcont{background:#fff;color:var(--violeta);padding:13px 36px 22px 20px;margin-bottom:24px;
+  clip-path:polygon(0 0,100% 0,100% 100%,42% 100%,42% 62%,0 62%)}
+.quote .hcont span{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+
+/* ---------- CTA de cierre (de C) ---------- */
+.cta{position:relative;overflow:hidden;background:var(--violeta-950);isolation:isolate}
+.cta__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;
+  filter:saturate(.45) brightness(.62);mix-blend-mode:multiply}
+.cta::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,var(--violeta-950) 18%,rgba(30,26,77,.55) 58%,rgba(30,26,77,.15))}
+.cta__forma{position:absolute;left:0;bottom:0;z-index:2;width:min(38%,480px);aspect-ratio:1.5;--forma-color:var(--violeta-3);opacity:.4;
+  -webkit-mask-image:url("/brand/formas/Hospitalar_forma4.png");mask-image:url("/brand/formas/Hospitalar_forma4.png")}
+.cta__in{position:relative;z-index:3;max-width:var(--max);margin:0 auto;padding:clamp(80px,9vw,128px) var(--pad);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:40px;align-items:end}
+.cta h2{max-width:17ch;text-transform:lowercase}
+
+/* ---------- Footer ---------- */
+.foot__in{max-width:var(--max);margin:0 auto;padding:clamp(56px,6vw,88px) var(--pad) 34px;
+  display:grid;grid-template-columns:minmax(0,3fr) repeat(3,minmax(0,2fr));gap:40px}
+.foot h4{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--naranja-3);margin-bottom:14px}
+.foot li{font-size:15px;line-height:1.85;color:rgba(255,255,255,.6)}
+.foot__logo{width:210px;margin-bottom:18px}
+.foot__bar div{max-width:var(--max);margin:0 auto;padding:18px var(--pad);display:flex;gap:22px;
+  font-size:13px;color:rgba(255,255,255,.38)}
+
+/* ---------- Entrada por scroll (stagger 60ms, sin escala) ---------- */
+.rv{opacity:0;transform:translateY(14px);transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out)}
+.rv.is-in{opacity:1;transform:none}
+/* revelado de imagen por clip-path */
+.clipin{clip-path:inset(0 0 100% 0);transition:clip-path 620ms var(--ease-out)}
+.clipin.is-in{clip-path:inset(0 0 0 0)}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:opacity 200ms linear}
+  .clipin{clip-path:none;transition:none}
+  .hero__forma{transform:none!important}
+  .hero__meta i{transform:scaleX(1)}
+}
+
+@media (max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}.tri{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .nav__links{display:none}
+  .hero__sil{display:none}
+  .hero__meta{grid-template-columns:1fr 1fr}
+  .quote__in{justify-content:flex-start}.quote figure{max-width:none}.quote__forma{opacity:.55}
+  .cta__in,.foot__in{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav__in">
+    <img class="nav__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+    <div class="nav__links">
+      <a href="#" class="is-active">Inicio</a>
+      <a href="#spec">Especialidades</a>
+      <a href="#serv">Servicios</a>
+      <a href="#marcas">Marcas</a>
+      <a href="#">Novedades</a>
+    </div>
+    <a class="btn btn--primary" href="#cta">COTIZAR <span class="arw">→</span></a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero__forma forma forma--1" id="heroForma"></div>
+  <img class="hero__sil" src="/brand/img/silueta-3.png" alt="">
+  <div class="hero__in">
+    <p class="eyebrow hero__eyebrow rv">40 años uniendo tecnología y vida</p>
+    <h1 class="rv">tecnología médica que <em>sostiene</em> decisiones críticas</h1>
+    <p class="lead rv">Venta, distribución, asesoría y servicios biomédicos para clínicas privadas, especialistas e instituciones públicas en toda Venezuela.</p>
+    <div class="hero__cta rv">
+      <a class="btn btn--primary" href="#cta">Solicitar cotización <span class="arw">→</span></a>
+      <a class="btn btn--ghost-light" href="#spec">Ver especialidades</a>
+    </div>
+  </div>
+  <div class="hero__meta rv" id="heroMeta">
+    <div><i></i><p class="data">40</p><span>años de trayectoria</span></div>
+    <div><i></i><p class="data">12</p><span>especialidades atendidas</span></div>
+    <div><i></i><p class="data">3</p><span>sedes: Caracas, Barquisimeto y Maturín</span></div>
+  </div>
+</header>
+
+<section class="marcas" id="marcas">
+  <p class="marcas__lbl">Representaciones exclusivas en Venezuela</p>
+  <div class="marquee">
+    <div class="marquee__track" aria-label="Marcas representadas">
+      <img src="/logos/siemens-logo-diapo-REV-1-400x143.png" alt="Siemens Healthineers">
+      <img src="/logos/Drager-logo-diapo-400x143.png" alt="Dräger">
+      <img src="/logos/medtronic-logo-diapo-400x143.png" alt="Medtronic">
+      <img src="/logos/Olympud-logo-rev-1-400x143.png" alt="Olympus">
+      <img src="/logos/esaote-logo-diapo-400x143.png" alt="Esaote">
+      <img src="/logos/Cochlear-logo-diapo-rev-2-400x143.png" alt="Cochlear">
+      <img src="/logos/Sony-logo-diapo-400x143.png" alt="Sony">
+      <img src="/logos/Barco-logo-diapo-400x143.png" alt="Barco">
+      <img src="/logos/Sonoscape-logo-diapo-400x143.png" alt="SonoScape">
+      <img src="/logos/inmode-logo-diapo-400x143.png" alt="InMode">
+      <img src="/logos/candela-logo-diapo-400x143.png" alt="Candela">
+      <img src="/logos/hydrafacial-logo-diapo-400x143.png" alt="Hydrafacial">
+      <img src="/logos/Deka-logo-diapo.png" alt="Deka">
+      <img src="/logos/mobile-odt-logo-diapo-400x143.png" alt="MobileODT">
+    </div>
+    <div class="marquee__track" aria-hidden="true">
+      <img src="/logos/siemens-logo-diapo-REV-1-400x143.png" alt="">
+      <img src="/logos/Drager-logo-diapo-400x143.png" alt="">
+      <img src="/logos/medtronic-logo-diapo-400x143.png" alt="">
+      <img src="/logos/Olympud-logo-rev-1-400x143.png" alt="">
+      <img src="/logos/esaote-logo-diapo-400x143.png" alt="">
+      <img src="/logos/Cochlear-logo-diapo-rev-2-400x143.png" alt="">
+      <img src="/logos/Sony-logo-diapo-400x143.png" alt="">
+      <img src="/logos/Barco-logo-diapo-400x143.png" alt="">
+      <img src="/logos/Sonoscape-logo-diapo-400x143.png" alt="">
+      <img src="/logos/inmode-logo-diapo-400x143.png" alt="">
+      <img src="/logos/candela-logo-diapo-400x143.png" alt="">
+      <img src="/logos/hydrafacial-logo-diapo-400x143.png" alt="">
+      <img src="/logos/Deka-logo-diapo.png" alt="">
+      <img src="/logos/mobile-odt-logo-diapo-400x143.png" alt="">
+    </div>
+  </div>
+</section>
+
+<section class="light section" id="spec">
+  <div class="wrap">
+    <div class="rv" style="display:flex;justify-content:space-between;align-items:end;gap:32px;margin-bottom:40px;flex-wrap:wrap">
+      <div>
+        <p class="eyebrow" style="color:var(--naranja)">Especialidades</p>
+        <h2 class="display-l" style="margin-top:16px;text-transform:lowercase">soluciones por área clínica</h2>
+      </div>
+      <p class="body-s" style="max-width:34ch">Equipos, consumibles y soporte biomédico especializado, con respaldo técnico local en cada línea.</p>
+    </div>
+    <div class="grid">
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg><h3 class="title-s">Imagenología</h3><p>18 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M4 14h4l2-5 3 10 2-5h5"/></svg><h3 class="title-s">Anestesiología</h3><p>9 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.6-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5C19 15.4 12 20 12 20z"/></svg><h3 class="title-s">Cardiología</h3><p>14 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 21c0-4 3-6 6-6s6 2 6 6"/></svg><h3 class="title-s">Ginecología y obstetricia</h3><p>11 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12"/><path d="M8 6V4h8v2M9 12h6"/></svg><h3 class="title-s">Cuidados intensivos</h3><p>16 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M5 5h6v6l6 8H9l-4-6z"/></svg><h3 class="title-s">Laboratorio clínico</h3><p>22 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M12 4v8m0 0 5 4M12 12l-5 4"/><circle cx="12" cy="4" r="2"/></svg><h3 class="title-s">Otorrinolaringología</h3><p>7 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M6 18 18 6M9 6h9v9"/></svg><h3 class="title-s">Dermatología estética</h3><p>13 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M4 18V8m5 10V5m5 13v-7m5 7V9"/></svg><h3 class="title-s">Neumonología</h3><p>8 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M7 4h10v6a5 5 0 0 1-10 0z"/><path d="M12 15v5M9 20h6"/></svg><h3 class="title-s">Oftalmología</h3><p>10 equipos</p></a>
+      <a class="cell rv" href="#"><span class="cell__bar"></span><svg class="cell__ico" viewBox="0 0 24 24"><path d="M5 12h4l2 6 2-12 2 6h4"/></svg><h3 class="title-s">Neurología</h3><p>6 equipos</p></a>
+      <a class="cell cell--cta rv" href="#"><p class="eyebrow" style="color:var(--naranja-3);margin-bottom:auto">Catálogo</p><h3 class="title-s" style="font-size:19px">Ver el catálogo completo <span class="arw">→</span></h3></a>
+    </div>
+  </div>
+</section>
+
+<section class="light section" id="serv" style="padding-top:0">
+  <div class="wrap">
+    <div class="rv" style="margin-bottom:40px">
+      <p class="eyebrow" style="color:var(--verde)">Ciclo completo</p>
+      <h2 class="display-l" style="margin-top:16px;text-transform:lowercase">antes, durante y después de la compra</h2>
+    </div>
+    <div class="tri">
+      <article class="tcard rv" style="--accent:var(--violeta)">
+        <div class="tcard__forma forma forma--3"></div>
+        <p class="tcard__n">01 — ASESORÍA</p>
+        <h3 class="display-m">Proyectos especiales</h3>
+        <p class="body-s">Estudio del espacio, selección técnica y equipamiento integral del servicio, hasta la puesta en marcha.</p>
+      </article>
+      <article class="tcard rv" style="--accent:var(--naranja)">
+        <div class="tcard__forma forma forma--1"></div>
+        <p class="tcard__n">02 — OPERACIÓN</p>
+        <h3 class="display-m">Soporte técnico</h3>
+        <p class="body-s">Ingenieros biomédicos certificados por fábrica, repuestos originales y mantenimiento preventivo programado.</p>
+      </article>
+      <article class="tcard rv" style="--accent:var(--verde)">
+        <div class="tcard__forma forma forma--2"></div>
+        <p class="tcard__n">03 — FUTURO</p>
+        <h3 class="display-m">Educación continua</h3>
+        <p class="body-s">Formación permanente para las nuevas generaciones médicas y actualización del personal en cada tecnología.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="quote">
+  <div class="quote__bg"></div>
+  <div class="quote__forma clipin"></div>
+  <div class="quote__in">
+    <figure class="rv">
+      <div class="hcont"><span>Confianza</span></div>
+      <blockquote>“La respuesta técnica de Hospitalar sostiene la operación diaria de nuestro servicio.”</blockquote>
+      <figcaption>Lic. Charlo Andrade — Clínica Santa Sofía, Caracas</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="cta" id="cta">
+  <img class="cta__img" src="/brand/img/manos-estetoscopio.webp" alt="">
+  <div class="cta__forma"></div>
+  <div class="cta__in">
+    <div class="rv">
+      <p class="eyebrow" style="color:var(--naranja-3)">Cotización</p>
+      <h2 class="display-l" style="margin:18px 0 20px">hablemos de lo que su servicio necesita</h2>
+      <p class="lead" style="color:rgba(255,255,255,.8)">Un asesor especializado en su área clínica responde en menos de 24 horas hábiles.</p>
+    </div>
+    <div class="rv" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a class="btn btn--primary" href="#">Cotizar <span class="arw">→</span></a>
+      <a class="btn btn--ghost-light" href="#">Servicio técnico</a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot__in">
+    <div>
+      <img class="foot__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+      <p class="body-s" style="color:rgba(255,255,255,.58);max-width:30ch">Unimos tecnología y vida.</p>
+    </div>
+    <div><h4>Caracas</h4><ul><li>Av. Principal de Los Ruices</li><li>+58 212 000 0000</li></ul></div>
+    <div><h4>Barquisimeto</h4><ul><li>Av. Los Leones</li><li>+58 251 000 0000</li></ul></div>
+    <div><h4>Maturín</h4><ul><li>Av. Alirio Ugarte Pelayo</li><li>+58 291 000 0000</li></ul></div>
+  </div>
+  <div class="foot__bar"><div><span>© 2026 Hospitalar</span><span>Aviso legal</span><span>Privacidad</span></div></div>
+</footer>
+
+<nav class="labbar">
+  <span>MOCKUP LAB</span>
+  <a href="/mockups/">Índice</a>
+  <a href="/mockups/a.html">A</a>
+  <a href="/mockups/b.html">B</a>
+  <a href="/mockups/c.html">C</a>
+  <a href="/mockups/d.html" aria-current="page">D · Mezcla</a>
+  <span class="sp">Header de C · hero de A · carrusel automático · especialidades de B · sin bordes · formas como máscara</span>
+</nav>
+
+<script>
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* Entradas escalonadas — 60ms entre hermanos, nunca más de 4 de retraso */
+const io = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.classList.add('is-in');
+  io.unobserve(e.target);
+}), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+
+document.querySelectorAll('.rv').forEach(el => {
+  const sibs = [...(el.parentElement?.children || [])].filter(n => n.classList.contains('rv'));
+  el.style.transitionDelay = Math.max(0, Math.min(sibs.indexOf(el), 5)) * 60 + 'ms';
+  io.observe(el);
+});
+
+/* Un elemento con clip-path: inset(0 0 100%) tiene área cero y nunca dispara su
+   propio IntersectionObserver: se observa el contenedor y se revela desde ahí. */
+const ioClip = new IntersectionObserver((es) => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  e.target.querySelectorAll('.clipin').forEach(c => c.classList.add('is-in'));
+  ioClip.unobserve(e.target);
+}), { threshold: .18 });
+document.querySelectorAll('.clipin').forEach(c => ioClip.observe(c.parentElement));
+
+/* Header: fondo y compactado sólo cuando hace falta */
+const nav = document.getElementById('nav');
+addEventListener('scroll', () => nav.classList.toggle('is-stuck', scrollY > 12), { passive: true });
+
+/* Parallax con resorte en la forma del hero (decorativo: interpolado, no atado 1:1) */
+if (!reduced) {
+  const forma = document.getElementById('heroForma');
+  let target = 0, current = 0, raf = null;
+  const tick = () => {
+    current += (target - current) * 0.08;          // resorte simple: 8% del delta por frame
+    forma.style.transform = `translate3d(0, ${current.toFixed(2)}px, 0)`;
+    raf = Math.abs(target - current) > .1 ? requestAnimationFrame(tick) : null;
+  };
+  addEventListener('scroll', () => {
+    target = Math.min(scrollY * 0.16, 90);
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+}
+</script>
+</body>
+</html>
