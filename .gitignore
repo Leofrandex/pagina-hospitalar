@@ -44,3 +44,8 @@ next-env.d.ts
 .agent/
 .claude/
 scratchpad_*.md
+
+# fuentes de diseño originales (PSD, .ai, JPG sin optimizar) — quedan en local,
+# lo que usa la web vive optimizado en public/brand/
+/diseno/
+/Manual Corporativo, Scalto (1).pdf
