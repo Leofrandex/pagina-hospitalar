@@ -137,23 +137,6 @@ body{background:var(--page);color:var(--tx)}
 .resenas{position:relative;background:var(--sec-1);overflow:hidden}
 .resenas__fx{position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--resenas-fx)}
 .resenas > .wrap{position:relative;z-index:1}
-.rlist{columns:3;column-gap:14px}
-.rcard{margin:0 0 14px;break-inside:avoid;position:relative;overflow:hidden;
-  background:var(--card);border-radius:var(--r-md);padding:clamp(24px,2.2vw,32px);
-  transition:background 220ms var(--ease-hover),transform 240ms var(--ease-out)}
-.rcard__mark{position:absolute;right:-16%;top:-22%;width:52%;aspect-ratio:1;--forma-color:var(--naranja);opacity:.12;
-  transition:transform 520ms var(--ease-out)}
-.rcard blockquote{margin:0;position:relative;font-size:16px;line-height:1.6;color:var(--tx)}
-.rcard--wide blockquote{font-weight:300;font-size:clamp(17px,1.45vw,20px);line-height:1.5}
-.rcard figcaption{margin-top:20px;position:relative;display:flex;flex-direction:column;gap:3px}
-.rcard figcaption strong{font-weight:600;font-size:14.5px;letter-spacing:.02em}
-.rcard figcaption span{font-size:13px;color:var(--tx-dim)}
-.rcard figcaption::before{content:"";display:block;width:22px;height:2px;border-radius:2px;background:var(--naranja);margin-bottom:12px}
-@media (hover:hover) and (pointer:fine){
-  .rcard:hover{background:var(--card-hover);transform:translateY(-3px)}
-  .rcard:hover .rcard__mark{transform:translate(-6%,6%) rotate(-3deg)}
-}
-
 /* ---------- CTA ---------- */
 .cta{position:relative;overflow:hidden;background:var(--violeta-950);isolation:isolate;
   border-radius:var(--r-xl) var(--r-xl) 0 0;color:#fff}
@@ -189,20 +172,23 @@ body{background:var(--page);color:var(--tx)}
   .hero__meta i{transform:scaleX(1)}
 }
 
-@media (max-width:1180px){.quad{grid-template-columns:repeat(2,1fr)}.rlist{columns:2}}
+
+@media (max-width:1180px){.quad{grid-template-columns:repeat(2,1fr)}
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:1024px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:900px){
   .nav__links{display:none}
   .hero__silwrap{display:none}
   .hero__meta{grid-template-columns:1fr 1fr}
-  .rlist{columns:1}
+  .bento{grid-template-columns:1fr;grid-auto-rows:auto}
+  .rcard--xl,.rcard--wide{grid-column:span 1}
   .cta__in,.foot__in{grid-template-columns:1fr}
   .marquee img{height:34px}
 }
 """
 
 DARK = r"""
-:root{
+:root[data-theme="dark"], [data-theme="hybrid"] [data-sec="dark"]{
   --page:var(--violeta-950);
   --tx:#fff; --tx-dim:rgba(255,255,255,.62);
   --sec-1:transparent; --sec-2:rgba(255,255,255,.035);
@@ -219,11 +205,14 @@ DARK = r"""
   --glow-a:rgba(89,78,156,.55); --glow-b:rgba(53,46,135,.6); --glow-c:rgba(242,106,54,.10);
   --dots:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
   --resenas-fx:radial-gradient(44rem 30rem at 50% 0%, rgba(89,78,156,.35), transparent 70%);
+  --switch-bg:rgba(255,255,255,.14); --switch-knob:#fff; --switch-ico-on:var(--violeta-950); --switch-ico-off:rgba(255,255,255,.55);
+  --dot:rgba(255,255,255,.22);
+  --logo-pos:0; --logo-neg:1; --mk-white:block; --mk-dark:none;
 }
 """
 
 LIGHT = r"""
-:root{
+:root[data-theme="light"], [data-theme="hybrid"] [data-sec="light"]{
   --page:#fff;
   --tx:var(--ink); --tx-dim:var(--gris-600);
   --sec-1:transparent; --sec-2:var(--hueso);
@@ -240,11 +229,92 @@ LIGHT = r"""
   --glow-a:rgba(108,98,169,.16); --glow-b:rgba(53,46,135,.10); --glow-c:rgba(242,106,54,.10);
   --dots:radial-gradient(rgba(53,46,135,.055) 1px, transparent 1px);
   --resenas-fx:radial-gradient(44rem 30rem at 50% 0%, rgba(108,98,169,.16), transparent 70%);
+  --switch-bg:rgba(53,46,135,.14); --switch-knob:var(--violeta); --switch-ico-on:#fff; --switch-ico-off:var(--gris-400);
+  --dot:rgba(53,46,135,.2);
+  --logo-pos:1; --logo-neg:0; --mk-white:none; --mk-dark:block;
 }
 /* En claro el botón fantasma del hero invierte a violeta */
 .btn--ghost:hover{background:var(--violeta);color:#fff}
-/* El logotipo del nav va en positivo */
-.nav__logo{filter:none}
+"""
+
+THEME_EXTRA = r"""
+/* El logotipo cambia de versión según el tema: se cruzan dos imágenes. */
+.nav__logo,.foot__logo{position:relative}
+.logoswap{position:relative;display:block;width:176px;height:auto}
+.logoswap img{display:block;width:100%;transition:opacity 200ms var(--ease-hover)}
+.logoswap img + img{position:absolute;inset:0}
+.logoswap .is-pos{opacity:var(--logo-pos)}
+.logoswap .is-neg{opacity:var(--logo-neg)}
+/* Los logos de marcas: blancos sobre oscuro, oscuros sobre claro */
+.marquee .is-white{display:var(--mk-white)}
+.marquee .is-dark{display:var(--mk-dark)}
+
+/* ---------- Modo híbrido: cada sección pinta su propio fondo ---------- */
+[data-theme="hybrid"] .bgfx{display:none}
+[data-theme="hybrid"] [data-sec]{background-color:var(--page);color:var(--tx);
+  background-image:var(--dots);background-size:22px 22px}
+[data-theme="hybrid"] .hero{background-color:var(--hero-bg)}
+[data-theme="hybrid"] .nav{background-color:transparent;background-image:none}
+[data-theme="hybrid"] .nav.is-stuck{background-color:var(--nav-bg)}
+[data-theme="hybrid"] .cta,[data-theme="hybrid"] .foot{background-color:var(--violeta-950)}
+/* Costura entre bloques de distinto tono */
+[data-theme="hybrid"] .serv{border-radius:var(--r-xl);margin-inline:clamp(0px,1.4vw,20px)}
+
+/* ---------- Interruptor de tema ---------- */
+.tswitch{position:relative;width:58px;height:30px;border-radius:999px;background:var(--switch-bg);
+  display:inline-flex;align-items:center;flex:0 0 auto;
+  transition:background var(--dur-hover) var(--ease-hover)}
+.tswitch:active{transform:scale(.97)}
+.tswitch__knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:999px;background:var(--switch-knob);
+  transition:transform 260ms var(--ease-out),background var(--dur-hover) var(--ease-hover)}
+[data-theme="light"] .tswitch__knob{transform:translateX(28px)}
+[data-theme="hybrid"] .tswitch__knob{transform:translateX(14px);
+  background:linear-gradient(100deg,var(--violeta-950) 0 50%,#fff 50% 100%)}
+.tswitch__i{position:absolute;width:15px;height:15px;stroke-width:1.7;fill:none;stroke-linecap:round;
+  transition:opacity 200ms var(--ease-hover)}
+.tswitch__i--moon{left:7px;stroke:var(--switch-ico-on);fill:none}
+.tswitch__i--sun{right:7px;stroke:var(--switch-ico-off)}
+[data-theme="light"] .tswitch__i--moon{stroke:var(--switch-ico-off)}
+[data-theme="light"] .tswitch__i--sun{stroke:var(--switch-ico-on)}
+
+/* ---------- Reseñas: bento compacto ----------
+   Retícula de 4 columnas con filas de altura fija. Las reseñas largas ocupan
+   dos celdas (una de ellas, dos filas); las cortas, una. El hueco que sobra lo
+   toma una pieza de dato. Mismas 8 reseñas completas, ~40% menos de altura. */
+.bento{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:stretch}
+.rcard{position:relative;margin:0;overflow:hidden;background:var(--card);border-radius:var(--r-md);
+  padding:clamp(22px,1.9vw,28px);display:flex;flex-direction:column;justify-content:space-between;
+  transition:background 220ms var(--ease-hover),transform 240ms var(--ease-out)}
+.rcard--wide{grid-column:span 2}
+.rcard--xl{grid-column:span 2}
+.rcard__mark{position:absolute;right:-14%;bottom:-20%;width:46%;aspect-ratio:1;--forma-color:var(--naranja);opacity:.13;
+  transition:transform 520ms var(--ease-out)}
+.rcard blockquote{margin:0;position:relative;font-weight:300;font-size:clamp(14.5px,1.15vw,16px);line-height:1.5;color:var(--tx)}
+.rcard--xl blockquote{font-size:clamp(16px,1.35vw,18.5px);line-height:1.45}
+.rcard figcaption{margin-top:18px;position:relative;display:flex;flex-direction:column;gap:2px}
+.rcard figcaption strong{font-weight:600;font-size:14px;letter-spacing:.02em}
+.rcard figcaption span{font-size:12.5px;color:var(--tx-dim);line-height:1.35}
+.rcard figcaption::before{content:"";display:block;width:20px;height:2px;border-radius:2px;background:var(--naranja);margin-bottom:10px}
+@media (hover:hover) and (pointer:fine){
+  .rcard:hover{background:var(--card-hover);transform:translateY(-3px)}
+  .rcard:hover .rcard__mark{transform:translate(-6%,-6%) rotate(-3deg)}
+}
+.rstat{background:var(--violeta);color:#fff;border-radius:var(--r-md);padding:clamp(22px,1.9vw,28px);
+  display:flex;flex-direction:column;justify-content:flex-end}
+.rstat .data{color:#fff}
+.rstat span{display:block;margin-top:10px;font-size:13px;font-weight:600;letter-spacing:.03em;color:rgba(255,255,255,.72)}
+/* Revelado progresivo: nada se recorta, sólo se muestra en dos tiempos. */
+.rcard.is-extra{display:none}
+.bento.is-open .rcard.is-extra{display:flex}
+.rmore{display:flex;justify-content:center;margin-top:20px}
+.bento.is-open ~ .rmore{display:none}
+.rcta{background:var(--naranja);color:#fff;border-radius:var(--r-md);padding:clamp(22px,1.9vw,28px);
+  display:flex;flex-direction:column;justify-content:space-between;gap:16px;
+  transition:background 200ms var(--ease-hover),transform 240ms var(--ease-out)}
+.rcta span{font-size:13px;font-weight:600;letter-spacing:.03em;color:rgba(255,255,255,.85)}
+.rcta strong{font-family:var(--display);font-weight:400;font-size:17px;line-height:1.2;letter-spacing:-.01em}
+.rcta .arw{display:inline-block;transition:transform var(--dur-hover) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.rcta:hover{background:var(--naranja-dark);transform:translateY(-3px)}.rcta:hover .arw{transform:translateX(4px)}}
 """
 
 SCRIPT = r"""
@@ -265,6 +335,38 @@ document.querySelectorAll('.rv').forEach(el => {
 const nav = document.getElementById('nav');
 addEventListener('scroll', () => nav.classList.toggle('is-stuck', scrollY > 12), { passive: true });
 
+/* ---------- Tema: oscuro · claro · híbrido ---------- */
+const root = document.documentElement;
+const MODES = ['dark', 'light', 'hybrid'];
+const LABEL = { dark: 'oscuro', light: 'claro', hybrid: 'híbrido' };
+const sw = document.getElementById('tswitch');
+const syncSwitch = () => {
+  const m = root.dataset.theme;
+  sw.dataset.mode = m;
+  sw.setAttribute('aria-pressed', m === 'light' ? 'true' : 'false');
+  sw.setAttribute('aria-label', 'Tema ' + LABEL[m] + '. Cambiar de tema');
+  sw.title = 'Tema ' + LABEL[m];
+};
+syncSwitch();
+sw.addEventListener('click', () => {
+  root.dataset.theme = MODES[(MODES.indexOf(root.dataset.theme) + 1) % MODES.length];
+  try { localStorage.setItem('hosp-theme', root.dataset.theme); } catch (e) {}
+  syncSwitch();
+});
+
+/* ---------- Reseñas: revelar las restantes ---------- */
+const bento = document.getElementById('bento');
+const moreBtn = document.getElementById('rmore');
+if (moreBtn) moreBtn.addEventListener('click', () => {
+  bento.classList.add('is-open');
+  moreBtn.setAttribute('aria-expanded', 'true');
+  bento.querySelectorAll('.is-extra').forEach((el, i) => {
+    el.style.opacity = 0; el.style.transform = 'translateY(10px)';
+    el.style.transition = 'opacity 380ms var(--ease-out) ' + (i * 60) + 'ms, transform 380ms var(--ease-out) ' + (i * 60) + 'ms';
+    requestAnimationFrame(() => { el.style.opacity = 1; el.style.transform = 'none'; });
+  });
+});
+
 /* Parallax con resorte en la forma del hero: interpolado, no atado 1:1 al scroll */
 if (!reduced) {
   const forma = document.getElementById('heroForma');
@@ -281,8 +383,22 @@ if (!reduced) {
 }
 """
 
-def page(title, theme_css, logo, logos_dir, labbar_current, note):
-    b = body.replace("{{LOGO}}", logo).replace("{{L}}", logos_dir)
+import json
+REVIEWS = json.load(open(os.path.join(HERE, "_reviews.json"), encoding="utf-8"))
+
+LOGO = """<span class="logoswap nav__logo">
+      <img class="is-pos" src="/brand/logo/hospitalar-cp.svg" alt="Hospitalar">
+      <img class="is-neg" src="/brand/logo/hospitalar-neg.svg" alt="">
+    </span>"""
+
+def build(theme, note, current):
+    b = body.replace("{{LOGO}}", "").replace('<img class="nav__logo" src="" alt="Hospitalar">', LOGO)
+    import re as _re
+    b = _re.sub(r'<img src="\{\{L\}\}/([^"]+)"([^>]*)>',
+                lambda m: '<img class="is-white" src="/logos/%s"%s><img class="is-dark" src="/brand/logos-dark/%s"%s>'
+                          % (m.group(1), m.group(2), m.group(1), m.group(2)), b)
+    def mark(f, name):
+        return ' aria-current="page"' if f == current else ''
     bar = """
 <nav class="labbar">
   <span>MOCKUP LAB</span>
@@ -290,20 +406,24 @@ def page(title, theme_css, logo, logos_dir, labbar_current, note):
   <a href="/mockups/a.html">A</a>
   <a href="/mockups/b.html">B</a>
   <a href="/mockups/c.html">C</a>
-  <a href="/mockups/d.html"%s>D · oscuro</a>
+  <a href="/mockups/d.html"%s>D · híbrido</a>
+  <a href="/mockups/d-dark.html"%s>D · oscuro</a>
   <a href="/mockups/d-light.html"%s>D · claro</a>
   <span class="sp">%s</span>
-</nav>""" % (' aria-current="page"' if labbar_current == "d" else "",
-             ' aria-current="page"' if labbar_current == "dl" else "", note)
+</nav>""" % (mark("hybrid", current), mark("dark", current), mark("light", current), note)
+    boot = """(function(){var t='%s';try{var v=localStorage.getItem('hosp-theme-page-%s');if(v)t=v}catch(e){}
+document.documentElement.dataset.theme=t})();""" % (theme, theme)
     return f"""<!doctype html>
-<html lang="es">
+<html lang="es" data-theme="{theme}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title}</title>
+<title>Hospitalar · Dirección D — {LABELS[theme]}</title>
+<meta name="color-scheme" content="dark light">
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
+<script>{boot}</script>
 <link rel="stylesheet" href="/mockups/tokens.css">
-<style>{theme_css}{COMMON}</style>
+<style>{DARK}{LIGHT}{THEME_EXTRA}{COMMON}</style>
 </head>
 <body>
 <div class="bgfx" aria-hidden="true"></div>
@@ -314,12 +434,12 @@ def page(title, theme_css, logo, logos_dir, labbar_current, note):
 </html>
 """
 
+LABELS = {"hybrid": "híbrido", "dark": "oscuro", "light": "claro"}
+
 open(os.path.join(HERE, "d.html"), "w", encoding="utf-8").write(
-    page("Hospitalar · Dirección D — oscuro", DARK, "/brand/logo/hospitalar-neg.svg", "/logos", "d",
-         "D oscuro · reseñas reales · marcas grandes · esquinas redondeadas"))
-
+    build("hybrid", "D híbrido · secciones claras y oscuras alternadas · reseñas en bento", "hybrid"))
+open(os.path.join(HERE, "d-dark.html"), "w", encoding="utf-8").write(
+    build("dark", "D oscuro · variante pura", "dark"))
 open(os.path.join(HERE, "d-light.html"), "w", encoding="utf-8").write(
-    page("Hospitalar · Dirección D — claro", LIGHT, "/brand/logo/hospitalar-cp.svg", "/brand/logos-dark", "dl",
-         "D claro · mismas piezas sobre superficies claras"))
-
-print("generados d.html y d-light.html")
+    build("light", "D claro · variante pura", "light"))
+print("generados d.html (híbrido), d-dark.html y d-light.html")

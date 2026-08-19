@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hospitalar · Reseñas — propuestas de retícula</title>
+<link rel="icon" href="/brand/logo/isotipo-cp.png">
+<link rel="stylesheet" href="/mockups/tokens.css">
+<style>
+body{background:#fff;color:var(--ink)}
+.head{background:var(--violeta);color:#fff}
+.head__in{max-width:var(--max);margin:0 auto;padding:clamp(40px,5vw,68px) var(--pad)}
+.prop{padding-block:clamp(48px,5vw,72px)}
+.prop:nth-child(even){background:var(--hueso)}
+.phead{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:26px}
+.phead h2{font-size:clamp(22px,2.2vw,30px);letter-spacing:-.02em;text-transform:lowercase}
+.tag{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#fff;background:var(--violeta);
+  padding:5px 11px;border-radius:999px}
+.tag--h{background:var(--naranja)}
+.note{font-size:14.5px;color:var(--gris-600);max-width:70ch;margin-bottom:26px}
+
+.g{display:grid;gap:14px}
+.g1,.g2{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(4,minmax(0,1fr))}
+.rc{position:relative;margin:0;background:#fff;border-radius:var(--r-md);padding:26px;
+  display:flex;flex-direction:column;justify-content:space-between}
+.prop:nth-child(even) .rc{background:#fff}
+.prop:nth-child(odd) .rc{background:var(--hueso)}
+.rc blockquote{margin:0;font-weight:300;font-size:15px;line-height:1.5}
+.rc figcaption{margin-top:16px;display:flex;flex-direction:column;gap:2px}
+.rc figcaption::before{content:"";width:20px;height:2px;border-radius:2px;background:var(--naranja);margin-bottom:10px}
+.rc figcaption strong{font-weight:600;font-size:14px}
+.rc figcaption span{font-size:12.5px;color:var(--gris-400);line-height:1.35}
+.w2{grid-column:span 2}
+.feat{grid-column:span 2;grid-row:span 2}
+.feat blockquote{font-size:clamp(17px,1.5vw,20px);line-height:1.45}
+.stat{background:var(--violeta);color:#fff;border-radius:var(--r-md);padding:26px;display:flex;flex-direction:column;justify-content:flex-end}
+.stat .data{color:#fff}
+.stat span{display:block;margin-top:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.72)}
+.ctile{background:var(--naranja);color:#fff;border-radius:var(--r-md);padding:26px;display:flex;flex-direction:column;
+  justify-content:space-between;gap:14px}
+.ctile span{font-size:13px;font-weight:600;color:rgba(255,255,255,.85)}
+.ctile strong{font-family:var(--display);font-weight:400;font-size:17px;line-height:1.2}
+/* Propuesta 3: fila horizontal */
+.railwrap{position:relative}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px;
+  height:330px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.rc--rail{flex:0 0 clamp(300px,29vw,400px);scroll-snap-align:start;height:100%;overflow:hidden}
+.railnav{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+.rbtn{width:38px;height:38px;border-radius:999px;background:var(--hueso);color:var(--ink);
+  display:grid;place-items:center;transition:background 180ms var(--ease-hover),transform 140ms var(--ease-out)}
+.rbtn:hover{background:var(--gris-100)}
+.rbtn:active{transform:scale(.94)}
+.extra{display:none}
+.g2.open .extra{display:flex}
+.more{display:flex;justify-content:center;margin-top:18px}
+.h{margin-top:18px;font-size:13px;font-weight:600;letter-spacing:.04em;color:var(--gris-400)}
+@media (max-width:1024px){.g1,.g2,.g3{grid-template-columns:repeat(2,minmax(0,1fr))}.feat{grid-row:span 1}}
+@media (max-width:680px){.g1,.g2,.g3{grid-template-columns:1fr}.w2,.feat{grid-column:span 1}}
+</style>
+</head>
+<body>
+
+<header class="head"><div class="head__in">
+  <img src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar" style="width:180px;margin-bottom:26px">
+  <p class="eyebrow" style="color:var(--naranja-3)">Reseñas · propuestas de retícula</p>
+  <h1 class="display-m" style="margin-top:14px;text-transform:lowercase">tres maneras de mostrar las 8 reseñas</h1>
+  <p class="lead" style="margin-top:16px;color:rgba(255,255,255,.85)">Ninguna recorta el texto de las reseñas. Cambia cómo se reparte el área y cuánta altura pide la sección.</p>
+</div></header>
+
+<section class="prop"><div class="wrap">
+  <div class="phead"><span class="tag">Propuesta 1</span><h2>bento completo</h2></div>
+  <p class="note">Las 8 reseñas visibles de una vez. Las tres más largas ocupan dos columnas; una pieza de dato y una de llamada cierran la retícula. Es la más generosa y la más alta.</p>
+  <div class="g g1"><figure class="rc "><blockquote>Hospitalar atendió todas mis dudas, con un trato amable y una garantía en los equipos con precios inigualables.</blockquote>
+      <figcaption><strong>Dra. Paola Bravo</strong><span>Radióloga · Clínica Edelmira Araujo</span></figcaption></figure><figure class="rc "><blockquote>Mantenemos relaciones con Hospitalar desde 2018, demostrando alto grado de responsabilidad con las obligaciones contraídas.</blockquote>
+      <figcaption><strong>Lic. Charlo Andrade</strong><span>Gerente de Administración · Clínica Santa Sofía</span></figcaption></figure><figure class="rc "><blockquote>Mantenemos relaciones comerciales con Hospitalar desde 2013, pudiendo dar fe de que los servicios prestados han sido de nuestra entera satisfacción.</blockquote>
+      <figcaption><strong>Ing. Carmen Barrios</strong><span>Directora de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><div class="stat"><p class="data">8</p><span>clientes que lo cuentan</span></div><figure class="rc "><blockquote>Estamos muy agradecidos con el equipo de Hospitalar: la atención y la dedicación han sido buenísimas. Mis compañeras y yo estamos felices utilizando el Eva Colpo.</blockquote>
+      <figcaption><strong>Dra. Gusberly Zambrano</strong><span>Clínica Santa Sofía</span></figcaption></figure><figure class="rc "><blockquote>Hemos mantenido buena relación comercial con Hospitalar. Es una empresa seria y cumplida con las entregas de los equipos láser de alta tecnología, la asesoría y el servicio técnico, por lo que nos permitimos recomendarla ampliamente.</blockquote>
+      <figcaption><strong>Samir Camacho</strong><span>Director de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><figure class="rc w2"><blockquote>Hospitalar es una empresa confiable, de muchos años de experiencia y trayectoria, siempre atenta a responder y resolver cualquier eventualidad. Además representan grandes marcas del mercado. Mi experiencia en cada equipo que he comprado ha sido excelente.</blockquote>
+      <figcaption><strong>Dr. Víctor Ollarves</strong><span>Médico estético · Unimel Venezuela</span></figcaption></figure><figure class="rc w2"><blockquote>Mi experiencia con Hospitalar estos 14 años ha sido excelente. Importan equipos que están a la vanguardia a nivel internacional, de casas comerciales serias, con un servicio técnico que jamás me ha dejado mal y un equipo de ventas responsable no solo durante la venta sino también en la post venta.</blockquote>
+      <figcaption><strong>Dra. Cristina Premerl</strong><span>Médico estético</span></figcaption></figure><figure class="rc w2"><blockquote>La experiencia que nos brindó Hospitalar fue excelente en calidad de atención, demostración de los equipos y orientación sobre los productos; genera confianza. No solo por la adquisición, también por el soporte técnico durante el uso del equipo. Es una empresa transparente, que ofrece opciones adaptadas a la necesidad de cada cliente en medios y tiempos de pago.</blockquote>
+      <figcaption><strong>Dra. Gisela</strong><span>Clínica Nueva Caracas</span></figcaption></figure><a class="ctile" href="#"><span>¿Quiere ser el próximo?</span><strong>Hablar con un asesor →</strong></a></div>
+  <p class="h" id="h1"></p>
+</div></section>
+
+<section class="prop"><div class="wrap">
+  <div class="phead"><span class="tag tag--h">Propuesta 2 · en uso</span><h2>bento con revelado</h2></div>
+  <p class="note">Arranca con 6 reseñas y las dos más largas quedan tras un botón. Nada se recorta: se muestra en dos tiempos. La sección arranca a poco más de la mitad de altura.</p>
+  <div class="g g2" id="g2"><figure class="rc "><blockquote>Hospitalar atendió todas mis dudas, con un trato amable y una garantía en los equipos con precios inigualables.</blockquote>
+      <figcaption><strong>Dra. Paola Bravo</strong><span>Radióloga · Clínica Edelmira Araujo</span></figcaption></figure><figure class="rc "><blockquote>Mantenemos relaciones con Hospitalar desde 2018, demostrando alto grado de responsabilidad con las obligaciones contraídas.</blockquote>
+      <figcaption><strong>Lic. Charlo Andrade</strong><span>Gerente de Administración · Clínica Santa Sofía</span></figcaption></figure><figure class="rc "><blockquote>Mantenemos relaciones comerciales con Hospitalar desde 2013, pudiendo dar fe de que los servicios prestados han sido de nuestra entera satisfacción.</blockquote>
+      <figcaption><strong>Ing. Carmen Barrios</strong><span>Directora de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><div class="stat"><p class="data">8</p><span>clientes que lo cuentan</span></div><figure class="rc "><blockquote>Estamos muy agradecidos con el equipo de Hospitalar: la atención y la dedicación han sido buenísimas. Mis compañeras y yo estamos felices utilizando el Eva Colpo.</blockquote>
+      <figcaption><strong>Dra. Gusberly Zambrano</strong><span>Clínica Santa Sofía</span></figcaption></figure><figure class="rc "><blockquote>Hemos mantenido buena relación comercial con Hospitalar. Es una empresa seria y cumplida con las entregas de los equipos láser de alta tecnología, la asesoría y el servicio técnico, por lo que nos permitimos recomendarla ampliamente.</blockquote>
+      <figcaption><strong>Samir Camacho</strong><span>Director de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><figure class="rc w2"><blockquote>Hospitalar es una empresa confiable, de muchos años de experiencia y trayectoria, siempre atenta a responder y resolver cualquier eventualidad. Además representan grandes marcas del mercado. Mi experiencia en cada equipo que he comprado ha sido excelente.</blockquote>
+      <figcaption><strong>Dr. Víctor Ollarves</strong><span>Médico estético · Unimel Venezuela</span></figcaption></figure><a class="ctile" href="#"><span>¿Quiere ser el próximo?</span><strong>Hablar con un asesor →</strong></a><figure class="rc w2 extra"><blockquote>Mi experiencia con Hospitalar estos 14 años ha sido excelente. Importan equipos que están a la vanguardia a nivel internacional, de casas comerciales serias, con un servicio técnico que jamás me ha dejado mal y un equipo de ventas responsable no solo durante la venta sino también en la post venta.</blockquote>
+      <figcaption><strong>Dra. Cristina Premerl</strong><span>Médico estético</span></figcaption></figure><figure class="rc w2 extra"><blockquote>La experiencia que nos brindó Hospitalar fue excelente en calidad de atención, demostración de los equipos y orientación sobre los productos; genera confianza. No solo por la adquisición, también por el soporte técnico durante el uso del equipo. Es una empresa transparente, que ofrece opciones adaptadas a la necesidad de cada cliente en medios y tiempos de pago.</blockquote>
+      <figcaption><strong>Dra. Gisela</strong><span>Clínica Nueva Caracas</span></figcaption></figure></div>
+  <div class="more"><button class="btn btn--secondary" type="button" id="more2">Ver las 2 restantes ↓</button></div>
+  <p class="h" id="h2"></p>
+</div></section>
+
+<section class="prop"><div class="wrap">
+  <div class="phead"><span class="tag">Propuesta 3</span><h2>fila horizontal</h2></div>
+  <p class="note">Altura fija y las 8 reseñas en una sola fila que se desplaza a mano (arrastre, rueda o flechas), con anclaje por tarjeta. Es la más compacta con diferencia y no tiene rotación automática, así que no salta ni se corta a medio movimiento.</p>
+  <div class="railwrap">
+    <div class="rail g3" id="rail"><figure class="rc rc--rail"><blockquote>Mi experiencia con Hospitalar estos 14 años ha sido excelente. Importan equipos que están a la vanguardia a nivel internacional, de casas comerciales serias, con un servicio técnico que jamás me ha dejado mal y un equipo de ventas responsable no solo durante la venta sino también en la post venta.</blockquote>
+      <figcaption><strong>Dra. Cristina Premerl</strong><span>Médico estético</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Hospitalar es una empresa confiable, de muchos años de experiencia y trayectoria, siempre atenta a responder y resolver cualquier eventualidad. Además representan grandes marcas del mercado. Mi experiencia en cada equipo que he comprado ha sido excelente.</blockquote>
+      <figcaption><strong>Dr. Víctor Ollarves</strong><span>Médico estético · Unimel Venezuela</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Hemos mantenido buena relación comercial con Hospitalar. Es una empresa seria y cumplida con las entregas de los equipos láser de alta tecnología, la asesoría y el servicio técnico, por lo que nos permitimos recomendarla ampliamente.</blockquote>
+      <figcaption><strong>Samir Camacho</strong><span>Director de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><figure class="rc rc--rail"><blockquote>La experiencia que nos brindó Hospitalar fue excelente en calidad de atención, demostración de los equipos y orientación sobre los productos; genera confianza. No solo por la adquisición, también por el soporte técnico durante el uso del equipo. Es una empresa transparente, que ofrece opciones adaptadas a la necesidad de cada cliente en medios y tiempos de pago.</blockquote>
+      <figcaption><strong>Dra. Gisela</strong><span>Clínica Nueva Caracas</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Mantenemos relaciones con Hospitalar desde 2018, demostrando alto grado de responsabilidad con las obligaciones contraídas.</blockquote>
+      <figcaption><strong>Lic. Charlo Andrade</strong><span>Gerente de Administración · Clínica Santa Sofía</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Mantenemos relaciones comerciales con Hospitalar desde 2013, pudiendo dar fe de que los servicios prestados han sido de nuestra entera satisfacción.</blockquote>
+      <figcaption><strong>Ing. Carmen Barrios</strong><span>Directora de Cadena de Suministros · Hospital de Clínicas Caracas</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Hospitalar atendió todas mis dudas, con un trato amable y una garantía en los equipos con precios inigualables.</blockquote>
+      <figcaption><strong>Dra. Paola Bravo</strong><span>Radióloga · Clínica Edelmira Araujo</span></figcaption></figure><figure class="rc rc--rail"><blockquote>Estamos muy agradecidos con el equipo de Hospitalar: la atención y la dedicación han sido buenísimas. Mis compañeras y yo estamos felices utilizando el Eva Colpo.</blockquote>
+      <figcaption><strong>Dra. Gusberly Zambrano</strong><span>Clínica Santa Sofía</span></figcaption></figure></div>
+    <div class="railnav">
+      <button class="rbtn" type="button" id="rleft" aria-label="Anterior">←</button>
+      <button class="rbtn" type="button" id="rright" aria-label="Siguiente">→</button>
+    </div>
+  </div>
+  <p class="h" id="h3"></p>
+</div></section>
+
+<nav class="labbar">
+  <span>MOCKUP LAB</span>
+  <a href="/mockups/">Índice</a>
+  <a href="/mockups/d.html">D · híbrido</a>
+  <a href="/mockups/d-dark.html">D · oscuro</a>
+  <a href="/mockups/d-light.html">D · claro</a>
+  <a href="/mockups/resenas.html" aria-current="page">Reseñas · propuestas</a>
+  <span class="sp">Compare altura y jerarquía; ninguna recorta el texto</span>
+</nav>
+
+<script>
+const g2 = document.getElementById('g2');
+document.getElementById('more2').addEventListener('click', (e) => {
+  g2.classList.add('open'); e.target.remove(); measure();
+});
+function measure(){
+  const p = (id, sel) => document.getElementById(id).textContent =
+    'Altura de la retícula: ' + Math.round(document.querySelector(sel).getBoundingClientRect().height) + ' px';
+  p('h1','.g1'); p('h2','.g2');
+  document.getElementById('h3').textContent = 'Altura de la fila: ' + Math.round(document.querySelector('.rail').getBoundingClientRect().height) + ' px (fija)';
+}
+addEventListener('load', measure);
+const rail = document.getElementById('rail');
+const step = () => rail.querySelector('.rc--rail').getBoundingClientRect().width + 14;
+document.getElementById('rleft').addEventListener('click', () => rail.scrollBy({left:-step(), behavior:'smooth'}));
+document.getElementById('rright').addEventListener('click', () => rail.scrollBy({left:step(), behavior:'smooth'}));
+</script>
+</body>
+</html>

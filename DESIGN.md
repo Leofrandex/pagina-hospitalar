@@ -273,6 +273,18 @@ El fondo plano se sentía vacío. Se resuelve con una capa fija `.bgfx` detrás 
 
 Regla: la textura nunca compite con el texto. Si un halo cae detrás de un párrafo, se mueve el halo.
 
+### 7.2 Modo híbrido de superficies
+
+Cada sección declara su tono con `data-sec="dark|light"`. En modo híbrido esos atributos activan los tokens de superficie de esa sección; en los modos puros se ignoran y manda `data-theme` en la raíz. Todo lo que depende del tono —logo positivo/negativo, versión blanca u oscura de los logos de marcas, color de iconos, trama de puntos— se resuelve con **variables**, no con selectores de tema, para que herede por sección sin duplicar reglas.
+
+Ritmo actual del híbrido: hero oscuro → marcas y especialidades claras → ciclo de servicios oscuro → reseñas claras → CTA y footer oscuros.
+
+### 7.3 Reseñas: bento con revelado progresivo
+
+Ocho reseñas completas no caben en poca altura sin recortar texto, y recortar testimonios reales no es una opción. La solución adoptada: retícula de 4 columnas con 6 reseñas visibles (las dos más largas ocupan dos columnas), una pieza de dato y una de llamada; las dos restantes se revelan con un botón. **706px** en vez de los 1030px de la retícula tipo mampostería, sin tocar una palabra.
+
+Se descartó el carrusel rotatorio automático: con reseñas de largos muy distintos, cada cambio saltaba de alto y el movimiento se sentía brusco.
+
 ---
 
 ## 8. Movimiento
@@ -382,10 +394,12 @@ python -m http.server 4321 --directory public     # o: npm run lab
 | `…/mockups/a.html` | **A · Apoyo** — editorial institucional, fondo violeta con formas, foto silueteada |
 | `…/mockups/b.html` | **B · Contenedor** — grilla suiza clara, Fondo 1 (foto + violeta 60%), buscador protagonista |
 | `…/mockups/c.html` | **C · Sistema** — violeta profundo técnico, forma 4, índice de datos |
-| `…/mockups/d.html` | **D · oscuro** — la dirección elegida (§11) |
-| `…/mockups/d-light.html` | **D · claro** — mismas piezas sobre superficies claras |
+| `…/mockups/d.html` | **D · híbrido** — la dirección elegida (§11): secciones claras y oscuras alternadas |
+| `…/mockups/d-dark.html` | **D · oscuro** — variante pura |
+| `…/mockups/d-light.html` | **D · claro** — variante pura |
+| `…/mockups/resenas.html` | Tres propuestas de retícula para las reseñas, con su altura medida |
 
-Las dos variantes de D se generan desde `public/mockups/_d-body.html` + `public/mockups/_build-d.py` (`python public/mockups/_build-d.py`): comparten estructura y sólo cambian los tokens de superficie, así no se desincronizan mientras se decide cuál queda.
+Las tres variantes de D se generan desde `public/mockups/_d-body.html` + `public/mockups/_build-d.py` (`python public/mockups/_build-d.py`): comparten estructura y sólo cambian los tokens de superficie, así no se desincronizan mientras se decide cuál queda.
 
 Los tres comparten `public/mockups/tokens.css`, que es la implementación literal de los tokens de §9. Cuando se elija dirección, ese archivo se traduce al `@theme` de Tailwind y los mockups quedan como referencia congelada.
 
@@ -395,7 +409,8 @@ Los tres comparten `public/mockups/tokens.css`, que es la implementación litera
 
 1. ~~Dirección visual~~ — **resuelta**: dirección D (§11).
 2. ~~Patrón de recorte de botón (`h-notch`)~~ — **descartado**: el cliente pidió esquinas redondeadas (§6.1).
-2b. **Variante de superficie**: oscura (`d.html`) vs. clara (`d-light.html`) — pendiente de elegir.
+2b. **Variante de superficie**: híbrida (`d.html`, por defecto), oscura pura o clara pura — el interruptor del header cicla los tres modos y el modo se recuerda por página.
+2c. **Retícula de reseñas**: tres propuestas en `resenas.html` — bento completo (956px), bento con revelado (706px, el que está en uso) y fila horizontal de altura fija (330px).
 3. ~~Vectorización de las formas~~ — **resuelta** con máscara CSS (§5.1); vectorizar a SVG queda como mejora opcional de nitidez.
 4. **Licencia de Myriad Pro para web** vs. sustitución por Source Sans 3.
 5. **Densidad de la grilla de especialidades** (12 ítems: 4×3 vs. 6×2 vs. lista indexada).
