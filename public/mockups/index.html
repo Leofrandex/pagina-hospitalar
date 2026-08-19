@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Hospitalar · Mockup Lab</title>
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
 <link rel="stylesheet" href="/mockups/tokens.css">
@@ -15,6 +16,7 @@ body{background:var(--hueso)}
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:12px}
 .dir{background:#fff;display:flex;flex-direction:column;transition:border-color 200ms var(--ease-hover),transform 200ms var(--ease-hover)}
 .dir:hover{transform:translateY(-3px)}
+.dir--wide:hover{transform:none}
 .dir__thumb{aspect-ratio:16/10;position:relative;overflow:hidden}
 .dir__thumb img{width:100%;height:100%;object-fit:cover}
 .dir__thumb .veil{position:absolute;inset:0}
@@ -42,17 +44,41 @@ body{background:var(--hueso)}
   <img class="head__forma" src="/brand/formas/Hospitalar_forma1.png" alt="">
   <div class="head__in">
     <img class="logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
-    <p class="eyebrow" style="color:var(--naranja-3)">Mockup Lab · rediseño 2026</p>
-    <h1 class="display-l" style="margin-top:18px;text-transform:lowercase">cuatro direcciones, un mismo design system</h1>
-    <p class="lead" style="margin-top:22px;color:rgba(255,255,255,.85)">Las cuatro cumplen al 100% el manual de marca (colores, tipografías, formas complementarias y fondos aprobados). Lo que cambia es la <strong>dirección</strong>: densidad, punto de entrada y temperatura. Elija una — o dígame qué tomar de cada una.</p>
+    <p class="eyebrow" style="color:var(--naranja-3)">Rediseño 2026 · propuesta de diseño</p>
+    <h1 class="display-l" style="margin-top:18px;text-transform:lowercase">la nueva web de hospitalar</h1>
+    <p class="lead" style="margin-top:22px;color:rgba(255,255,255,.85)">Todo lo que ve aquí sale del manual de marca: colores Pantone, Syncopate y Myriad, las cuatro formas complementarias y los fondos aprobados. La propuesta actual es la <strong>dirección D</strong>; debajo quedan las tres exploraciones que la originaron.</p>
+    <p class="body-s" style="margin-top:18px;color:rgba(255,255,255,.55)">Contenido real: las 12 especialidades, las marcas representadas y las 8 reseñas de clientes del sitio actual. Los enlaces del pie permiten saltar entre piezas.</p>
   </div>
 </header>
 
 <section class="section--tight" style="padding-top:clamp(48px,5vw,72px)">
   <div class="wrap">
+    <div class="dir dir--wide" style="display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:stretch">
+      <div class="dir__thumb" style="aspect-ratio:auto;border-bottom:0"><img src="/brand/img/silueta-3.png" alt="" style="object-fit:cover;object-position:left top;background:var(--violeta)"><div class="veil" style="background:linear-gradient(90deg,rgba(53,46,135,.15),var(--violeta))"></div></div>
+      <div class="dir__b" style="padding:clamp(28px,3vw,44px)">
+        <p class="eyebrow" style="color:var(--naranja)">Dirección D · seleccionada</p>
+        <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">mezcla refinada</h3>
+        <p class="body-s">Header de C, hero de A, carrusel automático de marcas, grilla de especialidades de B y el mundo oscuro de C para el resto. Sin bordes de 1px: la separación se hace con superficie, aire y recorte. Las formas del manual entran como máscara recolorable y el testimonial usa el Fondo 2 (foto dentro de la forma).</p>
+        <ul>
+          <li>Movimiento según Emil Kowalski: curvas fuertes, &lt;300ms, sólo transform y opacity</li>
+          <li>Carrusel infinito con pausa al hover y respeto a prefers-reduced-motion</li>
+          <li>Las 8 reseñas reales de clientes, en bento con revelado progresivo</li>
+          <li>Tres modos de superficie: híbrido (por sección), oscuro y claro</li>
+        </ul>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px">
+          <a class="btn btn--primary" href="/lab/d">Ver híbrido <span class="arw">→</span></a>
+          <a class="btn btn--secondary" href="/lab/d-dark">Sólo oscuro</a>
+          <a class="btn btn--secondary" href="/lab/d-light">Sólo claro</a>
+          <a class="btn btn--secondary" href="/lab/resenas">Reseñas: 3 propuestas</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="eyebrow" style="color:var(--naranja);margin:56px 0 6px">Exploraciones previas</p>
+    <p class="body-s" style="margin-bottom:24px;max-width:60ch">Tres caminos que se probaron antes de llegar a la dirección D. Se conservan como registro de por qué el diseño terminó donde terminó.</p>
     <div class="cards">
 
-      <a class="dir" href="/mockups/a.html">
+      <a class="dir" href="/lab/a">
         <div class="dir__thumb"><img src="/brand/img/silueta-3.png" alt="" style="object-fit:contain;background:var(--violeta)"><div class="veil" style="background:linear-gradient(180deg,transparent 40%,rgba(53,46,135,.9))"></div></div>
         <div class="dir__b">
           <p class="eyebrow" style="color:var(--naranja)">Dirección A</p>
@@ -67,7 +93,7 @@ body{background:var(--hueso)}
         </div>
       </a>
 
-      <a class="dir" href="/mockups/b.html">
+      <a class="dir" href="/lab/b">
         <div class="dir__thumb"><img src="/brand/img/lab-biotech.webp" alt=""><div class="veil" style="background:var(--violeta);opacity:.6"></div></div>
         <div class="dir__b">
           <p class="eyebrow" style="color:var(--naranja)">Dirección B</p>
@@ -82,7 +108,7 @@ body{background:var(--hueso)}
         </div>
       </a>
 
-      <a class="dir" href="/mockups/c.html">
+      <a class="dir" href="/lab/c">
         <div class="dir__thumb"><img src="/brand/img/tech-abstract.webp" alt=""><div class="veil" style="background:var(--violeta-950);opacity:.66"></div></div>
         <div class="dir__b">
           <p class="eyebrow" style="color:var(--naranja)">Dirección C</p>
@@ -98,27 +124,6 @@ body{background:var(--hueso)}
       </a>
 
     </div>
-
-    <a class="dir" href="/mockups/d.html" style="margin-top:24px;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:stretch">
-      <div class="dir__thumb" style="aspect-ratio:auto;border-bottom:0"><img src="/brand/img/silueta-3.png" alt="" style="object-fit:cover;object-position:left top;background:var(--violeta)"><div class="veil" style="background:linear-gradient(90deg,rgba(53,46,135,.15),var(--violeta))"></div></div>
-      <div class="dir__b" style="padding:clamp(28px,3vw,44px)">
-        <p class="eyebrow" style="color:var(--naranja)">Dirección D · seleccionada</p>
-        <h3 class="display-m" style="margin-top:10px;text-transform:lowercase">mezcla refinada</h3>
-        <p class="body-s">Header de C, hero de A, carrusel automático de marcas, grilla de especialidades de B y el mundo oscuro de C para el resto. Sin bordes de 1px: la separación se hace con superficie, aire y recorte. Las formas del manual entran como máscara recolorable y el testimonial usa el Fondo 2 (foto dentro de la forma).</p>
-        <ul>
-          <li>Movimiento según Emil Kowalski: curvas fuertes, &lt;300ms, sólo transform y opacity</li>
-          <li>Carrusel infinito con pausa al hover y respeto a prefers-reduced-motion</li>
-          <li>Las 8 reseñas reales de clientes, en bento con revelado progresivo</li>
-          <li>Tres modos de superficie: híbrido (por sección), oscuro y claro</li>
-        </ul>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:22px">
-          <span class="btn btn--primary">Ver híbrido <span class="arw">→</span></span>
-          <a class="btn btn--secondary" href="/mockups/d-dark.html">Sólo oscuro</a>
-          <a class="btn btn--secondary" href="/mockups/d-light.html">Sólo claro</a>
-          <a class="btn btn--secondary" href="/mockups/resenas.html">Reseñas: 3 propuestas</a>
-        </div>
-      </div>
-    </a>
   </div>
 </section>
 
@@ -167,14 +172,14 @@ body{background:var(--hueso)}
 
 <nav class="labbar">
   <span>MOCKUP LAB</span>
-  <a href="/mockups/" aria-current="page">Índice</a>
-  <a href="/mockups/a.html">A · Apoyo</a>
-  <a href="/mockups/b.html">B · Contenedor</a>
-  <a href="/mockups/c.html">C · Sistema</a>
-  <a href="/mockups/d.html">D · híbrido</a>
-  <a href="/mockups/d-dark.html">D · oscuro</a>
-  <a href="/mockups/d-light.html">D · claro</a>
-  <a href="/mockups/resenas.html">Reseñas</a>
+  <a href="/lab" aria-current="page">Índice</a>
+  <a href="/lab/a">A · Apoyo</a>
+  <a href="/lab/b">B · Contenedor</a>
+  <a href="/lab/c">C · Sistema</a>
+  <a href="/lab/d">D · híbrido</a>
+  <a href="/lab/d-dark">D · oscuro</a>
+  <a href="/lab/d-light">D · claro</a>
+  <a href="/lab/resenas">Reseñas</a>
   <span class="sp">DESIGN.md · rama redesign</span>
 </nav>
 </body>

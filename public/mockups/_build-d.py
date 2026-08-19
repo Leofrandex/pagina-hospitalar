@@ -402,13 +402,13 @@ def build(theme, note, current):
     bar = """
 <nav class="labbar">
   <span>MOCKUP LAB</span>
-  <a href="/mockups/">Índice</a>
-  <a href="/mockups/a.html">A</a>
-  <a href="/mockups/b.html">B</a>
-  <a href="/mockups/c.html">C</a>
-  <a href="/mockups/d.html"%s>D · híbrido</a>
-  <a href="/mockups/d-dark.html"%s>D · oscuro</a>
-  <a href="/mockups/d-light.html"%s>D · claro</a>
+  <a href="/lab">Índice</a>
+  <a href="/lab/a">A</a>
+  <a href="/lab/b">B</a>
+  <a href="/lab/c">C</a>
+  <a href="/lab/d"%s>D · híbrido</a>
+  <a href="/lab/d-dark"%s>D · oscuro</a>
+  <a href="/lab/d-light"%s>D · claro</a>
   <span class="sp">%s</span>
 </nav>""" % (mark("hybrid", current), mark("dark", current), mark("light", current), note)
     boot = """(function(){var t='%s';try{var v=localStorage.getItem('hosp-theme-page-%s');if(v)t=v}catch(e){}
@@ -418,6 +418,7 @@ document.documentElement.dataset.theme=t})();""" % (theme, theme)
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
 <title>Hospitalar · Dirección D — {LABELS[theme]}</title>
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
