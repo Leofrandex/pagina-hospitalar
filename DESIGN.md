@@ -283,7 +283,7 @@ Ritmo actual del híbrido: hero oscuro → marcas y especialidades claras → ci
 
 Ocho reseñas completas no caben en poca altura sin recortar texto, y recortar testimonios reales no es una opción. La solución adoptada: retícula de 4 columnas con 6 reseñas visibles (las dos más largas ocupan dos columnas), una pieza de dato y una de llamada; las dos restantes se revelan con un botón. **706px** en vez de los 1030px de la retícula tipo mampostería, sin tocar una palabra.
 
-Se descartó el carrusel rotatorio automático: con reseñas de largos muy distintos, cada cambio saltaba de alto y el movimiento se sentía brusco.
+Se descartó el carrusel rotatorio automático: con reseñas de largos muy distintos, cada cambio saltaba de alto y el movimiento se sentía brusco. **Decisión cerrada por el cliente el 18/08/2026.**
 
 ---
 
@@ -410,7 +410,7 @@ Los tres comparten `public/mockups/tokens.css`, que es la implementación litera
 1. ~~Dirección visual~~ — **resuelta**: dirección D (§11).
 2. ~~Patrón de recorte de botón (`h-notch`)~~ — **descartado**: el cliente pidió esquinas redondeadas (§6.1).
 2b. **Variante de superficie**: híbrida (`d.html`, por defecto), oscura pura o clara pura — el interruptor del header cicla los tres modos y el modo se recuerda por página.
-2c. **Retícula de reseñas**: tres propuestas en `resenas.html` — bento completo (956px), bento con revelado (706px, el que está en uso) y fila horizontal de altura fija (330px).
+2c. ~~Retícula de reseñas~~ — **resuelta el 18/08/2026: propuesta 2, bento con revelado progresivo** (706px). La propuesta 1 (bento completo, 956px) queda descartada por altura; la 3 (fila horizontal de 330px fijos) queda en reserva para páginas interiores. Las tres siguen visibles en `resenas.html` como registro.
 3. ~~Vectorización de las formas~~ — **resuelta** con máscara CSS (§5.1); vectorizar a SVG queda como mejora opcional de nitidez.
 4. **Licencia de Myriad Pro para web** vs. sustitución por Source Sans 3.
 5. **Densidad de la grilla de especialidades** (12 ítems: 4×3 vs. 6×2 vs. lista indexada).
