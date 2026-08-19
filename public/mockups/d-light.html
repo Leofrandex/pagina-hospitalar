@@ -3,28 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Hospitalar · Dirección D — oscuro</title>
+<title>Hospitalar · Dirección D — claro</title>
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
 <link rel="stylesheet" href="/mockups/tokens.css">
 <style>
 :root{
-  --page:var(--violeta-950);
-  --tx:#fff; --tx-dim:rgba(255,255,255,.62);
-  --sec-1:transparent; --sec-2:rgba(255,255,255,.035);
-  --card:rgba(255,255,255,.055); --card-hover:rgba(255,255,255,.095); --card-2:rgba(255,255,255,.05);
-  --ico:#fff;
-  --nav-bg:rgba(30,26,77,.82); --nav-link:rgba(255,255,255,.7); --nav-link-on:#fff;
-  --accent-eyebrow:var(--naranja-3);
-  --hero-bg:var(--violeta); --hero-bg-solid:var(--violeta); --hero-tx:#fff; --hero-tx-dim:rgba(255,255,255,.85);
-  --hero-em:var(--naranja-3); --hero-forma:var(--violeta-4); --hero-forma-op:.5;
-  --hero-sil-op:.78; --hero-sil-blend:luminosity;
-  --hero-fx:radial-gradient(60rem 40rem at 12% 108%, rgba(108,98,169,.55), transparent 70%);
-  --ghost-line:rgba(255,255,255,.6); --ghost-tx:#fff;
-  --marcas-bg:transparent; --logo-op:.72; --logo-filter:none;
-  --glow-a:rgba(89,78,156,.55); --glow-b:rgba(53,46,135,.6); --glow-c:rgba(242,106,54,.10);
-  --dots:radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px);
-  --resenas-fx:radial-gradient(44rem 30rem at 50% 0%, rgba(89,78,156,.35), transparent 70%);
+  --page:#fff;
+  --tx:var(--ink); --tx-dim:var(--gris-600);
+  --sec-1:transparent; --sec-2:var(--hueso);
+  --card:var(--hueso); --card-hover:#EEECF7; --card-2:#fff;
+  --ico:var(--violeta);
+  --nav-bg:rgba(255,255,255,.88); --nav-link:var(--gris-600); --nav-link-on:var(--violeta);
+  --accent-eyebrow:var(--naranja);
+  --hero-bg:var(--hueso); --hero-bg-solid:var(--hueso); --hero-tx:var(--ink); --hero-tx-dim:var(--gris-600);
+  --hero-em:var(--naranja); --hero-forma:var(--violeta-4); --hero-forma-op:.3;
+  --hero-sil-op:1; --hero-sil-blend:normal;
+  --hero-fx:radial-gradient(58rem 38rem at 8% 104%, rgba(108,98,169,.20), transparent 72%);
+  --ghost-line:var(--violeta); --ghost-tx:var(--violeta);
+  --marcas-bg:transparent; --logo-op:.55; --logo-filter:grayscale(1);
+  --glow-a:rgba(108,98,169,.16); --glow-b:rgba(53,46,135,.10); --glow-c:rgba(242,106,54,.10);
+  --dots:radial-gradient(rgba(53,46,135,.055) 1px, transparent 1px);
+  --resenas-fx:radial-gradient(44rem 30rem at 50% 0%, rgba(108,98,169,.16), transparent 70%);
 }
+/* En claro el botón fantasma del hero invierte a violeta */
+.btn--ghost:hover{background:var(--violeta);color:#fff}
+/* El logotipo del nav va en positivo */
+.nav__logo{filter:none}
 
 /* ===== Dirección D — mezcla refinada =========================================
    · Sin vértices a 90°: todo con radio (tokens --r-*).
@@ -225,7 +229,7 @@ body{background:var(--page);color:var(--tx)}
 <div class="bgfx" aria-hidden="true"></div>
 <nav class="nav" id="nav">
   <div class="nav__in">
-    <img class="nav__logo" src="/brand/logo/hospitalar-neg.svg" alt="Hospitalar">
+    <img class="nav__logo" src="/brand/logo/hospitalar-cp.svg" alt="Hospitalar">
     <div class="nav__links">
       <a href="#" class="is-active">Inicio</a>
       <a href="#spec">Especialidades</a>
@@ -265,38 +269,38 @@ body{background:var(--page);color:var(--tx)}
   </div>
   <div class="marquee rv">
     <div class="marquee__track" aria-label="Marcas representadas">
-      <img src="/logos/siemens-logo-diapo-REV-1-400x143.png" alt="Siemens Healthineers">
-      <img src="/logos/Drager-logo-diapo-400x143.png" alt="Dräger">
-      <img src="/logos/medtronic-logo-diapo-400x143.png" alt="Medtronic">
-      <img src="/logos/Olympud-logo-rev-1-400x143.png" alt="Olympus">
-      <img src="/logos/esaote-logo-diapo-400x143.png" alt="Esaote">
-      <img src="/logos/Cochlear-logo-diapo-rev-2-400x143.png" alt="Cochlear">
-      <img src="/logos/Sony-logo-diapo-400x143.png" alt="Sony">
-      <img src="/logos/Barco-logo-diapo-400x143.png" alt="Barco">
-      <img src="/logos/Sonoscape-logo-diapo-400x143.png" alt="SonoScape">
-      <img src="/logos/inmode-logo-diapo-400x143.png" alt="InMode">
-      <img src="/logos/candela-logo-diapo-400x143.png" alt="Candela Medical">
-      <img src="/logos/hydrafacial-logo-diapo-400x143.png" alt="Hydrafacial">
-      <img src="/logos/Deka-logo-diapo.png" alt="Deka Laser">
-      <img src="/logos/hyun-laser-400x143.png" alt="Hyun Laser">
-      <img src="/logos/mobile-odt-logo-diapo-400x143.png" alt="MobileODT">
+      <img src="/brand/logos-dark/siemens-logo-diapo-REV-1-400x143.png" alt="Siemens Healthineers">
+      <img src="/brand/logos-dark/Drager-logo-diapo-400x143.png" alt="Dräger">
+      <img src="/brand/logos-dark/medtronic-logo-diapo-400x143.png" alt="Medtronic">
+      <img src="/brand/logos-dark/Olympud-logo-rev-1-400x143.png" alt="Olympus">
+      <img src="/brand/logos-dark/esaote-logo-diapo-400x143.png" alt="Esaote">
+      <img src="/brand/logos-dark/Cochlear-logo-diapo-rev-2-400x143.png" alt="Cochlear">
+      <img src="/brand/logos-dark/Sony-logo-diapo-400x143.png" alt="Sony">
+      <img src="/brand/logos-dark/Barco-logo-diapo-400x143.png" alt="Barco">
+      <img src="/brand/logos-dark/Sonoscape-logo-diapo-400x143.png" alt="SonoScape">
+      <img src="/brand/logos-dark/inmode-logo-diapo-400x143.png" alt="InMode">
+      <img src="/brand/logos-dark/candela-logo-diapo-400x143.png" alt="Candela Medical">
+      <img src="/brand/logos-dark/hydrafacial-logo-diapo-400x143.png" alt="Hydrafacial">
+      <img src="/brand/logos-dark/Deka-logo-diapo.png" alt="Deka Laser">
+      <img src="/brand/logos-dark/hyun-laser-400x143.png" alt="Hyun Laser">
+      <img src="/brand/logos-dark/mobile-odt-logo-diapo-400x143.png" alt="MobileODT">
     </div>
     <div class="marquee__track" aria-hidden="true">
-      <img src="/logos/siemens-logo-diapo-REV-1-400x143.png" alt="">
-      <img src="/logos/Drager-logo-diapo-400x143.png" alt="">
-      <img src="/logos/medtronic-logo-diapo-400x143.png" alt="">
-      <img src="/logos/Olympud-logo-rev-1-400x143.png" alt="">
-      <img src="/logos/esaote-logo-diapo-400x143.png" alt="">
-      <img src="/logos/Cochlear-logo-diapo-rev-2-400x143.png" alt="">
-      <img src="/logos/Sony-logo-diapo-400x143.png" alt="">
-      <img src="/logos/Barco-logo-diapo-400x143.png" alt="">
-      <img src="/logos/Sonoscape-logo-diapo-400x143.png" alt="">
-      <img src="/logos/inmode-logo-diapo-400x143.png" alt="">
-      <img src="/logos/candela-logo-diapo-400x143.png" alt="">
-      <img src="/logos/hydrafacial-logo-diapo-400x143.png" alt="">
-      <img src="/logos/Deka-logo-diapo.png" alt="">
-      <img src="/logos/hyun-laser-400x143.png" alt="">
-      <img src="/logos/mobile-odt-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/siemens-logo-diapo-REV-1-400x143.png" alt="">
+      <img src="/brand/logos-dark/Drager-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/medtronic-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/Olympud-logo-rev-1-400x143.png" alt="">
+      <img src="/brand/logos-dark/esaote-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/Cochlear-logo-diapo-rev-2-400x143.png" alt="">
+      <img src="/brand/logos-dark/Sony-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/Barco-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/Sonoscape-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/inmode-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/candela-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/hydrafacial-logo-diapo-400x143.png" alt="">
+      <img src="/brand/logos-dark/Deka-logo-diapo.png" alt="">
+      <img src="/brand/logos-dark/hyun-laser-400x143.png" alt="">
+      <img src="/brand/logos-dark/mobile-odt-logo-diapo-400x143.png" alt="">
     </div>
   </div>
 </section>
@@ -460,9 +464,9 @@ body{background:var(--page);color:var(--tx)}
   <a href="/mockups/a.html">A</a>
   <a href="/mockups/b.html">B</a>
   <a href="/mockups/c.html">C</a>
-  <a href="/mockups/d.html" aria-current="page">D · oscuro</a>
-  <a href="/mockups/d-light.html">D · claro</a>
-  <span class="sp">D oscuro · reseñas reales · marcas grandes · esquinas redondeadas</span>
+  <a href="/mockups/d.html">D · oscuro</a>
+  <a href="/mockups/d-light.html" aria-current="page">D · claro</a>
+  <span class="sp">D claro · mismas piezas sobre superficies claras</span>
 </nav>
 <script>
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

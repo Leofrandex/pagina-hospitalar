@@ -118,6 +118,20 @@ Nivel 1 = color principal. Niveles 2–4 se usan para formas complementarias, fo
 
 ---
 
+## 3.4 Contenido real verificado (fuente: hospitalarve.com, leído el 18/08/2026)
+
+Datos que corrigen lo que se había asumido en los primeros mockups:
+
+- **La empresa opera desde 1982** → **43 años**, no 40.
+- **Las 12 especialidades reales** son: Diagnóstico por Imagen · Ginecología y Obstetricia · Cardiología · Dermoestética · Cirugía · Gastroenterología · Anestesia · ORL · Emergencia · Esterilización · Neonatología · Urología.
+- **Los cuatro servicios** son: Proyectos especiales · Actualización de equipos médicos · Hospitales llave en mano · Educación continua.
+- **Contacto:** contigo@hospitalarve.com · +58 424 194 1573. Sedes: Caracas (Av. Francisco de Miranda, Centro Seguros La Paz, piso 7, local O-71), Barquisimeto (Av. Los Abogados), Maturín (Av. Andrés Eloy Blanco, Centro Profesional Cristina, piso 2, of. C05).
+- **8 reseñas reales con nombre, cargo e institución** (Dra. Cristina Premerl, Dr. Víctor Ollarves, Samir Camacho, Dra. Gisela, Lic. Charlo Andrade, Ing. Carmen Barrios, Dra. Paola Bravo, Dra. Gusberly Zambrano). Se usan las ocho, completas, en la sección "Clientes".
+
+> ⚠️ El sitio actual muestra un bloque *"Based on 4,500+ reviews · Trusted Score 4.8/5.0"* que **no se reproduce** en el rediseño: parece texto de plantilla y no hay fuente que lo respalde. Si el cliente puede acreditarlo (Google Business, encuestas propias), se incorpora; mientras tanto queda fuera.
+
+---
+
 ## 4. Logo
 
 **Versiones (manual p.11):** principal (`hospitalar`), con slogan, sintetizada (isotipo "h").
@@ -191,12 +205,18 @@ Tratamiento web: `object-fit: cover`, sin viñeteado negro; el oscurecimiento se
 
 ### 6.1 Geometría y forma
 
-**Principio: recorte, no redondeo.** La marca es die-cut — el radio genérico traiciona la "h". 
+**Decisión del cliente (18/08/2026): fuera los vértices a 90°.** El recorte sigue siendo el gesto de marca (lo aportan las formas y las máscaras), pero las superficies de UI van redondeadas.
 
-- **Radio base: 0** (bordes rectos y limpios) para cards, inputs y contenedores de sección.
-- **Radio 4px** máximo en elementos pequeños interactivos (chips, tags), como "esquinas apenas suavizadas".
-- **Botones: forma de píldora prohibida.** Rectángulo recto, o rectángulo con **una esquina recortada a 45°/step** derivada de la "h" (patrón `h-notch`, a definir en el Lab).
-- Cero `rounded-full` salvo avatares de personas y el widget de WhatsApp.
+| Token | Valor | Uso |
+|---|---|---|
+| `--r-xs` | 8px | Elementos menores, marcas de acento |
+| `--r-sm` | 12px | **Botones** e inputs |
+| `--r-md` | 18px | **Cards, tiles, tarjetas de reseña** |
+| `--r-lg` | 26px | Media y contenedores de imagen |
+| `--r-xl` | 34px | Redondeo de bloque completo (hero, CTA) |
+
+- Los **chips** son píldora (`999px`); los botones **no** (píldora completa en botón queda fuera).
+- El radio nunca se aplica a las formas complementarias: su silueta la define el manual.
 
 ### 6.2 Profundidad y elevación
 
@@ -242,6 +262,16 @@ La separación se hace con **superficie** (blanco sobre `hueso`, `hueso` sobre b
 - **Medida de línea:** 60–75 caracteres para `body`; 45–55 para `lead`.
 - **Asimetría intencional:** los bloques de contenido se apoyan sobre una forma sangrada de un lado — reflejo literal de la "h" (paciente apoyado). Nunca composiciones perfectamente simétricas y centradas.
 - **Breakpoints:** 480 / 768 / 1024 / 1280 / 1536.
+
+### 7.1 Textura de fondo
+
+El fondo plano se sentía vacío. Se resuelve con una capa fija `.bgfx` detrás de todo el contenido, compuesta por tres piezas y nada más:
+
+1. **Tres halos radiales** muy abiertos en violeta nivel 3/4 y un tercero de naranja al 10% — dan profundidad y temperatura sin leerse como degradado.
+2. **Trama de puntos** de 1px cada 22px, al 4-5% de opacidad: da materia y refuerza la idea de instrumento de precisión.
+3. **Formas del manual** como marca de agua dentro de cada bloque (tarjetas de servicio, reseñas destacadas), al 12-20%, con parallax de resorte en el hero.
+
+Regla: la textura nunca compite con el texto. Si un halo cae detrás de un párrafo, se mueve el halo.
 
 ---
 
@@ -352,7 +382,10 @@ python -m http.server 4321 --directory public     # o: npm run lab
 | `…/mockups/a.html` | **A · Apoyo** — editorial institucional, fondo violeta con formas, foto silueteada |
 | `…/mockups/b.html` | **B · Contenedor** — grilla suiza clara, Fondo 1 (foto + violeta 60%), buscador protagonista |
 | `…/mockups/c.html` | **C · Sistema** — violeta profundo técnico, forma 4, índice de datos |
-| `…/mockups/d.html` | **D · Mezcla refinada** — la dirección elegida (§11) |
+| `…/mockups/d.html` | **D · oscuro** — la dirección elegida (§11) |
+| `…/mockups/d-light.html` | **D · claro** — mismas piezas sobre superficies claras |
+
+Las dos variantes de D se generan desde `public/mockups/_d-body.html` + `public/mockups/_build-d.py` (`python public/mockups/_build-d.py`): comparten estructura y sólo cambian los tokens de superficie, así no se desincronizan mientras se decide cuál queda.
 
 Los tres comparten `public/mockups/tokens.css`, que es la implementación literal de los tokens de §9. Cuando se elija dirección, ese archivo se traduce al `@theme` de Tailwind y los mockups quedan como referencia congelada.
 
@@ -361,7 +394,8 @@ Los tres comparten `public/mockups/tokens.css`, que es la implementación litera
 ## 13. Decisiones abiertas (se resuelven en el Mockup Lab, no en este documento)
 
 1. ~~Dirección visual~~ — **resuelta**: dirección D (§11).
-2. **Patrón de recorte de botón** (`h-notch`) — validar legibilidad y factura.
+2. ~~Patrón de recorte de botón (`h-notch`)~~ — **descartado**: el cliente pidió esquinas redondeadas (§6.1).
+2b. **Variante de superficie**: oscura (`d.html`) vs. clara (`d-light.html`) — pendiente de elegir.
 3. ~~Vectorización de las formas~~ — **resuelta** con máscara CSS (§5.1); vectorizar a SVG queda como mejora opcional de nitidez.
 4. **Licencia de Myriad Pro para web** vs. sustitución por Source Sans 3.
 5. **Densidad de la grilla de especialidades** (12 ítems: 4×3 vs. 6×2 vs. lista indexada).

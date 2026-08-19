@@ -22,6 +22,8 @@
   --body:"Myriad Pro","Source Sans 3",system-ui,sans-serif;
   /* Layout */
   --max:1280px; --pad:clamp(20px,5vw,80px);
+  /* Radio — decisión del cliente 18/08/2026: nada de vértices a 90° */
+  --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:26px; --r-xl:34px;
   /* Elevación */
   --elev-1:0 1px 2px rgba(20,17,58,.06);
   --elev-2:0 12px 32px rgba(20,17,58,.12);
@@ -80,7 +82,7 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .section--tight{padding-block:clamp(64px,7vw,104px)}
 
 /* ---------- Botones ---------- */
-.btn{display:inline-flex;align-items:center;gap:.6em;padding:15px 26px;font-weight:600;font-size:13px;letter-spacing:.04em;border-radius:0;transition:background 180ms var(--ease-hover),color 180ms var(--ease-hover),border-color 180ms var(--ease-hover),transform 140ms var(--ease-hover)}
+.btn{display:inline-flex;align-items:center;gap:.6em;padding:15px 26px;font-weight:600;font-size:13px;letter-spacing:.04em;border-radius:var(--r-sm);transition:background 180ms var(--ease-hover),color 180ms var(--ease-hover),border-color 180ms var(--ease-hover),transform 140ms var(--ease-hover)}
 .btn:active{transform:scale(.97)}
 .btn--primary{background:var(--naranja);color:#fff}
 .btn--primary:hover{background:var(--naranja-dark)}
@@ -101,7 +103,7 @@ button{font:inherit;cursor:pointer;border:0;background:none}
 .u-hueso{background:var(--hueso)}
 .u-deep{background:var(--violeta-950);color:#fff}
 .rule{height:1px;background:var(--gris-100);border:0;margin:0}
-.chip{display:inline-block;padding:6px 12px;font-weight:600;font-size:12px;letter-spacing:.04em;border-radius:4px}
+.chip{display:inline-block;padding:6px 13px;font-weight:600;font-size:12px;letter-spacing:.04em;border-radius:999px}
 
 /* ---------- Reveal por scroll ---------- */
 .reveal{opacity:0;transform:translateY(16px);transition:opacity 420ms var(--ease-brand),transform 420ms var(--ease-brand)}
