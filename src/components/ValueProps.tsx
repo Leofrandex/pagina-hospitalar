@@ -46,7 +46,7 @@ export default function ValueProps() {
                 Soporte técnico
               </h3>
               <p className="text-gray-600 leading-relaxed font-light text-left flex-1">
-                Personal técnico local, repuestos garantizados y un tiempo de respuesta inmediato para evitar que su equipo se detenga.
+                Personal técnico local, repuestos garantizados y respuesta inmediata. Nuestro personal es capacitado directamente por las marcas, para una atención actualizada y confiable.
               </p>
             </div>
           </ScrollReveal>

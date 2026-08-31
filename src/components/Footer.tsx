@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Globe, MapPin, Phone, Mail, MessageCircle } from "lucide-react";
+import { sedes } from "@/data/sedes";
 
 export default function Footer() {
   return (
@@ -42,19 +43,23 @@ export default function Footer() {
             <h4 className="font-syncopate font-bold text-white text-sm mb-6 uppercase tracking-wider flex items-center gap-2">
               <MapPin className="w-4 h-4 text-accent" /> Sedes
             </h4>
-            <ul className="space-y-4 text-sm font-light text-gray-400">
-              <li>
-                <strong className="text-white block mb-1">Caracas:</strong> 
-                Av. Francisco de Miranda, Centro Seguros La Paz. Piso 7, Local N°. O-71
-              </li>
-              <li>
-                <strong className="text-white block mb-1">Barquisimeto:</strong>
-                Av los Abogados, Barquisimeto 3001, Estado Lara
-              </li>
-              <li>
-                <strong className="text-white block mb-1">Maturín:</strong>
-                Av. Andrés Eloy Blanco, Centro Profesional Cristina piso 2 oficina Co5 Maturín Edo. Monagas
-              </li>
+            <ul className="space-y-6 text-sm font-light text-gray-400">
+              {sedes.map((sede) => (
+                <li key={sede.ciudad}>
+                  <strong className="text-white block mb-1">{sede.ciudad}:</strong>
+                  <span className="block mb-3">{sede.direccion}</span>
+                  <a
+                    href={sede.maps}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-4 py-2 font-syncopate text-[9px] font-bold uppercase tracking-widest text-white transition-all duration-300 hover:border-accent/40 hover:bg-accent hover:-translate-y-0.5"
+                  >
+                    <MapPin className="w-3.5 h-3.5" />
+                    Cómo llegar
+                    <ArrowUpRight className="w-3 h-3" />
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -83,7 +88,7 @@ export default function Footer() {
                 <li><Link href="#" className="hover:text-accent transition-colors">Nosotros</Link></li>
                 <li><Link href="#" className="hover:text-accent transition-colors">Servicio Técnico</Link></li>
                 <li><Link href="#" className="hover:text-accent transition-colors">Casos de Éxito</Link></li>
-                <li><Link href="#" className="hover:text-accent transition-colors">Novedades y Noticias</Link></li>
+                <li><Link href="/blog" className="hover:text-accent transition-colors">Novedades y Noticias</Link></li>
               </ul>
             </div>
             

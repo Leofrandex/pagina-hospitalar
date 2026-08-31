@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    // Imágenes destacadas del blog, servidas desde el WordPress actual.
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "hospitalarve.com",
+        pathname: "/wp-content/uploads/**",
+      },
+    ],
+  },
   async rewrites() {
     return [
       // Mockup Lab del rediseño: /lab y /lab/<pieza> sirven los HTML de public/mockups.

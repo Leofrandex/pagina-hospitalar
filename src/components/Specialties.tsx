@@ -1,70 +1,102 @@
-import { Activity, HeartPulse, Syringe, Baby, Microscope, Brain, Bone, Eye, Stethoscope, Scissors } from "lucide-react";
+import {
+  Scan,
+  HeartPulse,
+  Syringe,
+  Flower2,
+  Bone,
+  Scissors,
+  Sparkles,
+  Wand2,
+  Slice,
+  Stethoscope,
+  Baby,
+  Ear,
+  Droplets,
+} from "lucide-react";
 import { ScrollReveal } from "./ScrollReveal";
 
-export default function Specialties() {
-  const specialties = [
-    { 
-      name: "Radiología", 
-      icon: Activity, 
-      desc: "Imágenes diagnósticas",
-      products: ["Resonadores", "Tomógrafos", "Rayos X Digital"] 
-    },
-    { 
-      name: "Cardiología", 
-      icon: HeartPulse, 
-      desc: "Cuidado cardiovascular",
-      products: ["Ecógrafos", "Monitores", "Desfibriladores"] 
-    },
-    { 
-      name: "Anestesia", 
-      icon: Syringe, 
-      desc: "Quirófano moderno",
-      products: ["Máquinas de Anestesia", "Monitores de Gases"] 
-    },
-    { 
-      name: "Ginecología", 
-      icon: Baby, 
-      desc: "Atención maternal",
-      products: ["Ecógrafos 4D", "Doppler Fetal", "Mesas Ginecológicas"] 
-    },
-    { 
-      name: "Laboratorio", 
-      icon: Microscope, 
-      desc: "Análisis preciso",
-      products: ["Analizadores", "Microscopios", "Centrífugas"] 
-    },
-    { 
-      name: "Neurología", 
-      icon: Brain, 
-      desc: "Estudios avanzados",
-      products: ["Electroencefalógrafos", "Sistemas EMG", "Mapeo Cerebral"] 
-    },
-    { 
-      name: "Traumatología", 
-      icon: Bone, 
-      desc: "Recuperación física",
-      products: ["Densitómetros", "Fluoroscopia", "Sierras Quirúrgicas"] 
-    },
-    { 
-      name: "Oftalmología", 
-      icon: Eye, 
-      desc: "Visión perfecta",
-      products: ["OCT", "Lámparas de Hendidura", "Láseres Quirúrgicos"] 
-    },
-    { 
-      name: "Medicina General", 
-      icon: Stethoscope, 
-      desc: "Consulta integral",
-      products: ["Ecógrafos Portátiles", "Sistemas de Diagnóstico"] 
-    },
-    { 
-      name: "Quirófano", 
-      icon: Scissors, 
-      desc: "Equipamiento quirúrgico",
-      products: ["Lámparas Cialíticas", "Mesas Quirúrgicas", "Electrobisturí"] 
-    }
-  ];
+const specialties = [
+  {
+    name: "Radiología",
+    icon: Scan,
+    desc: "Imágenes diagnósticas",
+    products: ["Rayos X Digital", "Tomógrafos", "Resonadores", "Arcos en C"],
+  },
+  {
+    name: "Cardiología",
+    icon: HeartPulse,
+    desc: "Cuidado cardiovascular",
+    products: ["Ecógrafos Cardiológicos", "Monitores Multiparámetro", "Desfibriladores", "Electrocardiógrafos"],
+  },
+  {
+    name: "Anestesia",
+    icon: Syringe,
+    desc: "Quirófano moderno",
+    products: ["Máquinas de Anestesia", "Monitores de Gases", "Ventiladores", "Vaporizadores"],
+  },
+  {
+    name: "Ginecología",
+    icon: Flower2,
+    desc: "Atención maternal",
+    products: ["Ecógrafos 4D", "Doppler Fetal", "Mesas Ginecológicas", "Colposcopios"],
+  },
+  {
+    name: "Traumatología",
+    icon: Bone,
+    desc: "Recuperación física",
+    products: ["Densitómetros Óseos", "Arcos en C", "Sierras Quirúrgicas", "Motores Ortopédicos"],
+  },
+  {
+    name: "Quirófano",
+    icon: Scissors,
+    desc: "Equipamiento quirúrgico",
+    products: ["Lámparas Cialíticas", "Mesas Quirúrgicas", "Electrobisturíes", "Torres de Laparoscopia"],
+  },
+  {
+    name: "Medicina Estética",
+    icon: Sparkles,
+    desc: "Tecnología no invasiva",
+    products: ["Láseres Estéticos", "Radiofrecuencia Corporal", "Hydrafacial", "Depilación Láser"],
+  },
+  {
+    name: "Cirugía Plástica",
+    icon: Wand2,
+    desc: "Precisión reconstructiva",
+    products: ["Láseres CO₂ Fraccionados", "Equipos de Liposucción", "Electrobisturíes", "Lámparas Quirúrgicas"],
+  },
+  {
+    name: "Cirugía General",
+    icon: Slice,
+    desc: "Mínima invasión",
+    products: ["Torres de Laparoscopia", "Electrobisturíes", "Insufladores", "Instrumental Quirúrgico"],
+  },
+  {
+    name: "Gastroenterología",
+    icon: Stethoscope,
+    desc: "Endoscopía digestiva",
+    products: ["Videoendoscopios", "Videocolonoscopios", "Torres de Endoscopia", "Lavadoras de Endoscopios"],
+  },
+  {
+    name: "Neonatología",
+    icon: Baby,
+    desc: "Cuidado del recién nacido",
+    products: ["Incubadoras", "Cunas Térmicas", "Ventiladores Neonatales", "Lámparas de Fototerapia"],
+  },
+  {
+    name: "ORL",
+    icon: Ear,
+    desc: "Otorrinolaringología",
+    products: ["Videonasofibroscopios", "Unidades ORL", "Audiómetros", "Implantes Cocleares"],
+  },
+  {
+    name: "Urología",
+    icon: Droplets,
+    desc: "Diagnóstico y tratamiento",
+    products: ["Ecógrafos Urológicos", "Litotriptores", "Resectoscopios", "Cistoscopios"],
+  },
+];
 
+export default function Specialties() {
   return (
     <section className="py-24 bg-white" id="equipos">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,36 +117,45 @@ export default function Specialties() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        {/* Flex en vez de grid: la lista es impar y así la última fila queda centrada. */}
+        <div className="flex flex-wrap justify-center gap-4">
           {specialties.map((item, index) => {
             const Icon = item.icon;
             return (
-              <ScrollReveal key={index} delay={index * 0.05}>
-                <div 
-                  className="group relative h-56 bg-gray-50 border border-transparent rounded-2xl overflow-hidden hover:bg-white hover:border-gray-100 hover:shadow-[0_20px_50px_rgba(53,46,135,0.08)] transition-all duration-500 cursor-pointer flex flex-col justify-center items-center text-center p-6"
-                >
-                  {/* Default State */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 p-4">
-                    <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-500">
-                      <Icon className="w-7 h-7" />
+              <div
+                key={item.name}
+                className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]"
+              >
+                <ScrollReveal delay={(index % 4) * 0.05}>
+                  <div className="group relative h-64 bg-gray-50 border border-transparent rounded-2xl overflow-hidden hover:bg-white hover:border-gray-100 hover:shadow-[0_20px_50px_rgba(53,46,135,0.08)] transition-all duration-500 cursor-pointer flex flex-col justify-center items-center text-center p-6">
+                    {/* Estado por defecto */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 p-4">
+                      <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-500">
+                        <Icon className="w-7 h-7" />
+                      </div>
+                      <h3 className="font-syncopate font-bold text-sm text-primary tracking-wide">{item.name}</h3>
+                      <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest">{item.desc}</p>
                     </div>
-                    <h3 className="font-syncopate font-bold text-sm text-primary tracking-wide">{item.name}</h3>
-                    <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest">{item.desc}</p>
+
+                    {/* Revelado al hover: los cuatro productos de la especialidad */}
+                    <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center justify-center px-6 py-7">
+                      <h3 className="font-syncopate font-bold text-[11px] text-white mb-4 tracking-widest uppercase">
+                        {item.name}
+                      </h3>
+                      <ul className="text-[11px] text-white/70 w-full text-center leading-snug">
+                        {item.products.map((prod) => (
+                          <li
+                            key={prod}
+                            className="border-b border-white/10 py-2 last:border-0 last:pb-0 first:pt-0 px-1"
+                          >
+                            {prod}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  
-                  {/* Hover Reveal State */}
-                  <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center justify-center p-6">
-                    <h3 className="font-syncopate font-bold text-sm text-white mb-4 tracking-widest uppercase">{item.name}</h3>
-                    <ul className="text-xs text-white/70 space-y-3 text-center w-full">
-                      {item.products.map((prod, pIdx) => (
-                        <li key={pIdx} className="border-b border-white/10 pb-2 last:border-0 truncate w-full px-2">
-                          {prod}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </ScrollReveal>
+                </ScrollReveal>
+              </div>
             );
           })}
         </div>

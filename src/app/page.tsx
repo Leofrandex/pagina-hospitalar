@@ -4,6 +4,7 @@ import TrustMarquee from "@/components/TrustMarquee";
 import ValueProps from "@/components/ValueProps";
 import Specialties from "@/components/Specialties";
 import CaseStudies from "@/components/CaseStudies";
+import BlogTeaser from "@/components/BlogTeaser";
 import ContactCTA from "@/components/ContactCTA";
 import Footer from "@/components/Footer";
 
@@ -16,6 +17,7 @@ export default function Home() {
       <ValueProps />
       <Specialties />
       <CaseStudies />
+      <BlogTeaser />
       <ContactCTA />
       <Footer />
     </main>

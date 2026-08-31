@@ -26,6 +26,96 @@ body {
   font-family: var(--font-sans);
 }
 
+/*
+ * Tipografía del contenido que llega renderizado desde WordPress.
+ * El HTML es de terceros, así que se estila por selector en lugar de por clase.
+ */
+.wp-content {
+  color: #4b5563;
+  font-weight: 300;
+  font-size: 1.0625rem;
+  line-height: 1.85;
+}
+.wp-content > * + * {
+  margin-top: 1.5rem;
+}
+.wp-content h1,
+.wp-content h2,
+.wp-content h3,
+.wp-content h4 {
+  color: var(--color-primary);
+  font-family: var(--font-syncopate);
+  font-weight: 700;
+  line-height: 1.35;
+  margin-top: 3rem;
+}
+.wp-content h1 { font-size: 1.75rem; }
+.wp-content h2 { font-size: 1.5rem; }
+.wp-content h3 { font-size: 1.25rem; }
+.wp-content h4 { font-size: 1.0625rem; }
+.wp-content a {
+  color: var(--color-cta);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.wp-content a:hover {
+  color: var(--color-primary);
+}
+.wp-content strong {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+.wp-content ul,
+.wp-content ol {
+  padding-left: 1.5rem;
+}
+.wp-content ul { list-style: disc; }
+.wp-content ol { list-style: decimal; }
+.wp-content li + li {
+  margin-top: 0.5rem;
+}
+.wp-content li::marker {
+  color: var(--color-accent);
+}
+.wp-content blockquote {
+  border-left: 3px solid var(--color-accent);
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: var(--color-primary);
+}
+.wp-content img,
+.wp-content iframe,
+.wp-content video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}
+.wp-content figure {
+  margin-inline: 0;
+}
+.wp-content figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  text-align: center;
+}
+.wp-content hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin-block: 3rem;
+}
+.wp-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+.wp-content th,
+.wp-content td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  text-align: left;
+}
+
 @utility animate-marquee {
   animation: marquee 30s linear infinite;
 }

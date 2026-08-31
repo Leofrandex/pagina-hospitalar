@@ -25,22 +25,25 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             {/* Desktop Navigation */}
             <nav className="flex space-x-8 items-center text-[15px]">
-              <a href="#soporte" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
+              <Link href="/#soporte" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
                 Acerca de
-              </a>
-              <a href="#equipos" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
+              </Link>
+              <Link href="/#equipos" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
                 Equipos
-              </a>
-              <a href="#casos" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
+              </Link>
+              <Link href="/#casos" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
                 Casos de éxito
-              </a>
+              </Link>
+              <Link href="/blog" className="text-primary font-medium hover:text-accent transition-colors duration-200 cursor-pointer">
+                Blog
+              </Link>
             </nav>
 
             {/* CTA Button */}
             <div className="flex items-center">
-              <a href="#contacto" className="bg-cta text-white font-syncopate font-bold text-xs md:text-sm tracking-wider px-6 py-3 rounded-lg hover:bg-[#d95b2d] hover:shadow-lg hover:shadow-cta/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer block">
+              <Link href="/#contacto" className="bg-cta text-white font-syncopate font-bold text-xs md:text-sm tracking-wider px-6 py-3 rounded-lg hover:bg-[#d95b2d] hover:shadow-lg hover:shadow-cta/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer block">
                 Solicitar Asesoría
-              </a>
+              </Link>
             </div>
           </div>
           
