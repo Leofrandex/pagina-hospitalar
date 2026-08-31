@@ -129,17 +129,17 @@ export default function Specialties() {
                 <ScrollReveal delay={(index % 4) * 0.05}>
                   <div className="group relative h-64 bg-gray-50 border border-transparent rounded-2xl overflow-hidden hover:bg-white hover:border-gray-100 hover:shadow-[0_20px_50px_rgba(53,46,135,0.08)] transition-all duration-500 cursor-pointer flex flex-col justify-center items-center text-center p-6">
                     {/* Estado por defecto */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 p-4">
+                    <div className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 px-3 py-4">
                       <div className="w-14 h-14 rounded-2xl bg-white shadow-sm flex items-center justify-center mb-4 text-primary group-hover:scale-110 transition-transform duration-500">
                         <Icon className="w-7 h-7" />
                       </div>
-                      <h3 className="font-syncopate font-bold text-sm text-primary tracking-wide">{item.name}</h3>
+                      <h3 className="font-syncopate font-bold text-[12px] xl:text-sm text-primary tracking-tight xl:tracking-wide whitespace-nowrap">{item.name}</h3>
                       <p className="text-[10px] text-gray-400 mt-2 uppercase tracking-widest">{item.desc}</p>
                     </div>
 
                     {/* Revelado al hover: los cuatro productos de la especialidad */}
                     <div className="absolute inset-0 bg-primary translate-y-full group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center justify-center px-6 py-7">
-                      <h3 className="font-syncopate font-bold text-[11px] text-white mb-4 tracking-widest uppercase">
+                      <h3 className="font-syncopate font-bold text-[10px] xl:text-[11px] text-white mb-4 tracking-wider uppercase whitespace-nowrap">
                         {item.name}
                       </h3>
                       <ul className="text-[11px] text-white/70 w-full text-center leading-snug">
