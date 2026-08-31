@@ -114,11 +114,9 @@ body{background:var(--page);color:var(--tx)}
   transition:stroke 200ms var(--ease-hover),transform 260ms var(--ease-out)}
 /* Nombres largos como "Gastroenterología" no entran en una línea: que corten
    con guion en sílaba y no a mitad de palabra. */
-.cell h3{margin-top:26px;overflow-wrap:normal;hyphens:auto;-webkit-hyphens:auto;
-  font-size:clamp(16px,1.3vw,20px);text-wrap:balance}
-/* Nombres de una sola palabra que no entran a la escala normal (Gastroenterología).
-   Se les baja el cuerpo en vez de partirlos o encoger toda la retícula. */
-.cell--tight h3{font-size:clamp(14px,1.03vw,16px)}
+/* Escala calibrada para que los 13 nombres entren en una sola línea: el más
+   ancho ("Gastroenterología") mide 216 de los 223px útiles de la tarjeta. */
+.cell h3{margin-top:26px;white-space:nowrap;font-size:clamp(13px,1.02vw,16px)}
 .cell p{margin-top:7px;font-size:13px;color:var(--tx-dim);font-weight:600;letter-spacing:.03em}
 @media (hover:hover) and (pointer:fine){
   .cell:hover{background:var(--card-hover);transform:translateY(-3px)}
