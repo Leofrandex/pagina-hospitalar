@@ -94,22 +94,45 @@ body{background:var(--page);color:var(--tx)}
 
 /* ---------- Especialidades ---------- */
 .spec{background:var(--sec-1)}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+/* Flex en vez de grid: la lista es impar y así la última fila queda centrada. */
+.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
 .cell{position:relative;background:var(--card);border-radius:var(--r-md);padding:28px 24px 24px;min-height:184px;
+  flex:0 1 calc(25% - 10.5px);
   display:flex;flex-direction:column;overflow:hidden;
   transition:background 200ms var(--ease-hover),transform 220ms var(--ease-out)}
+.cell__face{display:flex;flex-direction:column;flex:1}
+/* Los cuatro productos entran desde abajo; sólo transform, por debajo de 300ms. */
+.cell__prods{position:absolute;inset:0;z-index:2;background:var(--violeta);color:#fff;
+  padding:26px 24px;display:flex;flex-direction:column;justify-content:center;
+  transform:translateY(101%);transition:transform 260ms var(--ease-out)}
+.cell__prods strong{font-family:var(--display);font-weight:400;font-size:16px;letter-spacing:-.01em;
+  margin-bottom:14px}
+.cell__prods li{font-size:13px;line-height:1.65;color:rgba(255,255,255,.72);font-weight:600;letter-spacing:.02em}
 .cell__bar{position:absolute;left:0;top:0;width:100%;height:3px;background:var(--naranja);
   transform:scaleX(0);transform-origin:left;transition:transform 260ms var(--ease-out)}
 .cell__ico{width:26px;height:26px;stroke:var(--ico);stroke-width:1.5;fill:none;margin-bottom:auto;
   stroke-linecap:round;stroke-linejoin:round;
   transition:stroke 200ms var(--ease-hover),transform 260ms var(--ease-out)}
-.cell h3{margin-top:26px;overflow-wrap:break-word;hyphens:manual;font-size:clamp(17px,1.35vw,20px)}
+/* Nombres largos como "Gastroenterología" no entran en una línea: que corten
+   con guion en sílaba y no a mitad de palabra. */
+.cell h3{margin-top:26px;overflow-wrap:normal;hyphens:auto;-webkit-hyphens:auto;
+  font-size:clamp(16px,1.3vw,20px);text-wrap:balance}
 .cell p{margin-top:7px;font-size:13px;color:var(--tx-dim);font-weight:600;letter-spacing:.03em}
 @media (hover:hover) and (pointer:fine){
   .cell:hover{background:var(--card-hover);transform:translateY(-3px)}
   .cell:hover .cell__bar{transform:scaleX(1)}
   .cell:hover .cell__ico{stroke:var(--naranja);transform:translateY(-2px)}
+  .cell:hover .cell__prods{transform:translateY(0)}
 }
+/* Sin hover (táctil) los productos se muestran fijos abajo, no ocultos. */
+@media not all and (hover:hover){
+  .cell__prods{position:static;transform:none;background:none;color:inherit;padding:16px 0 0}
+  .cell__prods strong{display:none}
+  .cell__prods li{color:var(--tx-dim)}
+  .cell__face p{display:none}
+}
+@media (max-width:1080px){.cell{flex:0 1 calc(50% - 7px)}}
+@media (max-width:640px){.cell{flex:0 1 100%}}
 .specall{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:14px;
   background:var(--violeta);color:#fff;border-radius:var(--r-md);padding:26px 30px;
   transition:background 200ms var(--ease-hover)}
@@ -134,10 +157,46 @@ body{background:var(--page);color:var(--tx)}
 }
 
 /* ---------- Reseñas ---------- */
+/* ---------- Soporte técnico: cierra la sección de servicios ---------- */
+.soporte{margin-top:14px;background:var(--violeta);color:#fff;border-radius:var(--r-md);
+  padding:clamp(26px,2.4vw,34px);display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:center}
+.soporte h3{max-width:18ch;line-height:1.12}
+.soporte .body-s{color:rgba(255,255,255,.74)}
+@media (max-width:820px){.soporte{grid-template-columns:1fr;gap:16px}}
+
+/* ---------- Botón de mapa por sede ---------- */
+.foot__maps{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  padding:9px 15px;border-radius:999px;background:rgba(255,255,255,.09);
+  font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#fff;
+  transition:background var(--dur-hover) var(--ease-hover),transform 200ms var(--ease-out)}
+.foot__maps svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.6;fill:none}
+@media (hover:hover) and (pointer:fine){
+  .foot__maps:hover{background:var(--naranja);transform:translateY(-2px)}
+}
+
 .resenas{position:relative;background:var(--sec-1);overflow:hidden}
 .resenas__fx{position:absolute;inset:0;z-index:0;pointer-events:none;background:var(--resenas-fx)}
 .resenas > .wrap{position:relative;z-index:1}
 /* ---------- CTA ---------- */
+/* ---------- Blog ---------- */
+.blog{background:var(--sec-1)}
+.posts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.post{display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-md);overflow:hidden;
+  transition:background 200ms var(--ease-hover),transform 220ms var(--ease-out)}
+.post__img{aspect-ratio:16/10;width:100%;object-fit:cover;background:var(--card-hover)}
+.post__in{padding:24px;display:flex;flex-direction:column;flex:1}
+.post__meta{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-dim);font-weight:700}
+.post h3{margin:14px 0 10px;font-size:clamp(17px,1.3vw,20px);line-height:1.18;text-wrap:balance}
+.post p{font-size:14px;line-height:1.6;color:var(--tx-dim)}
+.post__go{margin-top:auto;padding-top:18px;font-size:12px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--naranja);display:flex;align-items:center;gap:8px}
+.post__go .arw{transition:transform var(--dur-hover) var(--ease-out)}
+@media (hover:hover) and (pointer:fine){
+  .post:hover{background:var(--card-hover);transform:translateY(-3px)}
+  .post:hover .post__go .arw{transform:translateX(5px)}
+}
+@media (max-width:900px){.posts{grid-template-columns:1fr}}
+
 .cta{position:relative;overflow:hidden;background:var(--violeta-950);isolation:isolate;
   border-radius:var(--r-xl) var(--r-xl) 0 0;color:#fff}
 .cta__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.42;
@@ -386,20 +445,88 @@ if (!reduced) {
 import json
 REVIEWS = json.load(open(os.path.join(HERE, "_reviews.json"), encoding="utf-8"))
 
+# Los artículos se hornean al generar leyendo el WordPress actual. Si el origen
+# no responde (suele ser lento), se usa la última copia guardada en _posts.json
+# para no publicar una sección vacía.
+import urllib.request, html as _html, datetime, re as _re2
+
+POSTS_CACHE = os.path.join(HERE, "_posts.json")
+WP = "https://hospitalarve.com/wp-json/wp/v2/posts?per_page=6&_embed=wp:featuredmedia,wp:term"
+
+def _plain(t):
+    t = _re2.sub(r"<[^>]*>", "", t or "")
+    return _html.unescape(t).replace(" ", " ").strip()
+
+def _fetch_posts():
+    req = urllib.request.Request(WP, headers={"User-Agent": "hospitalar-build"})
+    with urllib.request.urlopen(req, timeout=45) as r:
+        raw = json.load(r)
+    out = []
+    for it in raw:
+        title = _plain(it.get("title", {}).get("rendered", ""))
+        if not title:
+            continue
+        media = (it.get("_embedded", {}).get("wp:featuredmedia") or [{}])[0]
+        sizes = (media.get("media_details") or {}).get("sizes") or {}
+        img = ""
+        for k in ("medium_large", "fusion-800", "large", "medium"):
+            if sizes.get(k, {}).get("source_url"):
+                img = sizes[k]["source_url"]; break
+        img = img or media.get("source_url", "")
+        terms = [t for g in (it.get("_embedded", {}).get("wp:term") or []) for t in g]
+        cat = next((t.get("name") for t in terms
+                    if t.get("taxonomy") == "category" and t.get("name") not in (None, "Uncategorized")), "Artículo")
+        out.append({"t": title, "u": "/blog/" + it.get("slug", ""), "img": img,
+                    "cat": _plain(cat), "d": it.get("date", "")[:10],
+                    "e": _plain(it.get("excerpt", {}).get("rendered", ""))})
+        if len(out) == 3:
+            break
+    return out
+
+try:
+    POSTS = _fetch_posts()
+    json.dump(POSTS, open(POSTS_CACHE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("artículos leídos de WordPress:", len(POSTS))
+except Exception as e:
+    POSTS = json.load(open(POSTS_CACHE, encoding="utf-8")) if os.path.exists(POSTS_CACHE) else []
+    print("WordPress no respondió (%s); uso la caché: %d artículos" % (type(e).__name__, len(POSTS)))
+
+_MESES = ["enero","febrero","marzo","abril","mayo","junio","julio",
+          "agosto","septiembre","octubre","noviembre","diciembre"]
+
+def _fecha(iso):
+    try:
+        d = datetime.date.fromisoformat(iso)
+        return "%d de %s de %d" % (d.day, _MESES[d.month - 1], d.year)
+    except Exception:
+        return ""
+
+def _post_card(p):
+    img = ('<img class="post__img" src="%s" alt="" loading="lazy">' % _html.escape(p["img"], quote=True)) if p["img"] else '<div class="post__img"></div>'
+    return ('<a class="post rv" href="%s">%s<div class="post__in">'
+            '<span class="post__meta">%s · %s</span><h3>%s</h3><p>%s</p>'
+            '<span class="post__go">Leer artículo <span class="arw">→</span></span>'
+            '</div></a>') % (_html.escape(p["u"], quote=True), img,
+                             _html.escape(p["cat"]), _fecha(p["d"]),
+                             _html.escape(p["t"]), _html.escape(p["e"][:130]))
+
+POSTS_HTML = "".join(_post_card(p) for p in POSTS)
+
 LOGO = """<span class="logoswap nav__logo">
       <img class="is-pos" src="/brand/logo/hospitalar-cp.svg" alt="Hospitalar">
       <img class="is-neg" src="/brand/logo/hospitalar-neg.svg" alt="">
     </span>"""
 
-def build(theme, note, current):
-    b = body.replace("{{LOGO}}", "").replace('<img class="nav__logo" src="" alt="Hospitalar">', LOGO)
+def build(theme, note, current, site=False):
+    """site=True genera la versión pública: sin barra del Lab y sin noindex."""
+    b = body.replace("{{POSTS}}", POSTS_HTML).replace("{{LOGO}}", "").replace('<img class="nav__logo" src="" alt="Hospitalar">', LOGO)
     import re as _re
     b = _re.sub(r'<img src="\{\{L\}\}/([^"]+)"([^>]*)>',
                 lambda m: '<img class="is-white" src="/logos/%s"%s><img class="is-dark" src="/brand/logos-dark/%s"%s>'
                           % (m.group(1), m.group(2), m.group(1), m.group(2)), b)
     def mark(f, name):
         return ' aria-current="page"' if f == current else ''
-    bar = """
+    bar = "" if site else """
 <nav class="labbar">
   <span>HOSPITALAR · REDISEÑO</span>
   <a href="/lab">Inicio</a>
@@ -408,6 +535,13 @@ def build(theme, note, current):
   <a href="/lab/d-light"%s>Claro</a>
   <span class="sp">%s</span>
 </nav>""" % (mark("hybrid", current), mark("dark", current), mark("light", current), note)
+    head_robots = ("" if site else
+        '<meta name="robots" content="noindex, nofollow">')
+    head_title = ("Hospitalar Venezuela | Unimos tecnología y vida" if site
+                  else "Hospitalar · Dirección D — %s" % LABELS[theme])
+    head_desc = ('<meta name="description" content="Equipamiento médico de clase mundial, '
+                 'servicio técnico local y soluciones integrales para centros de salud en Venezuela. '
+                 'Representamos a las marcas líderes desde 1982.">') if site else ""
     boot = """(function(){var t='%s';try{var v=localStorage.getItem('hosp-theme-page-%s');if(v)t=v}catch(e){}
 document.documentElement.dataset.theme=t})();""" % (theme, theme)
     return f"""<!doctype html>
@@ -415,8 +549,8 @@ document.documentElement.dataset.theme=t})();""" % (theme, theme)
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Hospitalar · Dirección D — {LABELS[theme]}</title>
+{head_robots}{head_desc}
+<title>{head_title}</title>
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
 <script>{boot}</script>
@@ -440,4 +574,8 @@ open(os.path.join(HERE, "d-dark.html"), "w", encoding="utf-8").write(
     build("dark", "D oscuro · variante pura", "dark"))
 open(os.path.join(HERE, "d-light.html"), "w", encoding="utf-8").write(
     build("light", "D claro · variante pura", "light"))
-print("generados d.html (híbrido), d-dark.html y d-light.html")
+
+# Versión pública: el modo claro, servido en / (ver rewrite en next.config.ts).
+open(os.path.join(HERE, "..", "site.html"), "w", encoding="utf-8").write(
+    build("light", "", "light", site=True))
+print("generados d.html (híbrido), d-dark.html, d-light.html y public/site.html")
