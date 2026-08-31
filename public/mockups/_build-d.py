@@ -94,10 +94,9 @@ body{background:var(--page);color:var(--tx)}
 
 /* ---------- Especialidades ---------- */
 .spec{background:var(--sec-1)}
-/* Flex en vez de grid: la lista es impar y así la última fila queda centrada. */
-.grid{display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+/* 13 celdas + el banner ocupando el resto de la última fila = 4 filas exactas. */
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .cell{position:relative;background:var(--card);border-radius:var(--r-md);padding:28px 24px 24px;min-height:184px;
-  flex:0 1 calc(25% - 10.5px);
   display:flex;flex-direction:column;overflow:hidden;
   transition:background 200ms var(--ease-hover),transform 220ms var(--ease-out)}
 .cell__face{display:flex;flex-direction:column;flex:1}
@@ -117,6 +116,9 @@ body{background:var(--page);color:var(--tx)}
    con guion en sílaba y no a mitad de palabra. */
 .cell h3{margin-top:26px;overflow-wrap:normal;hyphens:auto;-webkit-hyphens:auto;
   font-size:clamp(16px,1.3vw,20px);text-wrap:balance}
+/* Nombres de una sola palabra que no entran a la escala normal (Gastroenterología).
+   Se les baja el cuerpo en vez de partirlos o encoger toda la retícula. */
+.cell--tight h3{font-size:clamp(14px,1.03vw,16px)}
 .cell p{margin-top:7px;font-size:13px;color:var(--tx-dim);font-weight:600;letter-spacing:.03em}
 @media (hover:hover) and (pointer:fine){
   .cell:hover{background:var(--card-hover);transform:translateY(-3px)}
@@ -131,9 +133,9 @@ body{background:var(--page);color:var(--tx)}
   .cell__prods li{color:var(--tx-dim)}
   .cell__face p{display:none}
 }
-@media (max-width:1080px){.cell{flex:0 1 calc(50% - 7px)}}
-@media (max-width:640px){.cell{flex:0 1 100%}}
-.specall{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-top:14px;
+@media (max-width:1080px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.specall{grid-column:span 1}}
+@media (max-width:640px){.grid{grid-template-columns:1fr}.specall{grid-column:span 1}}
+.specall{grid-column:span 3;display:flex;align-items:center;justify-content:space-between;gap:24px;
   background:var(--violeta);color:#fff;border-radius:var(--r-md);padding:26px 30px;
   transition:background 200ms var(--ease-hover)}
 .specall strong{display:block;font-family:var(--display);font-weight:400;font-size:19px;letter-spacing:-.01em}
