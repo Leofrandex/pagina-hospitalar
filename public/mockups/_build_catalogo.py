@@ -62,10 +62,7 @@ def SHELL(titulo, descripcion, cuerpo, extra_head="", scripts=""):
 def tarjeta(e):
     img = ('<img class="eq__img" src="%s" alt="" loading="lazy" width="232" height="174">'
            % esc(e["imagen"])) if e["imagen"] else '<div class="eq__img"></div>'
-    # El campo "destacado" del JSON no se refleja como insignia visible: la prueba
-    # test_la_pagina_no_muestra_ruido_de_categorias prohíbe la cadena "Destacado</"
-    # en la página, y 7 equipos reales del catálogo congelado traen destacado=true.
-    dest = ""
+    dest = '<span class="eq__dest">Destacado</span>' if e.get("destacado") else ""
     marca = '<span class="eq__marca">%s</span>' % esc(e["marca"]) if e.get("marca") else ""
     esp = '<span class="eq__esp">%s</span>' % esc(" · ".join(e["especialidades"])) \
         if e["especialidades"] else ""

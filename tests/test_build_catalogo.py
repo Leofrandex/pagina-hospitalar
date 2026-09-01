@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os
+import re
 
 import pytest
 
@@ -46,10 +47,25 @@ def test_la_pagina_trae_los_215_equipos_en_el_html(catalogo):
     assert html.count('class="eq ') == 215
 
 
-def test_la_pagina_no_muestra_ruido_de_categorias(catalogo):
+def test_el_ruido_no_aparece_como_faceta(catalogo):
+    """El criterio del spec es que ninguna FACETA diga 'Destacado' o 'Sin categorizar'.
+
+    Ojo: 'Destacado' sí puede (y debe) aparecer como distintivo en la tarjeta -- el
+    diseño lo convirtió de categoría basura en atributo del equipo. Por eso el
+    aserto se limita al panel de facetas y no a la página entera.
+    """
     html = pagina_catalogo(catalogo)
-    for ruido in ("Sin categorizar", "Destacado</", "Radiología Computarizada"):
-        assert ruido not in html
+    panel = re.search(r'<aside class="facetas">.*?</aside>', html, re.S)
+    assert panel, "no se encontró el panel de facetas"
+    for ruido in ("Sin categorizar", "Destacado", "Covid",
+                  "Radiología Computarizada", "Radiología Directa"):
+        assert ruido not in panel.group(0), ruido
+
+
+def test_los_destacados_llevan_distintivo_en_la_tarjeta(catalogo):
+    cuantos = sum(1 for e in catalogo["equipos"] if e["destacado"])
+    assert cuantos == 7
+    assert pagina_catalogo(catalogo).count('class="eq__dest"') == cuantos
 
 
 def test_la_pagina_no_tiene_nada_de_tienda(catalogo):
