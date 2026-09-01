@@ -1533,13 +1533,6 @@ Agregar a `public/mockups/_catalogo.css`:
 Agregar a `public/mockups/_build_catalogo.py`, antes de `main()`:
 
 ```python
-def _slug_de(catalogo, eje, nombre):
-    for v in catalogo[eje]:
-        if v["nombre"] == nombre:
-            return v["slug"]
-    return ""
-
-
 def pagina_ficha(e, catalogo):
     mensaje = "Hola, me interesa el %s. ¿Me pueden dar más información?" % e["nombre"]
     img = ('<img class="ficha__img" src="%s" alt="%s" width="600" height="450">'
