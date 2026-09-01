@@ -125,3 +125,115 @@ def clasificar_raiz(nombre):
 
 def tipo_unificado(nombre):
     return TIPOS_UNIFICADOS.get(nombre, nombre)
+
+
+import html as _html
+
+# Cinco equipos no tienen ninguna especialidad en WooCommerce. En vez de dejarlos
+# invisibles en el catálogo, se les asigna a mano según lo que son:
+#   hockey-stick    transductor de ultrasonido
+#   thermoglide-2   trata lesiones precancerosas de cuello uterino
+#   valleylab-...   electrodos de electrocirugía
+#   oxylog-3000-plus ventilador de transporte
+#   oximetro-...    venía colgado de la categoría Covid
+REASIGNACIONES = {
+    "hockey-stick": {"especialidades": ["Diagnóstico por Imagen"], "tipos": ["Ultrasonidos"]},
+    "thermoglide-2": {"especialidades": ["Ginecología"], "tipos": []},
+    "valleylab-electrodos-con-cable-de-retorno-del-paciente": {
+        "especialidades": ["Cirugía"], "tipos": ["Sellado de Vasos"]},
+    "oxylog-3000-plus": {"especialidades": ["Emergencia"], "tipos": ["Respiradores Mecánicos"]},
+    "oximetro-de-pulso-yonker": {"especialidades": ["Emergencia"], "tipos": []},
+}
+
+_ETIQUETAS = re.compile(r"<[^>]+>")
+_ESPACIOS = re.compile(r"\s+")
+# Cada etiqueta se reemplaza por un espacio para no pegar palabras de bloques
+# distintos, pero eso deja "alta gama ." cuando el punto venía después de un </b>.
+_ESPACIO_ANTES_DE_PUNTUACION = re.compile(r"\s+([.,;:!?%)\]»])")
+
+
+def limpiar_html(fragmento):
+    sin_etiquetas = _ETIQUETAS.sub(" ", fragmento or "")
+    texto = _html.unescape(sin_etiquetas).replace("\xa0", " ")
+    texto = _ESPACIOS.sub(" ", texto)
+    return _ESPACIO_ANTES_DE_PUNTUACION.sub(r"\1", texto).strip()
+
+
+def raiz_de(cat_id, cats_por_id):
+    """Sube por el árbol de categorías hasta la que tiene parent 0."""
+    cat = cats_por_id.get(cat_id)
+    visitadas = set()
+    while cat and cat["parent"] != 0:
+        if cat["id"] in visitadas:  # ciclo defensivo
+            return None
+        visitadas.add(cat["id"])
+        cat = cats_por_id.get(cat["parent"])
+    return cat
+
+
+def _sin_repetir(valores):
+    vistos = []
+    for v in valores:
+        if v not in vistos:
+            vistos.append(v)
+    return vistos
+
+
+def equipo_desde_producto(producto, cats_por_id):
+    especialidades, tipos, marca, destacado = [], [], None, False
+
+    for ref in producto.get("categories", []):
+        cat = cats_por_id.get(ref["id"])
+        if not cat:
+            continue
+        raiz = raiz_de(ref["id"], cats_por_id)
+        if raiz is None:
+            continue
+        eje, limpio = clasificar_raiz(raiz["name"])
+
+        if raiz["name"] == "Destacado":
+            destacado = True
+
+        es_la_raiz = cat["id"] == raiz["id"]
+        if es_la_raiz:
+            if eje == "especialidad":
+                especialidades.append(limpio)
+            elif eje == "marca":
+                marca = marca or limpio
+            # 'oculta' y 'otros' no aportan nada como raíz
+        else:
+            # Es una subcategoría: siempre es un tipo de equipo.
+            tipos.append(tipo_unificado(cat["name"]))
+            if eje == "especialidad":
+                especialidades.append(limpio)
+            elif eje == "marca":
+                marca = marca or limpio
+
+    forzado = REASIGNACIONES.get(producto["slug"])
+    if forzado:
+        especialidades = list(forzado["especialidades"])
+        tipos = _sin_repetir(tipos + forzado["tipos"])
+
+    especialidades = _sin_repetir(especialidades)
+    tipos = _sin_repetir(tipos)
+
+    resumen = limpiar_html(producto.get("short_description"))
+    descripcion = limpiar_html(producto.get("description"))
+    imagenes = producto.get("images") or []
+    imagen = (imagenes[0].get("thumbnail") or imagenes[0].get("src")) if imagenes else None
+
+    partes = [producto["name"], marca or "", " ".join(especialidades),
+              " ".join(tipos), resumen[:200]]
+    return {
+        "slug": producto["slug"],
+        "nombre": producto["name"],
+        "url_original": producto.get("permalink", ""),
+        "resumen": resumen,
+        "descripcion": descripcion,
+        "especialidades": especialidades,
+        "marca": marca,
+        "tipos": tipos,
+        "destacado": destacado,
+        "imagen": imagen,
+        "busqueda": normalizar(" ".join(p for p in partes if p)),
+    }
