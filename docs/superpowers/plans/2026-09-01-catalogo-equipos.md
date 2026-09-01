@@ -507,20 +507,15 @@ def equipo_desde_producto(producto, cats_por_id):
         if raiz["name"] == "Destacado":
             destacado = True
 
-        es_la_raiz = cat["id"] == raiz["id"]
-        if es_la_raiz:
-            if eje == "especialidad":
-                especialidades.append(limpio)
-            elif eje == "marca":
-                marca = marca or limpio
-            # 'oculta' y 'otros' no aportan nada como raíz
-        else:
+        if cat["id"] != raiz["id"]:
             # Es una subcategoría: siempre es un tipo de equipo.
             tipos.append(tipo_unificado(cat["name"]))
-            if eje == "especialidad":
-                especialidades.append(limpio)
-            elif eje == "marca":
-                marca = marca or limpio
+        # Raíz o subcategoría, el eje de la raíz manda.
+        # 'oculta' y 'otros' no aportan ni especialidad ni marca.
+        if eje == "especialidad":
+            especialidades.append(limpio)
+        elif eje == "marca":
+            marca = marca or limpio
 
     forzado = REASIGNACIONES.get(producto["slug"])
     if forzado:
