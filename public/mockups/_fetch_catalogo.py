@@ -71,14 +71,21 @@ def _ruta_larga(ruta):
     return ruta
 
 
+def _url_segura(url):
+    """Codifica los caracteres que WordPress dejó crudos en el nombre del archivo.
+
+    13 de las 215 imágenes traen '®' o '™' sin codificar, y eso rompe la línea de
+    petición HTTP. El '%' va en `safe` a propósito: sin él, una URL que ya trae
+    '%c2%b2' se re-codificaría a '%25c2%25b2' y dejaría de resolver.
+    """
+    return urllib.parse.quote(url, safe=":/%")
+
+
 def bajar_imagen(url, destino):
     destino = _ruta_larga(destino)
     if os.path.exists(destino):
         return True
-    # Algunos nombres de archivo traen ® o ™ sin codificar: urllib no puede
-    # meter esos bytes crudos en la línea de request. safe=':/%' evita
-    # codificar dos veces los tramos que ya vienen en %XX.
-    url = urllib.parse.quote(url, safe=":/%")
+    url = _url_segura(url)
     req = urllib.request.Request(url, headers=UA)
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
