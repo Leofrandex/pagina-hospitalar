@@ -998,10 +998,25 @@ git commit -m "Agrega la logica de busqueda y facetas del catalogo"
 Construye `public/equipos.html` desde `_catalogo.json`, reusando los tokens y el shell del pipeline existente. Los 215 equipos se renderizan en HTML (sirven sin JavaScript y para buscadores) y el JS sólo los muestra u oculta.
 
 **Files:**
+- Create: `public/mockups/_tema.css` (extraído de `_build-d.py`)
+- Modify: `public/mockups/_build-d.py` (lee `_tema.css` en vez de tener el tema inline)
 - Create: `public/mockups/_build_catalogo.py`
 - Create: `public/mockups/_catalogo.css`
 - Create: `tests/test_build_catalogo.py`
 - Genera: `public/equipos.html`
+
+> **Nota de ejecución (defecto del plan corregido sobre la marcha).** `tokens.css` sólo
+> define la paleta cruda (`--violeta`, `--naranja`, `--max`, `--r-md`…). Las variables de
+> *superficie* que usa el catálogo — `--tx`, `--tx-dim`, `--card`, `--card-hover`,
+> `--accent-eyebrow` — viven en las constantes `DARK`, `LIGHT` y `THEME_EXTRA` dentro de
+> `_build-d.py` (líneas 249-378), que se inyectan en el `<style>` de la página en la línea
+> 558. Si el catálogo enlazara sólo `tokens.css`, esas variables quedarían **sin definir** y
+> la página saldría sin colores ni superficies.
+>
+> Por eso el Step 0 extrae esos tres bloques a `public/mockups/_tema.css` y hace que ambos
+> generadores lo lean. No se duplican valores: hay una sola fuente de verdad. `_build-d.py`
+> no se puede importar (tiene guión en el nombre y además baja el blog al importarse), así
+> que compartir un archivo `.css` es la única vía limpia.
 
 **Interfaces:**
 - Consumes: `_catalogo.json` (Task 3), `_buscador.mjs` (Task 4).
@@ -1011,6 +1026,42 @@ Construye `public/equipos.html` desde `_catalogo.json`, reusando los tokens y el
   - `pagina_catalogo(catalogo) -> str`
   - `wa_link(texto: str) -> str`
   - `SHELL(titulo, descripcion, cuerpo, extra_head="", scripts="") -> str`
+
+- [ ] **Step 0: Extraer la capa de tema a `_tema.css`**
+
+En `public/mockups/_build-d.py`, las constantes `DARK` (línea 249), `LIGHT` (273) y
+`THEME_EXTRA` (299) son tres strings de CSS que terminan concatenados en la línea 558:
+
+```python
+<style>{DARK}{LIGHT}{THEME_EXTRA}{COMMON}</style>
+```
+
+Mové el contenido de esas tres a `public/mockups/_tema.css`, en ese mismo orden, y
+reemplazalas por una sola lectura del archivo:
+
+```python
+TEMA = open(os.path.join(HERE, "_tema.css"), encoding="utf-8").read()
+```
+
+Luego, en la línea 558, cambiá la inyección a:
+
+```python
+<style>{TEMA}{COMMON}</style>
+```
+
+`COMMON` se queda dentro de `_build-d.py`: es el CSS de las secciones de la home, que el
+catálogo no usa.
+
+**La prueba de que la extracción no cambió nada es que el sitio se regenera idéntico:**
+
+```bash
+md5sum public/site.html > /tmp/antes.txt
+python public/mockups/_build-d.py
+md5sum -c /tmp/antes.txt
+```
+
+Tiene que decir `OK`. Si el hash cambió, algo se perdió o se reordenó al mover el CSS:
+arreglalo antes de seguir, no continúes con un sitio distinto al que había.
 
 - [ ] **Step 1: Escribir los tests que fallan**
 
@@ -1117,7 +1168,7 @@ Expected: FAIL con `ModuleNotFoundError: No module named '_build_catalogo'`
 .cat__conteo{color:var(--tx-dim);margin-top:14px}
 
 .buscador{position:relative;margin-top:28px}
-.buscador input{width:100%;padding:18px 20px 18px 52px;border:0;border-radius:var(--r-m);
+.buscador input{width:100%;padding:18px 20px 18px 52px;border:0;border-radius:var(--r-md);
   background:var(--card);color:var(--tx);font:inherit;font-size:17px}
 .buscador input:focus{outline:2px solid var(--naranja);outline-offset:2px}
 .buscador svg{position:absolute;left:20px;top:50%;transform:translateY(-50%);
@@ -1143,7 +1194,7 @@ Expected: FAIL con `ModuleNotFoundError: No module named '_build_catalogo'`
 .faceta .n{margin-left:auto;color:var(--tx-dim);font-size:13px;font-variant-numeric:tabular-nums}
 
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:22px}
-.eq{display:flex;flex-direction:column;border-radius:var(--r-m);overflow:hidden;
+.eq{display:flex;flex-direction:column;border-radius:var(--r-md);overflow:hidden;
   background:var(--card);color:inherit;text-decoration:none;
   transition:transform var(--dur-hover) var(--ease-hover),background var(--dur-hover)}
 .eq:hover{transform:translateY(-3px);background:var(--card-hover)}
@@ -1213,7 +1264,7 @@ def SHELL(titulo, descripcion, cuerpo, extra_head="", scripts=""):
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
 <script>{boot}</script>
 <link rel="stylesheet" href="/mockups/tokens.css">
-<style>{_leer("_catalogo.css")}</style>
+<style>{_leer("_tema.css")}{_leer("_catalogo.css")}</style>
 {extra_head}
 </head>
 <body>
@@ -1508,7 +1559,7 @@ Agregar a `public/mockups/_catalogo.css`:
 .ficha__cuerpo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   gap:52px;margin-top:26px;align-items:start}
 @media (max-width:860px){.ficha__cuerpo{grid-template-columns:1fr;gap:30px}}
-.ficha__img{width:100%;border-radius:var(--r-m);background:#fff;padding:26px;
+.ficha__img{width:100%;border-radius:var(--r-md);background:#fff;padding:26px;
   object-fit:contain;aspect-ratio:4/3}
 .ficha__marca{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-dim)}
 .ficha__nombre{margin:10px 0 0;line-height:1.15}
@@ -1519,7 +1570,7 @@ Agregar a `public/mockups/_catalogo.css`:
 .ficha__texto{margin-top:24px;line-height:1.65;color:var(--tx-dim)}
 .ficha__cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;
   background:var(--naranja);color:#fff;text-decoration:none;font-weight:700;
-  padding:16px 26px;border-radius:var(--r-s);
+  padding:16px 26px;border-radius:var(--r-sm);
   transition:transform var(--dur-hover) var(--ease-hover)}
 .ficha__cta:hover{transform:translateY(-2px)}
 .ficha__nota{margin-top:12px;font-size:13px;color:var(--tx-dim)}
@@ -1763,7 +1814,7 @@ escritas a mano) y dejar la sección así:
     </div>
     <div class="grid">{{ESPECIALIDADES}}</div>
     <p class="rv" style="margin-top:36px">
-      <a class="ghost" href="/equipos">Ver el catálogo completo →</a>
+      <a class="btn btn--ghost" href="/equipos">Ver el catálogo completo →</a>
     </p>
   </div>
 </section>
@@ -2064,12 +2115,12 @@ Agregar a `public/mockups/_catalogo.css`:
 
 .comparador{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:70;
   display:flex;align-items:center;gap:16px;padding:13px 16px 13px 20px;
-  border-radius:var(--r-m);background:var(--violeta);color:#fff;
+  border-radius:var(--r-md);background:var(--violeta);color:#fff;
   box-shadow:0 14px 40px rgba(20,17,58,.34);max-width:calc(100vw - 32px)}
 .comparador__lista{display:flex;gap:8px;flex-wrap:wrap;font-size:14px}
 .comparador__lista span{background:rgba(255,255,255,.14);border-radius:999px;padding:5px 12px}
 .comparador__cta{background:var(--naranja);color:#fff;text-decoration:none;font-weight:700;
-  padding:11px 20px;border-radius:var(--r-s);white-space:nowrap}
+  padding:11px 20px;border-radius:var(--r-sm);white-space:nowrap}
 .comparador__limpiar{background:none;border:0;color:rgba(255,255,255,.7);cursor:pointer;
   font:inherit;font-size:13px}
 ```
