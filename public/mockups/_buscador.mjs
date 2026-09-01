@@ -4,7 +4,7 @@
 // NFD y no NFKD, igual que en _catalogo_map.py: NFKD convertiría el '™' de
 // 'MyLab™X75' en las letras 'TM' y los dos lados dejarían de coincidir.
 export function normalizar(texto) {
-  return (texto || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return (texto || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
 
 function coincideTexto(equipo, terminos) {
