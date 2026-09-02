@@ -85,6 +85,12 @@ body{background:var(--page);color:var(--tx)}
 .marquee__track{display:flex;flex:0 0 auto;align-items:center;gap:84px;padding-right:84px;
   animation:marquee 52s linear infinite}
 .marquee:hover .marquee__track{animation-play-state:paused}
+/* Cada logo enlaza al catalogo filtrado por esa marca (spec 7). El <a> es un
+   item flex mas del track: display:flex para que no cambie ni el alto ni el
+   gap respecto de cuando el <img> era hijo directo. */
+.marquee a{display:flex;align-items:center;flex:0 0 auto}
+.marquee a:focus-visible{outline:2px solid var(--naranja);outline-offset:6px;border-radius:4px}
+.marquee a:focus-visible img{opacity:1;filter:none}
 .marquee img{height:44px;width:auto;opacity:var(--logo-op);
   filter:var(--logo-filter);
   transition:opacity var(--dur-hover) var(--ease-hover),transform var(--dur-hover) var(--ease-out),filter var(--dur-hover) var(--ease-hover)}
