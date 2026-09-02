@@ -29,6 +29,14 @@ def test_ningun_equipo_quedo_sin_especialidad(catalogo):
     assert huerfanos == []
 
 
+def test_ningun_tipo_es_el_singular_de_otro(catalogo):
+    """Ofrecer 'Ultrasonido' y 'Ultrasonidos' como dos filtros distintos confunde
+    al que busca y delata una tabla de unificación incompleta."""
+    nombres = {v["nombre"] for v in catalogo["tipos"]}
+    for n in nombres:
+        assert n + "s" not in nombres, "%s y %ss son el mismo tipo" % (n, n)
+
+
 def test_wa_link_precarga_el_mensaje():
     url = wa_link("Hola, me interesa el ACUSON Sequoia")
     assert url.startswith("https://wa.me/584241941573?text=")

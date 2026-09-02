@@ -92,6 +92,8 @@ TIPOS_UNIFICADOS = {
     "Descartables Ginecología": "Descartables",
     "Insumos Diagnóstico por Imagen": "Insumos",
     "Mobile ODT Diagnóstico por Imagen": "Colposcopia",
+    # Singular y plural del mismo tipo, segun que especialidad lo nombro en Woo.
+    "Ultrasonido": "Ultrasonidos",
 }
 
 

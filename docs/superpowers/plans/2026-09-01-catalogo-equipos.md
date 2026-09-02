@@ -237,6 +237,9 @@ TIPOS_UNIFICADOS = {
     "Ecógrafos Para Anestesia": "Ecógrafos",
     "Ecógrafos Cardiología": "Ecógrafos",
     "Ecógrafos Diagnóstico por Imagen": "Ecógrafos",
+    # Singular y plural del mismo tipo, según qué especialidad lo nombró en Woo.
+    # Sin esto, la home ofrece "Ultrasonido" y "Ultrasonidos" como tipos distintos.
+    "Ultrasonido": "Ultrasonidos",
     "Monitores Anestesia": "Monitores",
     "Monitores Cirugía": "Monitores",
     "Monitores Hospitalización": "Monitores",
