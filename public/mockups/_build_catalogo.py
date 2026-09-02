@@ -107,7 +107,11 @@ def _buscador_inline():
 def pagina_catalogo(catalogo):
     total = len(catalogo["equipos"])
     tarjetas = "".join(tarjeta(e) for e in catalogo["equipos"])
-    datos = json.dumps(_indice(catalogo), ensure_ascii=False, separators=(",", ":"))
+    # `json.dumps` no escapa "</", así que un nombre o descripción que contuviera
+    # "</script" cerraría la etiqueta antes de tiempo y dejaría inyectar markup.
+    # Hoy ningún equipo lo trae, pero el JSON se regenera desde WordPress.
+    datos = json.dumps(_indice(catalogo), ensure_ascii=False,
+                       separators=(",", ":")).replace("</", "<\\/")
     cuerpo = f"""
 <main class="cat">
   <header class="cat__head">

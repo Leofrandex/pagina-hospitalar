@@ -94,3 +94,18 @@ def test_la_pagina_declara_las_tres_facetas(catalogo):
     html = pagina_catalogo(catalogo)
     for etiqueta in ("Especialidad", "Marca", "Tipo de equipo"):
         assert etiqueta in html
+
+
+def test_las_tarjetas_ocultas_se_pueden_ocultar_de_verdad(catalogo):
+    """`display:flex` de autor le gana a `[hidden]{display:none}` del navegador,
+    así que sin una regla propia el buscador no ocultaría nada."""
+    html = pagina_catalogo(catalogo)
+    assert ".eq[hidden]" in html and ".rejilla[hidden]" in html
+
+
+def test_la_tarjeta_ancla_el_badge(catalogo):
+    """`.eq__dest` es absolute: sin un ancestro posicionado los 7 badges se
+    apilarían en el origen de la página."""
+    html = pagina_catalogo(catalogo)
+    bloque = re.search(r"\.eq\{[^}]*\}", html)
+    assert bloque and "position:relative" in bloque.group(0)

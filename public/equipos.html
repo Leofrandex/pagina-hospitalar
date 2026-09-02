@@ -167,10 +167,15 @@
 .faceta .n{margin-left:auto;color:var(--tx-dim);font-size:13px;font-variant-numeric:tabular-nums}
 
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:22px}
-.eq{display:flex;flex-direction:column;border-radius:var(--r-md);overflow:hidden;
-  background:var(--card);color:inherit;text-decoration:none;
+.eq{position:relative;display:flex;flex-direction:column;border-radius:var(--r-md);
+  overflow:hidden;background:var(--card);color:inherit;text-decoration:none;
   transition:transform var(--dur-hover) var(--ease-hover),background var(--dur-hover)}
 .eq:hover{transform:translateY(-3px);background:var(--card-hover)}
+/* El buscador oculta tarjetas con la propiedad `hidden`, pero `display:flex` y
+   `display:grid` son CSS de autor y le ganan por origen a la regla `[hidden]
+   {display:none}` del navegador. Sin esto, filtrar actualiza los contadores y
+   la URL y no oculta absolutamente nada. */
+.eq[hidden],.rejilla[hidden]{display:none}
 .eq__img{aspect-ratio:4/3;object-fit:contain;width:100%;background:#fff;padding:14px}
 .eq__in{padding:16px 18px 20px;display:flex;flex-direction:column;gap:7px;flex:1}
 .eq__marca{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--tx-dim)}
