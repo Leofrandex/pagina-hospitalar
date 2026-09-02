@@ -149,3 +149,24 @@ def test_se_generaron_las_215_fichas():
     carpeta = os.path.join(RAIZ, "public", "equipos")
     fichas = [f for f in os.listdir(carpeta) if f.endswith(".html")]
     assert len(fichas) == 215
+
+
+def test_el_panel_de_facetas_scrollea_aparte(catalogo):
+    """Con 73 tipos el panel es más alto que la pantalla; sin scroll propio
+    arrastra el de la página."""
+    html = pagina_catalogo(catalogo)
+    bloque = re.search(r"\.facetas\{[^}]*\}", html)
+    assert bloque, "no se encontró la regla .facetas"
+    assert "overflow-y:auto" in bloque.group(0)
+    assert "overscroll-behavior:contain" in bloque.group(0)
+
+
+def test_la_pagina_trae_los_controles_de_paginacion(catalogo):
+    html = pagina_catalogo(catalogo)
+    assert 'id="paginacion"' in html
+    assert "POR_PAGINA = 25" in html
+
+
+def test_las_215_tarjetas_siguen_en_el_html(catalogo):
+    """La paginación se hace mostrando y ocultando: sin JS se ven todas."""
+    assert pagina_catalogo(catalogo).count('class="eq "') == 215

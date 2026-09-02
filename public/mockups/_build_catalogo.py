@@ -134,6 +134,11 @@ def pagina_catalogo(catalogo):
     {panel_facetas(catalogo)}
     <div>
       <div class="rejilla" id="rejilla">{tarjetas}</div>
+      <nav class="paginacion" id="paginacion" aria-label="Paginación del catálogo" hidden>
+        <button type="button" id="pag-antes">← Anteriores</button>
+        <span class="paginacion__estado" id="pag-estado" aria-live="polite"></span>
+        <button type="button" id="pag-despues">Siguientes →</button>
+      </nav>
       <div class="cat__vacio" id="vacio" hidden>
         <p>No encontramos equipos con esa búsqueda.</p>
         <p><a href="{wa_link("Hola, estoy buscando un equipo que no encontré en el catálogo:")}"
@@ -164,10 +169,18 @@ _CONTROLADOR = r"""
     tarjetas[el.dataset.slug] = el;
   });
 
+  var POR_PAGINA = 25;
+  var pagina = 1;
+  var barraPag = document.getElementById('paginacion');
+  var estadoPag = document.getElementById('pag-estado');
+  var antesPag = document.getElementById('pag-antes');
+  var despuesPag = document.getElementById('pag-despues');
+
   function leerURL() {
     var p = new URLSearchParams(location.search);
     var lista = function (k) { return p.getAll(k).filter(Boolean); };
-    return { q: p.get('q') || '', esp: lista('esp'), marca: lista('marca'), tipo: lista('tipo') };
+    return { q: p.get('q') || '', esp: lista('esp'), marca: lista('marca'), tipo: lista('tipo'),
+      pagina: parseInt(p.get('pagina') || '1', 10) };
   }
 
   function escribirURL(f) {
@@ -176,6 +189,7 @@ _CONTROLADOR = r"""
     ['esp', 'marca', 'tipo'].forEach(function (k) {
       f[k].forEach(function (v) { p.append(k, v); });
     });
+    if (pagina > 1) p.set('pagina', pagina);
     var qs = p.toString();
     history.replaceState(null, '', qs ? '?' + qs : location.pathname);
   }
@@ -190,13 +204,24 @@ _CONTROLADOR = r"""
 
   function pintar(f) {
     var visibles = buscar(EQUIPOS, f);
-    var set = new Set(visibles);
+    var pag = paginar(visibles, pagina, POR_PAGINA);
+    pagina = pag.pagina;
+    var enPantalla = new Set(pag.slugs);
     Object.keys(tarjetas).forEach(function (slug) {
-      tarjetas[slug].hidden = !set.has(slug);
+      tarjetas[slug].hidden = !enPantalla.has(slug);
     });
+
     conteo.textContent = visibles.length;
     vacio.hidden = visibles.length !== 0;
     rejilla.hidden = visibles.length === 0;
+    barraPag.hidden = pag.paginas < 2;
+    if (pag.paginas > 1) {
+      var desde = (pag.pagina - 1) * POR_PAGINA + 1;
+      var hasta = desde + pag.slugs.length - 1;
+      estadoPag.textContent = desde + '–' + hasta + ' de ' + visibles.length;
+      antesPag.disabled = pag.pagina === 1;
+      despuesPag.disabled = pag.pagina === pag.paginas;
+    }
 
     var cuentas = contarFacetas(EQUIPOS, f);
     var mapa = { esp: cuentas.especialidades, marca: cuentas.marcas, tipo: cuentas.tipos };
@@ -213,21 +238,38 @@ _CONTROLADOR = r"""
     escribirURL(f);
   }
 
+  // Cambiar de filtro devuelve a la primera página: quedarse en la 7 después de
+  // filtrar a 30 resultados desorienta.
+  function pintarDesdeElPrincipio(f) {
+    pagina = 1;
+    pintar(f);
+  }
+
+  function irAPagina(n) {
+    pagina = n;
+    pintar(leerCasillas());
+    rejilla.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  antesPag.addEventListener('click', function () { irAPagina(pagina - 1); });
+  despuesPag.addEventListener('click', function () { irAPagina(pagina + 1); });
+
   function aplicar(f) {
     input.value = f.q;
     document.querySelectorAll('.faceta input').forEach(function (c) {
       c.checked = f[c.name].indexOf(c.value) !== -1;
     });
+    pagina = f.pagina || 1;
     pintar(f);
   }
 
   var t;
   input.addEventListener('input', function () {
     clearTimeout(t);
-    t = setTimeout(function () { pintar(leerCasillas()); }, 120);
+    t = setTimeout(function () { pintarDesdeElPrincipio(leerCasillas()); }, 120);
   });
   document.querySelectorAll('.faceta input').forEach(function (c) {
-    c.addEventListener('change', function () { pintar(leerCasillas()); });
+    c.addEventListener('change', function () { pintarDesdeElPrincipio(leerCasillas()); });
   });
   window.addEventListener('popstate', function () { aplicar(leerURL()); });
 

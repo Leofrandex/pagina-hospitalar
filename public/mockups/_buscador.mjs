@@ -62,3 +62,13 @@ export function contarFacetas(equipos, filtros) {
     tipos: contar('tipo'),
   };
 }
+
+// Acota la página al rango válido en vez de devolver una pantalla vacía: si el
+// usuario estaba en la página 7 y filtra hasta dejar 30 resultados, tiene que
+// caer en la última página que existe, no en la nada.
+export function paginar(slugs, pagina, porPagina) {
+  var paginas = Math.max(1, Math.ceil(slugs.length / porPagina));
+  var actual = Math.min(Math.max(1, pagina || 1), paginas);
+  var desde = (actual - 1) * porPagina;
+  return { pagina: actual, paginas: paginas, slugs: slugs.slice(desde, desde + porPagina) };
+}

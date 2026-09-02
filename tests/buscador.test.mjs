@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buscar, contarFacetas, normalizar } from '../public/mockups/_buscador.mjs';
+import { buscar, contarFacetas, normalizar, paginar } from '../public/mockups/_buscador.mjs';
 
 const EQUIPOS = [
   { slug: 'acuson', nombre: 'ACUSON Sequoia', marca: 'Siemens',
@@ -74,4 +74,32 @@ test('los conteos respetan el texto buscado', () => {
   const c = contarFacetas(EQUIPOS, { ...vacio, q: 'ecografo' });
   assert.equal(c.especialidades['Emergencia'], undefined);
   assert.equal(c.tipos['Ecógrafos'], 2);
+});
+
+test('paginar recorta a 25 y calcula el total de páginas', () => {
+  const slugs = Array.from({ length: 215 }, (_, i) => 's' + i);
+  const r = paginar(slugs, 1, 25);
+  assert.equal(r.paginas, 9);
+  assert.equal(r.slugs.length, 25);
+  assert.equal(r.slugs[0], 's0');
+});
+
+test('la última página trae el resto, no 25', () => {
+  const slugs = Array.from({ length: 215 }, (_, i) => 's' + i);
+  const r = paginar(slugs, 9, 25);
+  assert.equal(r.slugs.length, 15);
+  assert.equal(r.slugs[0], 's200');
+});
+
+test('una página fuera de rango se acota en vez de vaciar la pantalla', () => {
+  const slugs = Array.from({ length: 30 }, (_, i) => 's' + i);
+  assert.equal(paginar(slugs, 99, 25).pagina, 2);
+  assert.equal(paginar(slugs, 0, 25).pagina, 1);
+  assert.equal(paginar(slugs, -3, 25).pagina, 1);
+});
+
+test('sin resultados hay una sola página vacía', () => {
+  const r = paginar([], 1, 25);
+  assert.equal(r.paginas, 1);
+  assert.deepEqual(r.slugs, []);
 });

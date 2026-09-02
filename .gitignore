@@ -49,3 +49,5 @@ scratchpad_*.md
 # lo que usa la web vive optimizado en public/brand/
 /diseno/
 /Manual Corporativo, Scalto (1).pdf
+__pycache__/
+*.pyc
