@@ -178,3 +178,42 @@ def test_la_pagina_trae_los_controles_de_paginacion(catalogo):
 def test_las_215_tarjetas_siguen_en_el_html(catalogo):
     """La paginación se hace mostrando y ocultando: sin JS se ven todas."""
     assert pagina_catalogo(catalogo).count('class="eq "') == 215
+
+
+from _catalogo_map import CHIPS
+
+
+def test_los_chips_apuntan_a_facetas_que_existen(catalogo):
+    validos = {
+        "esp": {v["nombre"] for v in catalogo["especialidades"]},
+        "tipo": {v["nombre"] for v in catalogo["tipos"]},
+        "marca": {v["nombre"] for v in catalogo["marcas"]},
+    }
+    for chip in CHIPS:
+        for eje, valores in chip["filtros"].items():
+            for v in valores:
+                assert v in validos[eje], "%s -> %s" % (chip["texto"], v)
+
+
+def test_ningun_chip_deja_la_pantalla_vacia(catalogo):
+    """Un atajo que no devuelve nada es peor que no tenerlo."""
+    def coincide(equipo, filtros):
+        # Dentro de una faceta los valores suman; entre facetas se restringen.
+        # Mismo criterio que buscar() en _buscador.mjs.
+        campos = {"esp": equipo["especialidades"],
+                  "tipo": equipo["tipos"],
+                  "marca": [equipo["marca"]] if equipo["marca"] else []}
+        for eje, elegidos in filtros.items():
+            if elegidos and not any(v in campos[eje] for v in elegidos):
+                return False
+        return True
+
+    for chip in CHIPS:
+        hay = [e for e in catalogo["equipos"] if coincide(e, chip["filtros"])]
+        assert hay, chip["texto"]
+
+
+def test_la_pagina_renderiza_los_chips(catalogo):
+    html = pagina_catalogo(catalogo)
+    for chip in CHIPS:
+        assert chip["texto"] in html

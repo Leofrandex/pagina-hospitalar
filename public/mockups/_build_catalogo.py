@@ -9,6 +9,7 @@ import os
 import re
 import urllib.parse
 
+from _catalogo_map import CHIPS
 from _rutas import ruta_larga
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -114,6 +115,14 @@ def pagina_catalogo(catalogo):
     # Hoy ningún equipo lo trae, pero el JSON se regenera desde WordPress.
     datos = json.dumps(_indice(catalogo), ensure_ascii=False,
                        separators=(",", ":")).replace("</", "<\\/")
+    # data-filtros es un atributo HTML delimitado con comillas simples: el JSON
+    # (que trae comillas dobles) va sin tocar, pero esc() lo protege igual por si
+    # algún texto o valor de filtro llegara a traer comillas simples o "&".
+    chips = "".join(
+        '<button class="chip" type="button" aria-pressed="false" '
+        'data-filtros=\'%s\'>%s</button>'
+        % (esc(json.dumps(c["filtros"], ensure_ascii=False)), esc(c["texto"]))
+        for c in CHIPS)
     cuerpo = f"""
 <main class="cat">
   <header class="cat__head">
@@ -125,7 +134,7 @@ def pagina_catalogo(catalogo):
       <input id="q" type="search" autocomplete="off"
              placeholder="Buscá un equipo, una marca o una técnica…">
     </div>
-    <div class="chips" id="chips"></div>
+    <div class="chips" id="chips">{chips}</div>
     <p class="cat__conteo"><strong id="conteo">{total}</strong> equipos ·
        {len(catalogo["especialidades"])} especialidades ·
        {len(catalogo["marcas"])} marcas</p>
@@ -236,6 +245,23 @@ _CONTROLADOR = r"""
       });
     });
     escribirURL(f);
+    sincronizarChips(f);
+  }
+
+  // Un chip se ve "puesto" solo mientras las casillas coinciden exactamente con
+  // su combinación de filtros. Si el usuario destilda una a mano (o marca otra),
+  // el chip deja de reclamar un estado que ya no es cierto.
+  function sincronizarChips(f) {
+    document.querySelectorAll('.chip').forEach(function (boton) {
+      var filtros = JSON.parse(boton.dataset.filtros);
+      var coincide = ['esp', 'marca', 'tipo'].every(function (eje) {
+        var actual = f[eje] || [];
+        var esperado = filtros[eje] || [];
+        return actual.length === esperado.length &&
+          esperado.every(function (v) { return actual.indexOf(v) !== -1; });
+      });
+      boton.setAttribute('aria-pressed', String(coincide));
+    });
   }
 
   // Cambiar de filtro devuelve a la primera página: quedarse en la 7 después de
@@ -272,6 +298,32 @@ _CONTROLADOR = r"""
     c.addEventListener('change', function () { pintarDesdeElPrincipio(leerCasillas()); });
   });
   window.addEventListener('popstate', function () { aplicar(leerURL()); });
+
+  document.querySelectorAll('.chip').forEach(function (boton) {
+    boton.addEventListener('click', function () {
+      var puesto = boton.getAttribute('aria-pressed') === 'true';
+      document.querySelectorAll('.chip').forEach(function (o) {
+        o.setAttribute('aria-pressed', 'false');
+      });
+      document.querySelectorAll('.faceta input').forEach(function (c) {
+        c.checked = false;
+      });
+      if (!puesto) {
+        boton.setAttribute('aria-pressed', 'true');
+        var f = JSON.parse(boton.dataset.filtros);
+        Object.keys(f).forEach(function (eje) {
+          f[eje].forEach(function (valor) {
+            var c = document.querySelector(
+              '.faceta input[name="' + eje + '"][value="' + CSS.escape(valor) + '"]');
+            if (c) c.checked = true;
+          });
+        });
+      }
+      // Un chip cambia el conjunto de filtros: como cualquier otro cambio de
+      // filtro, vuelve a la página 1 (ver pintarDesdeElPrincipio más arriba).
+      pintarDesdeElPrincipio(leerCasillas());
+    });
+  });
 
   aplicar(leerURL());
 })();

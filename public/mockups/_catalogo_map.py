@@ -234,3 +234,22 @@ def equipo_desde_producto(producto, cats_por_id):
         "imagen": imagen,
         "busqueda": normalizar(" ".join(p for p in partes if p)),
     }
+
+
+# Atajos en el idioma del médico, no en el del catálogo. El que busca no siempre
+# sabe que lo que necesita se llama "arco en C"; sí sabe que va a operar.
+# Los valores tienen que existir en _catalogo.json: hay un test que lo verifica.
+CHIPS = [
+    {"texto": "Voy a montar un consultorio de ginecología",
+     "filtros": {"esp": ["Ginecología"]}},
+    {"texto": "Necesito reemplazar un ecógrafo",
+     "filtros": {"tipo": ["Ecógrafos"]}},
+    {"texto": "Equipamiento para quirófano",
+     "filtros": {"esp": ["Quirófano", "Cirugía"]}},
+    {"texto": "Diagnóstico por imagen",
+     "filtros": {"esp": ["Diagnóstico por Imagen"]}},
+    {"texto": "Medicina estética",
+     "filtros": {"esp": ["Dermatología / Medicina Estética"]}},
+    {"texto": "Consumibles y descartables",
+     "filtros": {"tipo": ["Descartables", "Insumos"]}},
+]
