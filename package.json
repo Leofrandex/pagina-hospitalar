@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "lab": "next dev -p 4321"
+    "lab": "next dev -p 4321",
+    "catalogo:bajar": "python public/mockups/_fetch_catalogo.py",
+    "catalogo:build": "python public/mockups/_build_catalogo.py && python public/mockups/_build-d.py",
+    "test": "python -m pytest tests -q && node --test \"tests/*.test.mjs\""
   },
   "dependencies": {
     "framer-motion": "^12.38.0",
