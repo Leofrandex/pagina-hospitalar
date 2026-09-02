@@ -149,12 +149,15 @@
    ahí es una recta limpia en vez de curvarse con el radio de la tarjeta, y lee
    como el bloque que sostiene el texto. En reposo violeta (institucional); sólo
    la tarjeta bajo el cursor pasa a naranja, que es como se respeta "un solo
-   naranja por pantalla visible" con 25 tarjetas a la vez. */
-.eq__marco::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
-  background:var(--violeta);
-  transition:height var(--dur-hover) var(--ease-hover),
+   naranja por pantalla visible" con 25 tarjetas a la vez.
+
+   La barra mide 5px y se escala a .6 en reposo en vez de animar `height`:
+   así los 3px->5px del hover corren en el compositor y no tocan layout. */
+.eq__marco::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;
+  background:var(--violeta);transform:scaleY(.6);transform-origin:bottom;
+  transition:transform var(--dur-hover) var(--ease-hover),
              background var(--dur-hover) var(--ease-hover)}
-.eq:hover .eq__marco::after{height:5px;background:var(--naranja)}
+.eq:hover .eq__marco::after{transform:scaleY(1);background:var(--naranja)}
 .eq__img{display:block;aspect-ratio:4/3;object-fit:contain;width:100%;
   transition:transform var(--dur-enter) var(--ease-out)}
 .eq:hover .eq__img{transform:scale(1.045)}

@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "border-left: 3px solid var(--color-accent)",
+        "createdAt": "2026-08-30T01:56:57.096Z",
+        "reason": "Claude: no es un card side-tab sino la barra de cita de .wp-content blockquote, convencion tipografica estandar para citas"
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "public/mockups/_catalogo.css"
+        ],
+        "createdAt": "2026-09-02T14:16:50.909Z",
+        "reason": "DESIGN.md 6.3 exige la barra de acento de 3px que crece a 5px en hover; ademas va al pie del marco de la foto, no es el borde lateral grueso que persigue la regla"
+      }
+    ]
+  }
+}
