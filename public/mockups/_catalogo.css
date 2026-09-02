@@ -54,3 +54,25 @@
 
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.ficha{max-width:var(--max);margin:0 auto;padding:44px var(--pad) 88px}
+.ficha__volver{color:var(--tx-dim);text-decoration:none;font-size:14px}
+.ficha__volver:hover{color:var(--naranja)}
+.ficha__cuerpo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:52px;margin-top:26px;align-items:start}
+@media (max-width:860px){.ficha__cuerpo{grid-template-columns:1fr;gap:30px}}
+.ficha__img{width:100%;border-radius:var(--r-md);background:#fff;padding:26px;
+  object-fit:contain;aspect-ratio:4/3}
+.ficha__marca{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--tx-dim)}
+.ficha__nombre{margin:10px 0 0;line-height:1.15}
+.ficha__meta{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 0}
+.ficha__meta a{background:var(--card);border-radius:999px;padding:7px 14px;font-size:13px;
+  color:var(--tx);text-decoration:none}
+.ficha__meta a:hover{background:var(--card-hover)}
+.ficha__texto{margin-top:24px;line-height:1.65;color:var(--tx-dim)}
+.ficha__cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;
+  background:var(--naranja);color:#fff;text-decoration:none;font-weight:700;
+  padding:16px 26px;border-radius:var(--r-sm);
+  transition:transform var(--dur-hover) var(--ease-hover)}
+.ficha__cta:hover{transform:translateY(-2px)}
+.ficha__nota{margin-top:12px;font-size:13px;color:var(--tx-dim)}

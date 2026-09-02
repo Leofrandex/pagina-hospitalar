@@ -2,6 +2,7 @@
 import json
 import os
 import re
+import urllib.parse
 
 import pytest
 
@@ -109,3 +110,42 @@ def test_la_tarjeta_ancla_el_badge(catalogo):
     html = pagina_catalogo(catalogo)
     bloque = re.search(r"\.eq\{[^}]*\}", html)
     assert bloque and "position:relative" in bloque.group(0)
+
+
+from _build_catalogo import pagina_ficha
+
+
+def _equipo(catalogo, slug):
+    return next(e for e in catalogo["equipos"] if e["slug"] == slug)
+
+
+def test_la_ficha_pone_el_nombre_del_equipo_en_el_whatsapp(catalogo):
+    e = catalogo["equipos"][0]
+    html = pagina_ficha(e, catalogo)
+    assert "wa.me/584241941573?text=" in html
+    assert urllib.parse.quote(e["nombre"])[:20] in html
+
+
+def test_la_ficha_no_tiene_nada_de_tienda(catalogo):
+    html = pagina_ficha(catalogo["equipos"][0], catalogo).lower()
+    for prohibido in ("añadir al carrito", "add-to-cart", "checkout", "woocommerce"):
+        assert prohibido not in html, prohibido
+
+
+def test_la_ficha_enlaza_de_vuelta_al_catalogo_filtrado(catalogo):
+    e = next(x for x in catalogo["equipos"] if x["especialidades"])
+    html = pagina_ficha(e, catalogo)
+    assert "/equipos?esp=" in html
+
+
+def test_la_ficha_tiene_titulo_y_descripcion_propios(catalogo):
+    e = catalogo["equipos"][0]
+    html = pagina_ficha(e, catalogo)
+    assert "<title>" in html and e["nombre"][:10] in html
+    assert '<meta name="description"' in html
+
+
+def test_se_generaron_las_215_fichas():
+    carpeta = os.path.join(RAIZ, "public", "equipos")
+    fichas = [f for f in os.listdir(carpeta) if f.endswith(".html")]
+    assert len(fichas) == 215

@@ -10,13 +10,25 @@ import re
 import urllib.parse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PUBLIC = os.path.join(HERE, "..")
+PUBLIC = os.path.normpath(os.path.join(HERE, ".."))
 WHATSAPP = "584241941573"
 
 
 def _leer(nombre):
     with open(os.path.join(HERE, nombre), encoding="utf-8") as f:
         return f.read()
+
+
+def _ruta_larga(ruta):
+    """Algunos slugs superan los 260 caracteres que Windows exige sin este
+    prefijo (MAX_PATH). No afecta a Linux/Mac, donde no se usa este prefijo.
+
+    Mismo criterio que `_ruta_larga` de `_fetch_catalogo.py`."""
+    if os.name == "nt":
+        absoluta = os.path.abspath(ruta)
+        if not absoluta.startswith("\\\\?\\"):
+            return "\\\\?\\" + absoluta
+    return ruta
 
 
 def cargar_catalogo():
@@ -234,12 +246,62 @@ _CONTROLADOR = r"""
 """
 
 
+def pagina_ficha(e, catalogo):
+    mensaje = "Hola, me interesa el %s. ¿Me pueden dar más información?" % e["nombre"]
+    img = ('<img class="ficha__img" src="%s" alt="%s" width="600" height="450">'
+           % (esc(e["imagen"]), esc(e["nombre"]))) if e["imagen"] else \
+          '<div class="ficha__img"></div>'
+    marca = '<p class="ficha__marca">%s</p>' % esc(e["marca"]) if e.get("marca") else ""
+
+    enlaces = []
+    for nombre in e["especialidades"]:
+        enlaces.append('<a href="/equipos?esp=%s">%s</a>'
+                       % (urllib.parse.quote(nombre), esc(nombre)))
+    for nombre in e["tipos"]:
+        enlaces.append('<a href="/equipos?tipo=%s">%s</a>'
+                       % (urllib.parse.quote(nombre), esc(nombre)))
+    if e.get("marca"):
+        enlaces.append('<a href="/equipos?marca=%s">%s</a>'
+                       % (urllib.parse.quote(e["marca"]), esc(e["marca"])))
+    meta = '<div class="ficha__meta">%s</div>' % "".join(enlaces) if enlaces else ""
+
+    texto = e["descripcion"] or e["resumen"]
+    cuerpo = f"""
+<main class="ficha">
+  <a class="ficha__volver" href="/equipos">← Volver al catálogo</a>
+  <div class="ficha__cuerpo">
+    <div>{img}</div>
+    <div>
+      {marca}
+      <h1 class="display-m ficha__nombre">{esc(e["nombre"])}</h1>
+      {meta}
+      <div class="ficha__texto"><p>{esc(texto)}</p></div>
+      <a class="ficha__cta" href="{wa_link(mensaje)}" target="_blank" rel="noopener">
+        Consultar por WhatsApp →</a>
+      <p class="ficha__nota">Te respondemos con disponibilidad, condiciones y respaldo técnico.</p>
+    </div>
+  </div>
+</main>"""
+    descripcion = (e["resumen"] or e["nombre"])[:155]
+    return SHELL("%s | Hospitalar Venezuela" % e["nombre"], descripcion, cuerpo)
+
+
 def main():
     catalogo = cargar_catalogo()
-    destino = os.path.join(PUBLIC, "equipos.html")
-    with open(destino, "w", encoding="utf-8") as f:
+    with open(os.path.join(PUBLIC, "equipos.html"), "w", encoding="utf-8") as f:
         f.write(pagina_catalogo(catalogo))
-    print("generado public/equipos.html con %d equipos" % len(catalogo["equipos"]))
+
+    carpeta = os.path.join(PUBLIC, "equipos")
+    os.makedirs(carpeta, exist_ok=True)
+    for viejo in os.listdir(carpeta):
+        if viejo.endswith(".html"):
+            os.remove(_ruta_larga(os.path.join(carpeta, viejo)))
+    for e in catalogo["equipos"]:
+        ruta = _ruta_larga(os.path.join(carpeta, "%s.html" % e["slug"]))
+        with open(ruta, "w", encoding="utf-8") as f:
+            f.write(pagina_ficha(e, catalogo))
+
+    print("generado public/equipos.html y %d fichas" % len(catalogo["equipos"]))
 
 
 if __name__ == "__main__":
