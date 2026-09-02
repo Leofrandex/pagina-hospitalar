@@ -69,10 +69,14 @@ def tarjeta(e):
     marca = '<span class="eq__marca">%s</span>' % esc(e["marca"]) if e.get("marca") else ""
     esp = '<span class="eq__esp">%s</span>' % esc(" · ".join(e["especialidades"])) \
         if e["especialidades"] else ""
+    cmp_btn = ('<button class="eq__cmp" type="button" aria-pressed="false" '
+               'title="Comparar" data-cmp="%s" data-nombre="%s">+</button>'
+               % (esc(e["slug"]), esc(e["nombre"])))
     return (
-        '<a class="eq " href="/equipos/%s" data-slug="%s">%s%s'
+        '<a class="eq " href="/equipos/%s" data-slug="%s">%s%s%s'
         '<div class="eq__in">%s<h3 class="eq__nombre">%s</h3>%s</div></a>'
-    ) % (esc(e["slug"]), esc(e["slug"]), dest, img, marca, esc(e["nombre"]), esp)
+    ) % (esc(e["slug"]), esc(e["slug"]), cmp_btn, dest, img, marca,
+         esc(e["nombre"]), esp)
 
 
 def _faceta(clave, etiqueta, valores):
@@ -154,6 +158,11 @@ def pagina_catalogo(catalogo):
               target="_blank" rel="noopener">Contanos qué necesitás por WhatsApp →</a></p>
       </div>
     </div>
+  </div>
+  <div class="comparador" id="comparador" hidden>
+    <div class="comparador__lista" id="comparador-lista"></div>
+    <a class="comparador__cta" id="comparador-cta" href="#" target="_blank" rel="noopener">Consultar los 3</a>
+    <button class="comparador__limpiar" type="button" id="comparador-limpiar">Limpiar</button>
   </div>
 </main>"""
     scripts = (
@@ -323,6 +332,56 @@ _CONTROLADOR = r"""
       // filtro, vuelve a la página 1 (ver pintarDesdeElPrincipio más arriba).
       pintarDesdeElPrincipio(leerCasillas());
     });
+  });
+
+  var elegidos = [];
+  var barra = document.getElementById('comparador');
+  var lista = document.getElementById('comparador-lista');
+  var cta = document.getElementById('comparador-cta');
+
+  function pintarComparador() {
+    barra.hidden = elegidos.length === 0;
+    lista.innerHTML = '';
+    elegidos.forEach(function (e) {
+      var s = document.createElement('span');
+      s.textContent = e.nombre;
+      lista.appendChild(s);
+    });
+    cta.textContent = elegidos.length === 1
+      ? 'Consultar este equipo'
+      : 'Consultar los ' + elegidos.length;
+    var texto = 'Hola, me interesan estos equipos:\n' +
+      elegidos.map(function (e) { return '• ' + e.nombre; }).join('\n');
+    cta.href = 'https://wa.me/584241941573?text=' + encodeURIComponent(texto);
+  }
+
+  document.querySelectorAll('.eq__cmp').forEach(function (boton) {
+    boton.addEventListener('click', function (ev) {
+      ev.preventDefault();      // el botón vive dentro del <a> de la tarjeta
+      ev.stopPropagation();
+      var slug = boton.dataset.cmp;
+      var i = elegidos.findIndex(function (e) { return e.slug === slug; });
+      if (i !== -1) {
+        elegidos.splice(i, 1);
+        boton.setAttribute('aria-pressed', 'false');
+        boton.textContent = '+';
+      } else {
+        if (elegidos.length === 3) return;   // tres es el máximo legible
+        elegidos.push({ slug: slug, nombre: boton.dataset.nombre });
+        boton.setAttribute('aria-pressed', 'true');
+        boton.textContent = '✓';
+      }
+      pintarComparador();
+    });
+  });
+
+  document.getElementById('comparador-limpiar').addEventListener('click', function () {
+    elegidos = [];
+    document.querySelectorAll('.eq__cmp').forEach(function (b) {
+      b.setAttribute('aria-pressed', 'false');
+      b.textContent = '+';
+    });
+    pintarComparador();
   });
 
   aplicar(leerURL());

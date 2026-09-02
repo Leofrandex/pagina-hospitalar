@@ -57,6 +57,26 @@
 .eq__dest{position:absolute;margin:12px;padding:4px 10px;border-radius:999px;
   background:var(--naranja);color:#fff;font-size:11px;font-weight:700;letter-spacing:.05em}
 
+/* `.eq` ya trae `position:relative` desde Task 5, que es lo que ancla este botón. */
+.eq__cmp{position:absolute;top:10px;right:10px;z-index:2;width:26px;height:26px;
+  border-radius:8px;border:0;background:rgba(255,255,255,.9);cursor:pointer;
+  display:grid;place-items:center;font-size:15px;line-height:1;color:var(--violeta)}
+.eq__cmp[aria-pressed="true"]{background:var(--violeta);color:#fff}
+
+.comparador{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:70;
+  display:flex;align-items:center;gap:16px;padding:13px 16px 13px 20px;
+  border-radius:var(--r-md);background:var(--violeta);color:#fff;
+  box-shadow:0 14px 40px rgba(20,17,58,.34);max-width:calc(100vw - 32px)}
+/* Mismo motivo que `.eq[hidden]` más arriba: `display:flex` es CSS de autor y
+   le gana por origen a la regla `[hidden]{display:none}` del navegador. */
+.comparador[hidden]{display:none}
+.comparador__lista{display:flex;gap:8px;flex-wrap:wrap;font-size:14px}
+.comparador__lista span{background:rgba(255,255,255,.14);border-radius:999px;padding:5px 12px}
+.comparador__cta{background:var(--naranja);color:#fff;text-decoration:none;font-weight:700;
+  padding:11px 20px;border-radius:var(--r-sm);white-space:nowrap}
+.comparador__limpiar{background:none;border:0;color:rgba(255,255,255,.7);cursor:pointer;
+  font:inherit;font-size:13px}
+
 .cat__vacio{padding:64px 0;text-align:center;color:var(--tx-dim)}
 .cat__vacio a{color:var(--naranja);font-weight:600}
 

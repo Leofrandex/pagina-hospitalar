@@ -217,3 +217,19 @@ def test_la_pagina_renderiza_los_chips(catalogo):
     html = pagina_catalogo(catalogo)
     for chip in CHIPS:
         assert chip["texto"] in html
+
+
+def test_la_pagina_trae_el_comparador(catalogo):
+    html = pagina_catalogo(catalogo)
+    assert 'id="comparador"' in html
+    assert "Comparar" in html
+
+
+def test_cada_tarjeta_permite_seleccionarse(catalogo):
+    html = pagina_catalogo(catalogo)
+    assert html.count('class="eq__cmp"') == 215
+
+
+def test_el_comparador_arranca_oculto(catalogo):
+    html = pagina_catalogo(catalogo)
+    assert re.search(r'id="comparador"[^>]*\shidden', html)
