@@ -75,10 +75,12 @@ def SHELL(titulo, descripcion, cuerpo, extra_head="", scripts=""):
 
 
 def tarjeta(e):
-    img = ('<img class="eq__img" src="%s" alt="" loading="lazy" width="232" height="174">'
-           % esc(e["imagen"])) if e["imagen"] else '<div class="eq__img"></div>'
+    img = ('<div class="eq__marco"><img class="eq__img" src="%s" alt="" loading="lazy"'
+           ' width="238" height="179"></div>' % esc(e["imagen"])) if e["imagen"]         else '<div class="eq__marco"><div class="eq__img"></div></div>'
     dest = '<span class="eq__dest">Destacado</span>' if e.get("destacado") else ""
-    marca = '<span class="eq__marca">%s</span>' % esc(e["marca"]) if e.get("marca") else ""
+    # 37 equipos no tienen marca. El hueco se reserva igual para que el nombre
+    # arranque a la misma altura en toda la fila; vacío, sin inventar texto.
+    marca = ('<span class="eq__marca">%s</span>' % esc(e["marca"])) if e.get("marca")         else '<span class="eq__marca" aria-hidden="true"></span>'
     esp = '<span class="eq__esp">%s</span>' % esc(" · ".join(e["especialidades"])) \
         if e["especialidades"] else ""
     cmp_btn = ('<button class="eq__cmp" type="button" aria-pressed="false" '
@@ -92,7 +94,7 @@ def tarjeta(e):
          esc(e["slug"]), esc(e["nombre"]), esp)
 
 
-def _faceta(clave, etiqueta, valores):
+def _faceta(clave, etiqueta, valores, abierta=False):
     filas = "".join(
         '<label data-valor="%s"><input type="checkbox" name="%s" value="%s">'
         '<span>%s</span><span class="n">%d</span></label>'
@@ -100,15 +102,30 @@ def _faceta(clave, etiqueta, valores):
         for v in valores)
     # role="group" + aria-labelledby y no <fieldset>: el fieldset trae su propio
     # box model y pelearía con el CSS de .faceta. La agrupación es lo que hace que
-    # un lector de pantalla anuncie a qué eje pertenecen las 72 casillas.
-    return ('<div class="faceta" data-faceta="%s" role="group" aria-labelledby="faceta-%s">'
-            '<h3 id="faceta-%s">%s</h3>%s</div>'
-            % (clave, clave, clave, esc(etiqueta), filas))
+    # un lector de pantalla anuncie a qué eje pertenecen las casillas.
+    #
+    # El eje arranca plegado salvo Especialidad: con 72 tipos, abrir los tres de
+    # golpe convierte el panel en un muro. La flecha y aria-expanded dicen que se
+    # puede desplegar; el contenido plegado queda fuera del tabulador por el
+    # visibility:hidden del CSS, no sólo con altura cero.
+    return (
+        '<div class="faceta" data-faceta="%s" data-abierta="%s" role="group" '
+        'aria-labelledby="faceta-%s">'
+        '<h3 class="faceta__cab"><button id="faceta-%s" type="button" '
+        'aria-expanded="%s" aria-controls="faceta-%s-cuerpo">'
+        '<svg class="faceta__flecha" viewBox="0 0 24 24" aria-hidden="true">'
+        '<path d="m6 9 6 6 6-6"/></svg>%s'
+        '<span class="faceta__n">%d</span></button></h3>'
+        '<div class="faceta__cuerpo" id="faceta-%s-cuerpo">'
+        '<div class="faceta__lista"><div>%s</div></div></div></div>'
+    ) % (clave, "1" if abierta else "0", clave, clave,
+         "true" if abierta else "false", clave, esc(etiqueta), len(valores),
+         clave, filas)
 
 
 def panel_facetas(catalogo):
     return ('<aside class="facetas">%s%s%s</aside>' % (
-        _faceta("esp", "Especialidad", catalogo["especialidades"]),
+        _faceta("esp", "Especialidad", catalogo["especialidades"], abierta=True),
         _faceta("marca", "Marca", catalogo["marcas"]),
         _faceta("tipo", "Tipo de equipo", catalogo["tipos"]),
     ))
@@ -146,20 +163,23 @@ def pagina_catalogo(catalogo):
         for c in CHIPS)
     cuerpo = f"""
 <main class="cat">
-  <header class="cat__head">
-    <p class="eyebrow" style="color:var(--accent-eyebrow)">Catálogo</p>
-    <h1 class="display-l cat__titulo">equipos que representamos</h1>
-    <div class="buscador">
-      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <label class="sr-only" for="q">Buscar equipos</label>
-      <input id="q" type="search" autocomplete="off"
-             placeholder="Buscá un equipo, una marca o una técnica…">
-    </div>
-    <div class="chips" id="chips">{chips}</div>
-    <p class="cat__conteo" aria-live="polite"><strong id="conteo">{total}</strong> equipos ·
-       {len(catalogo["especialidades"])} especialidades ·
-       {len(catalogo["marcas"])} marcas</p>
-  </header>
+  <div class="cat__hero">
+    <header class="cat__head">
+      <h1 class="display-l cat__titulo">equipos que representamos</h1>
+      <p class="cat__bajada">
+        <strong id="conteo" aria-live="polite">{total}</strong> equipos de
+        {len(catalogo["especialidades"])} especialidades y {len(catalogo["marcas"])} marcas.
+        Buscá por nombre, por marca o por la técnica que necesitás resolver.
+      </p>
+      <div class="buscador">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label class="sr-only" for="q">Buscar equipos</label>
+        <input id="q" type="search" autocomplete="off"
+               placeholder="Buscá un equipo, una marca o una técnica…">
+      </div>
+      <div class="chips" id="chips">{chips}</div>
+    </header>
+  </div>
   <div class="cat__cuerpo">
     {panel_facetas(catalogo)}
     <div>
@@ -252,8 +272,15 @@ _CONTROLADOR = r"""
     var pag = paginar(visibles, pagina, POR_PAGINA);
     pagina = pag.pagina;
     var enPantalla = new Set(pag.slugs);
+    // `--i` se fija ANTES de mostrar la tarjeta: la animación de entrada arranca
+    // en el momento en que el elemento deja de estar `hidden`, y el retardo
+    // escalonado tiene que estar puesto para entonces.
+    var orden = 0;
     Object.keys(tarjetas).forEach(function (slug) {
-      tarjetas[slug].hidden = !enPantalla.has(slug);
+      var el = tarjetas[slug];
+      var visible = enPantalla.has(slug);
+      if (visible) el.style.setProperty('--i', orden++);
+      el.hidden = !visible;
     });
 
     conteo.textContent = visibles.length;
@@ -438,6 +465,15 @@ _CONTROLADOR = r"""
       b.setAttribute('aria-label', 'Comparar ' + b.dataset.nombre);
     });
     pintarComparador();
+  });
+
+  document.querySelectorAll('.faceta__cab button').forEach(function (boton) {
+    boton.addEventListener('click', function () {
+      var panel = boton.closest('.faceta');
+      var abierta = panel.dataset.abierta === '1';
+      panel.dataset.abierta = abierta ? '0' : '1';
+      boton.setAttribute('aria-expanded', abierta ? 'false' : 'true');
+    });
   });
 
   aplicar(leerURL());
