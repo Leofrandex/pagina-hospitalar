@@ -233,3 +233,41 @@ def test_cada_tarjeta_permite_seleccionarse(catalogo):
 def test_el_comparador_arranca_oculto(catalogo):
     html = pagina_catalogo(catalogo)
     assert re.search(r'id="comparador"[^>]*\shidden', html)
+
+
+# --- Guardas sobre el JSON congelado --------------------------------------
+# Cierran dos clases enteras de defecto que llegaron a producción:
+#   1. diecisiete nombres traían entidades HTML crudas ('Dräger &#8211; Atlan®'),
+#      que esc() volvía a escapar y la página pintaba literales;
+#   2. diez slugs traían percent-encoding ('smartxide%c2%b2-trio'), que el
+#      navegador decodifica antes de tocar el disco: 404 en la ficha y en la
+#      imagen.
+# Ambas asertan primero el total, para que un catálogo vacío falle en vez de
+# pasar en verde sin haber mirado nada (igual que en test_independencia.py).
+
+_ENTIDAD = re.compile(r"&\w+;|&#\d+;")
+
+
+def test_ningun_texto_del_catalogo_arrastra_entidades_html(catalogo):
+    assert len(catalogo["equipos"]) == 215
+    culpables = [
+        (e["slug"], campo, e[campo])
+        for e in catalogo["equipos"]
+        for campo in ("nombre", "resumen", "descripcion")
+        if _ENTIDAD.search(e[campo] or "")
+    ]
+    assert culpables == [], culpables
+
+
+def test_todos_los_slugs_son_seguros_en_una_url_y_en_el_disco(catalogo):
+    assert len(catalogo["equipos"]) == 215
+    malos = [e["slug"] for e in catalogo["equipos"]
+             if not re.fullmatch(r"[a-z0-9-]+", e["slug"] or "")]
+    assert malos == [], malos
+
+
+def test_no_hay_raices_de_categoria_sin_curar(catalogo):
+    """§5.4: una raíz nueva sin mapear le borraría la marca o la especialidad a
+    un producto en silencio. `_fetch_catalogo.py` las anota acá; este test las
+    convierte en rojo."""
+    assert catalogo.get("sin_mapear") == []

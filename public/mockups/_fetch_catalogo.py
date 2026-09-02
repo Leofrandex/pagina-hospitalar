@@ -18,7 +18,8 @@ import urllib.request
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from _catalogo_map import equipo_desde_producto, slugificar  # noqa: E402
+from _catalogo_map import (clasificar_raiz, equipo_desde_producto,  # noqa: E402
+                           raiz_de, slugificar)
 from _rutas import ruta_larga  # noqa: E402
 
 API = "https://hospitalarve.com/wp-json/wc/store/v1"
@@ -90,6 +91,48 @@ def bajar_imagen(url, destino):
     return True
 
 
+def raices_sin_mapear(productos, cats_por_id):
+    """Nombres de raíz que el mapa de curaduría no conoce (§5.4 del spec).
+
+    `clasificar_raiz` los devuelve como eje "otros" y `equipo_desde_producto` los
+    descarta: sin esto, una categoría raíz nueva le borraría la marca o la
+    especialidad a un producto en silencio. Quedan escritos en _catalogo.json y
+    hay un test que exige que la lista esté vacía, así que el silencio pasa a ser
+    un test en rojo.
+    """
+    sueltas = set()
+    for p in productos:
+        for ref in p.get("categories", []):
+            if ref["id"] not in cats_por_id:
+                continue
+            raiz = raiz_de(ref["id"], cats_por_id)
+            if raiz is None:
+                continue
+            if clasificar_raiz(raiz["name"])[0] == "otros":
+                sueltas.add(raiz["name"])
+    return sorted(sueltas)
+
+
+def barrer_imagenes(equipos):
+    """Borra las imágenes que ya no referencia ningún equipo.
+
+    El nombre del archivo sale del slug: cuando un slug cambia (o un producto
+    desaparece de WooCommerce), la imagen vieja se quedaría en el repo para
+    siempre. `_build_catalogo.py` ya hace lo mismo con las fichas HTML.
+    """
+    carpeta = os.path.join(SALIDA_IMG)
+    if not os.path.isdir(carpeta):
+        return []
+    en_uso = {os.path.basename(e["imagen"]) for e in equipos if e.get("imagen")}
+    borradas = []
+    for archivo in sorted(os.listdir(carpeta)):
+        if archivo in en_uso:
+            continue
+        os.remove(ruta_larga(os.path.join(carpeta, archivo)))
+        borradas.append(archivo)
+    return borradas
+
+
 def main():
     print("Bajando categorías…")
     cats = traer("products/categories")
@@ -128,12 +171,17 @@ def main():
 
     catalogo = {
         "equipos": equipos,
+        "sin_mapear": raices_sin_mapear(productos, cats_por_id),
         "especialidades": eje("especialidades"),
         "marcas": eje("marca"),
         "tipos": eje("tipos"),
     }
     with open(SALIDA_JSON, "w", encoding="utf-8") as f:
         json.dump(catalogo, f, ensure_ascii=False, indent=1)
+
+    borradas = barrer_imagenes(equipos)
+    for archivo in borradas:
+        print("  imagen huérfana borrada: %s" % archivo)
 
     sin_esp = [e["slug"] for e in equipos if not e["especialidades"]]
     print("Escrito %s" % SALIDA_JSON)
@@ -142,6 +190,9 @@ def main():
         len(catalogo["marcas"]), len(catalogo["tipos"])))
     if sin_esp:
         print("  OJO, sin especialidad: %s" % ", ".join(sin_esp))
+    if catalogo["sin_mapear"]:
+        print("  OJO, raíces sin mapear en _catalogo_map.py: %s"
+              % ", ".join(catalogo["sin_mapear"]))
 
 
 if __name__ == "__main__":

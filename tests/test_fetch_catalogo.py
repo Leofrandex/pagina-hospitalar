@@ -41,3 +41,35 @@ def test_url_segura_no_recodifica_lo_que_ya_viene_en_porcentaje():
 def test_url_segura_deja_igual_una_url_ascii_comun():
     normal = "https://h.com/wp-content/uploads/2026/08/Equipo-500x500.jpeg"
     assert _url_segura(normal) == normal
+
+
+CATS = {
+    100: {"id": 100, "name": "Diagnostico-por-Imagen", "parent": 0},
+    101: {"id": 101, "name": "Ultrasonidos", "parent": 100},
+    900: {"id": 900, "name": "Marca Nueva Sin Curar", "parent": 0},
+    901: {"id": 901, "name": "Un Tipo", "parent": 900},
+}
+
+
+def test_raices_sin_mapear_delata_una_categoria_nueva():
+    from _fetch_catalogo import raices_sin_mapear
+    productos = [{"categories": [{"id": 100}, {"id": 101}]},
+                 {"categories": [{"id": 901}]}]
+    assert raices_sin_mapear(productos, CATS) == ["Marca Nueva Sin Curar"]
+
+
+def test_raices_sin_mapear_no_se_queja_de_lo_que_ya_esta_curado():
+    from _fetch_catalogo import raices_sin_mapear
+    assert raices_sin_mapear([{"categories": [{"id": 101}]}], CATS) == []
+
+
+def test_barrer_imagenes_borra_solo_lo_que_ya_nadie_referencia(tmp_path, monkeypatch):
+    import _fetch_catalogo
+    carpeta = tmp_path / "img"
+    carpeta.mkdir()
+    (carpeta / "vive.png").write_bytes(b"x")
+    (carpeta / "huerfana.png").write_bytes(b"x")
+    monkeypatch.setattr(_fetch_catalogo, "SALIDA_IMG", str(carpeta))
+    borradas = _fetch_catalogo.barrer_imagenes([{"imagen": "/equipos/img/vive.png"}])
+    assert borradas == ["huerfana.png"]
+    assert sorted(p.name for p in carpeta.iterdir()) == ["vive.png"]

@@ -105,3 +105,37 @@ def test_el_texto_de_busqueda_va_normalizado():
 def test_resumen_sale_del_short_description_sin_html():
     e = equipo_desde_producto(producto(), CATS)
     assert e["resumen"] == "Ecógrafo de alta gama."
+
+
+def test_el_slug_percent_encodeado_se_normaliza():
+    """El navegador percent-decodifica la ruta antes de tocar el disco: dejar el
+    '%XX' literal en el href y en el nombre del archivo daba 404 en diez fichas
+    y diez imágenes."""
+    e = equipo_desde_producto(
+        producto(slug="ligasure-exact-dissector-nano%e2%80%91coated-lf2019"), CATS)
+    assert e["slug"] == "ligasure-exact-dissector-nano-coated-lf2019"
+
+    e2 = equipo_desde_producto(producto(slug="smartxide%c2%b2-trio"), CATS)
+    assert e2["slug"] == "smartxide-trio"
+
+
+def test_el_slug_normal_no_se_toca():
+    assert equipo_desde_producto(producto(), CATS)["slug"] == "acuson-sequoia"
+
+
+def test_el_nombre_llega_sin_entidades_html():
+    """WooCommerce devuelve 'Dräger &#8211; Atlan&reg;'. Sin desescapar, esc() lo
+    volvía a escapar y la página pintaba el '&#8211;' literal en el <title>, la
+    tarjeta y el mensaje precargado de WhatsApp."""
+    e = equipo_desde_producto(
+        producto(name="Dr\u00e4ger &#8211; Atlan&reg; A300"), CATS)
+    assert e["nombre"] == "Dr\u00e4ger \u2013 Atlan\u00ae A300"
+    assert "&#8211;" not in e["busqueda"]
+
+
+def test_slug_de_producto_siempre_devuelve_un_slug_limpio():
+    from _catalogo_map import slug_de_producto
+    import re
+    for crudo in ("smartxide%c2%b2-wh", "Ya-Limpio", "con espacios", "%20%20"):
+        s = slug_de_producto(crudo)
+        assert s == "" or re.fullmatch(r"[a-z0-9-]+", s), crudo

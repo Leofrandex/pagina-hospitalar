@@ -8,6 +8,7 @@ categoría nueva, tiene que pasar por acá.
 """
 import re
 import unicodedata
+import urllib.parse
 
 # Raíz cruda en WooCommerce -> nombre que mostramos.
 ESPECIALIDADES = {
@@ -113,6 +114,19 @@ def slugificar(texto):
     return base.strip("-")
 
 
+def slug_de_producto(slug):
+    """Normaliza el slug que viene de WordPress a `^[a-z0-9-]+$`.
+
+    Diez productos traen el slug ya percent-encodeado ('...nano%e2%80%91coated',
+    'smartxide%c2%b2-trio'). Tomarlo tal cual dejaba el '%XX' literal en el nombre
+    del archivo Y en el href/src, pero el navegador percent-decodifica la ruta
+    antes de tocar el disco: pedía '...nano‑coated' y recibía un 404. Se
+    decodifica primero y se vuelve a slugificar, para que la URL y el archivo
+    coincidan siempre.
+    """
+    return slugificar(urllib.parse.unquote(slug or ""))
+
+
 def clasificar_raiz(nombre):
     """Devuelve (eje, nombre_limpio). El eje 'otros' es la red de seguridad: una
     categoría nueva sin mapear se ve en la interfaz en vez de romper el build."""
@@ -206,7 +220,10 @@ def equipo_desde_producto(producto, cats_por_id):
             marca = marca or limpio
         # 'oculta' y 'otros' no aportan ni especialidad ni marca
 
-    forzado = REASIGNACIONES.get(producto["slug"])
+    slug = slug_de_producto(producto["slug"])
+    # Las reasignaciones a mano se escribieron contra el slug crudo de WooCommerce;
+    # ninguno de los cinco trae percent-encoding, así que ambas claves coinciden.
+    forzado = REASIGNACIONES.get(producto["slug"]) or REASIGNACIONES.get(slug)
     if forzado:
         especialidades = list(forzado["especialidades"])
         tipos = _sin_repetir(tipos + forzado["tipos"])
@@ -219,11 +236,17 @@ def equipo_desde_producto(producto, cats_por_id):
     imagenes = producto.get("images") or []
     imagen = (imagenes[0].get("thumbnail") or imagenes[0].get("src")) if imagenes else None
 
-    partes = [producto["name"], marca or "", " ".join(especialidades),
+    # WooCommerce devuelve el nombre con entidades HTML crudas
+    # ('Dräger &#8211; Atlan&reg;'). Sin desescaparlo, esc() lo vuelve a
+    # escapar y la página pinta el '&#8211;' literal en el <title>, el <h1>, la
+    # tarjeta y el mensaje precargado de WhatsApp.
+    nombre = _html.unescape(producto["name"] or "")
+
+    partes = [nombre, marca or "", " ".join(especialidades),
               " ".join(tipos), resumen[:200]]
     return {
-        "slug": producto["slug"],
-        "nombre": producto["name"],
+        "slug": slug,
+        "nombre": nombre,
         "url_original": producto.get("permalink", ""),
         "resumen": resumen,
         "descripcion": descripcion,
