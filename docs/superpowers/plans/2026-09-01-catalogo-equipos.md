@@ -1209,9 +1209,15 @@ Expected: FAIL con `ModuleNotFoundError: No module named '_build_catalogo'`
 .faceta .n{margin-left:auto;color:var(--tx-dim);font-size:13px;font-variant-numeric:tabular-nums}
 
 .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:22px}
-.eq{display:flex;flex-direction:column;border-radius:var(--r-md);overflow:hidden;
-  background:var(--card);color:inherit;text-decoration:none;
+.eq{position:relative;display:flex;flex-direction:column;border-radius:var(--r-md);
+  overflow:hidden;background:var(--card);color:inherit;text-decoration:none;
   transition:transform var(--dur-hover) var(--ease-hover),background var(--dur-hover)}
+
+/* El buscador oculta tarjetas con la propiedad `hidden`, pero `display:flex` y
+   `display:grid` son CSS de autor y le ganan por origen a la regla `[hidden]
+   {display:none}` del navegador. Sin esto, filtrar actualiza los contadores y
+   la URL y no oculta absolutamente nada. */
+.eq[hidden],.rejilla[hidden]{display:none}
 .eq:hover{transform:translateY(-3px);background:var(--card-hover)}
 .eq__img{aspect-ratio:4/3;object-fit:contain;width:100%;background:#fff;padding:14px}
 .eq__in{padding:16px 18px 20px;display:flex;flex-direction:column;gap:7px;flex:1}
@@ -1339,7 +1345,11 @@ def _buscador_inline():
 def pagina_catalogo(catalogo):
     total = len(catalogo["equipos"])
     tarjetas = "".join(tarjeta(e) for e in catalogo["equipos"])
-    datos = json.dumps(_indice(catalogo), ensure_ascii=False, separators=(",", ":"))
+    # `json.dumps` no escapa "</", así que un nombre o descripción que contuviera
+    # "</script" cerraría la etiqueta antes de tiempo y dejaría inyectar markup.
+    # Hoy ningún equipo lo trae, pero el JSON se regenera desde WordPress.
+    datos = json.dumps(_indice(catalogo), ensure_ascii=False,
+                       separators=(",", ":")).replace("</", "<\\/")
     cuerpo = f"""
 <main class="cat">
   <header class="cat__head">
@@ -2122,7 +2132,7 @@ Expected: FAIL — no existe `id="comparador"`.
 Agregar a `public/mockups/_catalogo.css`:
 
 ```css
-.eq{position:relative}
+/* `.eq` ya trae `position:relative` desde Task 5, que es lo que ancla este botón. */
 .eq__cmp{position:absolute;top:10px;right:10px;z-index:2;width:26px;height:26px;
   border-radius:8px;border:0;background:rgba(255,255,255,.9);cursor:pointer;
   display:grid;place-items:center;font-size:15px;line-height:1;color:var(--violeta)}
