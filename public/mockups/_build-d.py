@@ -389,9 +389,54 @@ LOGO = """<span class="logoswap nav__logo">
       <img class="is-neg" src="/brand/logo/hospitalar-neg.svg" alt="">
     </span>"""
 
+# Las especialidades salen del catálogo congelado: conteos y nombres reales,
+# nunca listas escritas a mano.
+CATALOGO = json.load(open(os.path.join(HERE, "_catalogo.json"), encoding="utf-8"))
+
+_ICONOS = {
+    "Diagnóstico por Imagen": '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',
+    "Ginecología": '<circle cx="12" cy="8" r="4"/><path d="M6 21c0-4 3-6 6-6s6 2 6 6"/>',
+    "Cardiología": '<path d="M12 20s-7-4.6-7-9.5A3.9 3.9 0 0 1 12 8a3.9 3.9 0 0 1 7 2.5C19 15.4 12 20 12 20z"/>',
+}
+_ICONO_POR_DEFECTO = '<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M9 12h6"/>'
+
+
+def _tipos_de(especialidad, cuantos=4):
+    """Los tipos de equipo más frecuentes dentro de una especialidad.
+    Reemplaza a las listas que antes estaban escritas a mano en _d-body.html."""
+    import collections
+    cuenta = collections.Counter()
+    for e in CATALOGO["equipos"]:
+        if especialidad in e["especialidades"]:
+            cuenta.update(e["tipos"])
+    return [nombre for nombre, _ in cuenta.most_common(cuantos)]
+
+
+def _celda_especialidad(esp):
+    import urllib.parse
+    tipos = _tipos_de(esp["nombre"])
+    lis = "".join("<li>%s</li>" % _html.escape(t) for t in tipos)
+    ico = _ICONOS.get(esp["nombre"], _ICONO_POR_DEFECTO)
+    return (
+        '<a class="cell rv" href="/equipos?esp=%s">'
+        '<span class="cell__bar"></span>'
+        '<div class="cell__face"><svg class="cell__ico" viewBox="0 0 24 24">%s</svg>'
+        '<h3 class="title-s">%s</h3><p>%d equipos</p></div>'
+        '<div class="cell__prods"><strong>%s</strong><ul>%s</ul></div></a>'
+    ) % (urllib.parse.quote(esp["nombre"]), ico, _html.escape(esp["nombre"]),
+         esp["total"], _html.escape(esp["nombre"]), lis)
+
+
+ESPECIALIDADES_HTML = "".join(
+    _celda_especialidad(e) for e in CATALOGO["especialidades"][:12])
+
+
 def build(theme, note, current, site=False):
     """site=True genera la versión pública: sin barra del Lab y sin noindex."""
-    b = body.replace("{{POSTS}}", POSTS_HTML).replace("{{LOGO}}", "").replace('<img class="nav__logo" src="" alt="Hospitalar">', LOGO)
+    b = (body.replace("{{POSTS}}", POSTS_HTML)
+             .replace("{{ESPECIALIDADES}}", ESPECIALIDADES_HTML)
+             .replace("{{LOGO}}", "")
+             .replace('<img class="nav__logo" src="" alt="Hospitalar">', LOGO))
     import re as _re
     b = _re.sub(r'<img src="\{\{L\}\}/([^"]+)"([^>]*)>',
                 lambda m: '<img class="is-white" src="/logos/%s"%s><img class="is-dark" src="/brand/logos-dark/%s"%s>'
