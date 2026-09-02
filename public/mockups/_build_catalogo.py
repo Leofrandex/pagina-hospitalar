@@ -70,13 +70,14 @@ def tarjeta(e):
     esp = '<span class="eq__esp">%s</span>' % esc(" · ".join(e["especialidades"])) \
         if e["especialidades"] else ""
     cmp_btn = ('<button class="eq__cmp" type="button" aria-pressed="false" '
-               'title="Comparar" data-cmp="%s" data-nombre="%s">+</button>'
-               % (esc(e["slug"]), esc(e["nombre"])))
+               'aria-label="Comparar %s" data-cmp="%s" data-nombre="%s">+</button>'
+               % (esc(e["nombre"]), esc(e["slug"]), esc(e["nombre"])))
     return (
-        '<a class="eq " href="/equipos/%s" data-slug="%s">%s%s%s'
-        '<div class="eq__in">%s<h3 class="eq__nombre">%s</h3>%s</div></a>'
-    ) % (esc(e["slug"]), esc(e["slug"]), cmp_btn, dest, img, marca,
-         esc(e["nombre"]), esp)
+        '<div class="eq " data-slug="%s">%s%s%s'
+        '<div class="eq__in">%s<h3 class="eq__nombre">'
+        '<a class="eq__link" href="/equipos/%s">%s</a></h3>%s</div></div>'
+    ) % (esc(e["slug"]), cmp_btn, dest, img, marca,
+         esc(e["slug"]), esc(e["nombre"]), esp)
 
 
 def _faceta(clave, etiqueta, valores):
@@ -353,23 +354,36 @@ _CONTROLADOR = r"""
     var texto = 'Hola, me interesan estos equipos:\n' +
       elegidos.map(function (e) { return '• ' + e.nombre; }).join('\n');
     cta.href = 'https://wa.me/584241941573?text=' + encodeURIComponent(texto);
+    // Con tres elegidos, los botones no marcados quedan visualmente
+    // deshabilitados (pero siguen enfocables, para que un lector de pantalla
+    // pueda anunciar por qué no responden) hasta que baje de tres.
+    var tope = elegidos.length === 3;
+    document.querySelectorAll('.eq__cmp').forEach(function (b) {
+      if (tope && b.getAttribute('aria-pressed') !== 'true') {
+        b.setAttribute('aria-disabled', 'true');
+      } else {
+        b.removeAttribute('aria-disabled');
+      }
+    });
   }
 
   document.querySelectorAll('.eq__cmp').forEach(function (boton) {
-    boton.addEventListener('click', function (ev) {
-      ev.preventDefault();      // el botón vive dentro del <a> de la tarjeta
-      ev.stopPropagation();
+    boton.addEventListener('click', function () {
+      // El botón ya no vive dentro de un <a> (ver .eq__link): no hay
+      // navegación ambiente que cancelar aquí.
       var slug = boton.dataset.cmp;
       var i = elegidos.findIndex(function (e) { return e.slug === slug; });
       if (i !== -1) {
         elegidos.splice(i, 1);
         boton.setAttribute('aria-pressed', 'false');
         boton.textContent = '+';
+        boton.setAttribute('aria-label', 'Comparar ' + boton.dataset.nombre);
       } else {
         if (elegidos.length === 3) return;   // tres es el máximo legible
         elegidos.push({ slug: slug, nombre: boton.dataset.nombre });
         boton.setAttribute('aria-pressed', 'true');
         boton.textContent = '✓';
+        boton.setAttribute('aria-label', 'Quitar ' + boton.dataset.nombre);
       }
       pintarComparador();
     });
@@ -380,6 +394,7 @@ _CONTROLADOR = r"""
     document.querySelectorAll('.eq__cmp').forEach(function (b) {
       b.setAttribute('aria-pressed', 'false');
       b.textContent = '+';
+      b.setAttribute('aria-label', 'Comparar ' + b.dataset.nombre);
     });
     pintarComparador();
   });

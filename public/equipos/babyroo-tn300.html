@@ -192,11 +192,19 @@
 .eq__dest{position:absolute;margin:12px;padding:4px 10px;border-radius:999px;
   background:var(--naranja);color:#fff;font-size:11px;font-weight:700;letter-spacing:.05em}
 
+/* Enlace estirado: el <a> envuelve solo el nombre (así el texto del enlace que
+   anuncia un lector de pantalla es el nombre del equipo, no la tarjeta entera),
+   pero su ::after cubre toda la tarjeta para que siga siendo clickeable. El
+   botón de comparar queda por encima con z-index, ya sin anidar interactivos. */
+.eq__link{color:inherit;text-decoration:none}
+.eq__link::after{content:"";position:absolute;inset:0;z-index:1}
+
 /* `.eq` ya trae `position:relative` desde Task 5, que es lo que ancla este botón. */
 .eq__cmp{position:absolute;top:10px;right:10px;z-index:2;width:26px;height:26px;
   border-radius:8px;border:0;background:rgba(255,255,255,.9);cursor:pointer;
   display:grid;place-items:center;font-size:15px;line-height:1;color:var(--violeta)}
 .eq__cmp[aria-pressed="true"]{background:var(--violeta);color:#fff}
+.eq__cmp[aria-disabled="true"]{opacity:.35}
 
 .comparador{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:70;
   display:flex;align-items:center;gap:16px;padding:13px 16px 13px 20px;
