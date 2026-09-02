@@ -6,7 +6,7 @@ import urllib.parse
 
 import pytest
 
-from _build_catalogo import pagina_catalogo, tarjeta, wa_link
+from _build_catalogo import css_combinado, pagina_catalogo, tarjeta, wa_link
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CATALOGO = os.path.join(RAIZ, "public", "mockups", "_catalogo.json")
@@ -105,18 +105,17 @@ def test_la_pagina_declara_las_tres_facetas(catalogo):
         assert etiqueta in html
 
 
-def test_las_tarjetas_ocultas_se_pueden_ocultar_de_verdad(catalogo):
+def test_las_tarjetas_ocultas_se_pueden_ocultar_de_verdad():
     """`display:flex` de autor le gana a `[hidden]{display:none}` del navegador,
     así que sin una regla propia el buscador no ocultaría nada."""
-    html = pagina_catalogo(catalogo)
-    assert ".eq[hidden]" in html and ".rejilla[hidden]" in html
+    css = css_combinado()
+    assert ".eq[hidden]" in css and ".rejilla[hidden]" in css
 
 
-def test_la_tarjeta_ancla_el_badge(catalogo):
+def test_la_tarjeta_ancla_el_badge():
     """`.eq__dest` es absolute: sin un ancestro posicionado los 7 badges se
     apilarían en el origen de la página."""
-    html = pagina_catalogo(catalogo)
-    bloque = re.search(r"\.eq\{[^}]*\}", html)
+    bloque = re.search(r"\.eq\{[^}]*\}", css_combinado())
     assert bloque and "position:relative" in bloque.group(0)
 
 
@@ -159,11 +158,10 @@ def test_se_generaron_las_215_fichas():
     assert len(fichas) == 215
 
 
-def test_el_panel_de_facetas_scrollea_aparte(catalogo):
+def test_el_panel_de_facetas_scrollea_aparte():
     """Con 73 tipos el panel es más alto que la pantalla; sin scroll propio
     arrastra el de la página."""
-    html = pagina_catalogo(catalogo)
-    bloque = re.search(r"\.facetas\{[^}]*\}", html)
+    bloque = re.search(r"\.facetas\{[^}]*\}", css_combinado())
     assert bloque, "no se encontró la regla .facetas"
     assert "overflow-y:auto" in bloque.group(0)
     assert "overscroll-behavior:contain" in bloque.group(0)
@@ -271,3 +269,23 @@ def test_no_hay_raices_de_categoria_sin_curar(catalogo):
     un producto en silencio. `_fetch_catalogo.py` las anota acá; este test las
     convierte en rojo."""
     assert catalogo.get("sin_mapear") == []
+
+
+def test_la_pagina_committeada_sale_del_json_committeado(catalogo):
+    """Editar _catalogo.json y olvidarse de rebuildear dejaría el sitio viejo en
+    el repo sin que nada se queje."""
+    with open(os.path.join(RAIZ, "public", "equipos.html"), encoding="utf-8") as f:
+        en_disco = f.read()
+    assert pagina_catalogo(catalogo) == en_disco, \
+        "public/equipos.html está desactualizado: corré npm run catalogo:build"
+
+
+def test_el_css_del_catalogo_es_externo_y_esta_committeado(catalogo):
+    """Spec §7: las 216 páginas comparten /equipos/_cat.css en vez de inlinear
+    ~10KB cada una."""
+    html = pagina_catalogo(catalogo)
+    assert '<link rel="stylesheet" href="/equipos/_cat.css">' in html
+    assert "<style>" not in html
+    ruta = os.path.join(RAIZ, "public", "equipos", "_cat.css")
+    with open(ruta, encoding="utf-8") as f:
+        assert f.read() == css_combinado()

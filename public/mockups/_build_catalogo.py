@@ -27,6 +27,18 @@ def cargar_catalogo():
         return json.load(f)
 
 
+def css_combinado():
+    """El CSS que comparten el catálogo y las 215 fichas.
+
+    Spec §7: va a un archivo externo (/equipos/_cat.css) en vez de inlinearse en
+    cada una de las 216 páginas. Inlinearlo repetía ~10KB por ficha.
+    """
+    return _leer("_tema.css") + _leer("_catalogo.css")
+
+
+CSS_EXTERNO = "/equipos/_cat.css"
+
+
 def esc(texto):
     return _html.escape(texto or "", quote=True)
 
@@ -50,7 +62,7 @@ def SHELL(titulo, descripcion, cuerpo, extra_head="", scripts=""):
 <link rel="icon" href="/brand/logo/isotipo-cp.png">
 <script>{boot}</script>
 <link rel="stylesheet" href="/mockups/tokens.css">
-<style>{_leer("_tema.css")}{_leer("_catalogo.css")}</style>
+<link rel="stylesheet" href="{CSS_EXTERNO}">
 {extra_head}
 </head>
 <body>
@@ -86,8 +98,12 @@ def _faceta(clave, etiqueta, valores):
         '<span>%s</span><span class="n">%d</span></label>'
         % (esc(v["nombre"]), clave, esc(v["nombre"]), esc(v["nombre"]), v["total"])
         for v in valores)
-    return ('<div class="faceta" data-faceta="%s"><h3>%s</h3>%s</div>'
-            % (clave, esc(etiqueta), filas))
+    # role="group" + aria-labelledby y no <fieldset>: el fieldset trae su propio
+    # box model y pelearía con el CSS de .faceta. La agrupación es lo que hace que
+    # un lector de pantalla anuncie a qué eje pertenecen las 72 casillas.
+    return ('<div class="faceta" data-faceta="%s" role="group" aria-labelledby="faceta-%s">'
+            '<h3 id="faceta-%s">%s</h3>%s</div>'
+            % (clave, clave, clave, esc(etiqueta), filas))
 
 
 def panel_facetas(catalogo):
@@ -140,7 +156,7 @@ def pagina_catalogo(catalogo):
              placeholder="Buscá un equipo, una marca o una técnica…">
     </div>
     <div class="chips" id="chips">{chips}</div>
-    <p class="cat__conteo"><strong id="conteo">{total}</strong> equipos ·
+    <p class="cat__conteo" aria-live="polite"><strong id="conteo">{total}</strong> equipos ·
        {len(catalogo["especialidades"])} especialidades ·
        {len(catalogo["marcas"])} marcas</p>
   </header>
@@ -160,8 +176,9 @@ def pagina_catalogo(catalogo):
       </div>
     </div>
   </div>
-  <div class="comparador" id="comparador" hidden>
-    <div class="comparador__lista" id="comparador-lista"></div>
+  <div class="comparador" id="comparador" hidden
+       role="region" aria-label="Equipos elegidos para comparar">
+    <div class="comparador__lista" id="comparador-lista" aria-live="polite"></div>
     <a class="comparador__cta" id="comparador-cta" href="#" target="_blank" rel="noopener">Consultar los 3</a>
     <button class="comparador__limpiar" type="button" id="comparador-limpiar">Limpiar</button>
   </div>
@@ -202,7 +219,11 @@ _CONTROLADOR = r"""
       pagina: parseInt(p.get('pagina') || '1', 10) };
   }
 
-  function escribirURL(f) {
+  // 'replace' para la normalización inicial y para lo que ya vino del historial;
+  // 'push' para cada cambio que hizo el usuario, que es lo que da atrás/adelante
+  // (spec §8). Antes siempre reemplazaba, así que el listener de popstate de más
+  // abajo no podía dispararse nunca desde la propia página.
+  function escribirURL(f, modo) {
     var p = new URLSearchParams();
     if (f.q) p.set('q', f.q);
     ['esp', 'marca', 'tipo'].forEach(function (k) {
@@ -210,7 +231,12 @@ _CONTROLADOR = r"""
     });
     if (pagina > 1) p.set('pagina', pagina);
     var qs = p.toString();
-    history.replaceState(null, '', qs ? '?' + qs : location.pathname);
+    var url = qs ? '?' + qs : location.pathname;
+    if (modo === 'push') {
+      history.pushState(null, '', url);
+    } else {
+      history.replaceState(null, '', url);
+    }
   }
 
   function leerCasillas() {
@@ -221,7 +247,7 @@ _CONTROLADOR = r"""
     return f;
   }
 
-  function pintar(f) {
+  function pintar(f, modo) {
     var visibles = buscar(EQUIPOS, f);
     var pag = paginar(visibles, pagina, POR_PAGINA);
     pagina = pag.pagina;
@@ -254,7 +280,7 @@ _CONTROLADOR = r"""
         casilla.disabled = n === 0 && !casilla.checked;
       });
     });
-    escribirURL(f);
+    escribirURL(f, modo);
     sincronizarChips(f);
   }
 
@@ -276,36 +302,51 @@ _CONTROLADOR = r"""
 
   // Cambiar de filtro devuelve a la primera página: quedarse en la 7 después de
   // filtrar a 30 resultados desorienta.
-  function pintarDesdeElPrincipio(f) {
+  function pintarDesdeElPrincipio(f, modo) {
     pagina = 1;
-    pintar(f);
+    pintar(f, modo);
   }
 
   function irAPagina(n) {
     pagina = n;
-    pintar(leerCasillas());
+    pintar(leerCasillas(), 'push');
     rejilla.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
   antesPag.addEventListener('click', function () { irAPagina(pagina - 1); });
   despuesPag.addEventListener('click', function () { irAPagina(pagina + 1); });
 
+  // aplicar() pinta un estado que YA está en el historial (la carga inicial o un
+  // atrás/adelante): normaliza la URL con replaceState y no agrega una entrada.
   function aplicar(f) {
     input.value = f.q;
     document.querySelectorAll('.faceta input').forEach(function (c) {
       c.checked = f[c.name].indexOf(c.value) !== -1;
     });
     pagina = f.pagina || 1;
-    pintar(f);
+    escribiendoTexto = false;
+    clearTimeout(finRafaga);
+    pintar(f, 'replace');
   }
 
-  var t;
+  // Escribir crea UNA entrada de historial por ráfaga de tecleo, no una por
+  // tecla: la primera pulsación después de una pausa empuja el estado anterior
+  // al historial y el resto de la ráfaga reemplaza. Así "atrás" vuelve a la
+  // búsqueda anterior y no letra por letra.
+  var t, finRafaga, escribiendoTexto = false;
   input.addEventListener('input', function () {
     clearTimeout(t);
-    t = setTimeout(function () { pintarDesdeElPrincipio(leerCasillas()); }, 120);
+    t = setTimeout(function () {
+      pintarDesdeElPrincipio(leerCasillas(), escribiendoTexto ? 'replace' : 'push');
+      escribiendoTexto = true;
+      clearTimeout(finRafaga);
+      finRafaga = setTimeout(function () { escribiendoTexto = false; }, 1200);
+    }, 120);
   });
   document.querySelectorAll('.faceta input').forEach(function (c) {
-    c.addEventListener('change', function () { pintarDesdeElPrincipio(leerCasillas()); });
+    c.addEventListener('change', function () {
+      pintarDesdeElPrincipio(leerCasillas(), 'push');
+    });
   });
   window.addEventListener('popstate', function () { aplicar(leerURL()); });
 
@@ -331,7 +372,7 @@ _CONTROLADOR = r"""
       }
       // Un chip cambia el conjunto de filtros: como cualquier otro cambio de
       // filtro, vuelve a la página 1 (ver pintarDesdeElPrincipio más arriba).
-      pintarDesdeElPrincipio(leerCasillas());
+      pintarDesdeElPrincipio(leerCasillas(), 'push');
     });
   });
 
@@ -451,6 +492,8 @@ def main():
 
     carpeta = os.path.join(PUBLIC, "equipos")
     os.makedirs(carpeta, exist_ok=True)
+    with open(os.path.join(carpeta, "_cat.css"), "w", encoding="utf-8") as f:
+        f.write(css_combinado())
     for viejo in os.listdir(carpeta):
         if viejo.endswith(".html"):
             os.remove(ruta_larga(os.path.join(carpeta, viejo)))
