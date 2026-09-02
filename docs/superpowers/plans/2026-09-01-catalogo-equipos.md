@@ -1760,6 +1760,265 @@ después de haberlo enganchado a la home.
 
 ---
 
+### Task 7B: Paginación y scroll propio de las facetas
+
+Pedido por el cliente en el gate de revisión visual, después de ver la página real: el
+panel de filtros y la rejilla deben scrollear por separado, y 215 tarjetas de un tirón son
+demasiadas — se pagina de a 25.
+
+**Files:**
+- Modify: `public/mockups/_buscador.mjs` (agregar `paginar`)
+- Modify: `tests/buscador.test.mjs`
+- Modify: `public/mockups/_catalogo.css`
+- Modify: `public/mockups/_build_catalogo.py` (marcado y controlador)
+- Modify: `tests/test_build_catalogo.py`
+
+**Interfaces:**
+- Consumes: `buscar` de Task 4, `pagina_catalogo` de Task 5.
+- Produces: `paginar(slugs, pagina, porPagina) -> {pagina, paginas, slugs}` — recorta la
+  lista ya filtrada y **acota** la página pedida al rango válido.
+
+- [ ] **Step 1: Test de `paginar` (falla)**
+
+En `tests/buscador.test.mjs`, agregar al import `paginar` y estos tests:
+
+```javascript
+test('paginar recorta a 25 y calcula el total de páginas', () => {
+  const slugs = Array.from({ length: 215 }, (_, i) => 's' + i);
+  const r = paginar(slugs, 1, 25);
+  assert.equal(r.paginas, 9);
+  assert.equal(r.slugs.length, 25);
+  assert.equal(r.slugs[0], 's0');
+});
+
+test('la última página trae el resto, no 25', () => {
+  const slugs = Array.from({ length: 215 }, (_, i) => 's' + i);
+  const r = paginar(slugs, 9, 25);
+  assert.equal(r.slugs.length, 15);
+  assert.equal(r.slugs[0], 's200');
+});
+
+test('una página fuera de rango se acota en vez de vaciar la pantalla', () => {
+  const slugs = Array.from({ length: 30 }, (_, i) => 's' + i);
+  assert.equal(paginar(slugs, 99, 25).pagina, 2);
+  assert.equal(paginar(slugs, 0, 25).pagina, 1);
+  assert.equal(paginar(slugs, -3, 25).pagina, 1);
+});
+
+test('sin resultados hay una sola página vacía', () => {
+  const r = paginar([], 1, 25);
+  assert.equal(r.paginas, 1);
+  assert.deepEqual(r.slugs, []);
+});
+```
+
+- [ ] **Step 2: Correr y ver que falla**
+
+Run: `node --test "tests/*.test.mjs"`
+Expected: FAIL, `paginar` no está exportada.
+
+- [ ] **Step 3: Implementar `paginar`**
+
+Al final de `public/mockups/_buscador.mjs`:
+
+```javascript
+// Acota la página al rango válido en vez de devolver una pantalla vacía: si el
+// usuario estaba en la página 7 y filtra hasta dejar 30 resultados, tiene que
+// caer en la última página que existe, no en la nada.
+export function paginar(slugs, pagina, porPagina) {
+  var paginas = Math.max(1, Math.ceil(slugs.length / porPagina));
+  var actual = Math.min(Math.max(1, pagina || 1), paginas);
+  var desde = (actual - 1) * porPagina;
+  return { pagina: actual, paginas: paginas, slugs: slugs.slice(desde, desde + porPagina) };
+}
+```
+
+- [ ] **Step 4: Correr y ver que pasa**
+
+Run: `node --test "tests/*.test.mjs"`
+Expected: PASS, 15 tests.
+
+- [ ] **Step 5: CSS — scroll propio del panel y estilos de paginación**
+
+En `public/mockups/_catalogo.css`, reemplazar la regla `.facetas` por:
+
+```css
+/* El panel scrollea aparte de la rejilla: con 73 tipos es más alto que la
+   pantalla, y `overscroll-behavior:contain` evita que al llegar al final se
+   arrastre el scroll de la página. */
+.facetas{position:sticky;top:96px;display:grid;gap:26px;
+  max-height:calc(100vh - 120px);overflow-y:auto;overscroll-behavior:contain;
+  padding-right:8px;scrollbar-width:thin}
+@media (max-width:900px){
+  .facetas{position:static;max-height:none;overflow:visible;padding-right:0}
+}
+```
+
+Y agregar al final del archivo:
+
+```css
+.paginacion{display:flex;align-items:center;justify-content:center;gap:10px;
+  margin-top:34px;flex-wrap:wrap}
+.paginacion button{border:0;border-radius:var(--r-sm);padding:10px 16px;font:inherit;
+  background:var(--card);color:var(--tx);cursor:pointer;
+  transition:background var(--dur-hover) var(--ease-hover)}
+.paginacion button:hover:not(:disabled){background:var(--card-hover)}
+.paginacion button:disabled{opacity:.4;cursor:default}
+.paginacion__estado{color:var(--tx-dim);font-size:14px;
+  font-variant-numeric:tabular-nums;min-width:14ch;text-align:center}
+.paginacion[hidden]{display:none}
+```
+
+- [ ] **Step 6: Tests de la página (fallan)**
+
+En `tests/test_build_catalogo.py`:
+
+```python
+def test_el_panel_de_facetas_scrollea_aparte(catalogo):
+    """Con 73 tipos el panel es más alto que la pantalla; sin scroll propio
+    arrastra el de la página."""
+    html = pagina_catalogo(catalogo)
+    bloque = re.search(r"\.facetas\{[^}]*\}", html)
+    assert bloque, "no se encontró la regla .facetas"
+    assert "overflow-y:auto" in bloque.group(0)
+    assert "overscroll-behavior:contain" in bloque.group(0)
+
+
+def test_la_pagina_trae_los_controles_de_paginacion(catalogo):
+    html = pagina_catalogo(catalogo)
+    assert 'id="paginacion"' in html
+    assert "POR_PAGINA = 25" in html
+
+
+def test_las_215_tarjetas_siguen_en_el_html(catalogo):
+    """La paginación se hace mostrando y ocultando: sin JS se ven todas."""
+    assert pagina_catalogo(catalogo).count('class="eq "') == 215
+```
+
+- [ ] **Step 7: Correr y ver que fallan**
+
+Run: `python -m pytest tests/test_build_catalogo.py -v`
+Expected: FAIL, no existe `id="paginacion"`.
+
+- [ ] **Step 8: Marcado y controlador**
+
+En `pagina_catalogo`, justo después del `<div class="rejilla" id="rejilla">…</div>` y antes
+del bloque `cat__vacio`, agregar:
+
+```html
+      <nav class="paginacion" id="paginacion" aria-label="Paginación del catálogo" hidden>
+        <button type="button" id="pag-antes">← Anteriores</button>
+        <span class="paginacion__estado" id="pag-estado" aria-live="polite"></span>
+        <button type="button" id="pag-despues">Siguientes →</button>
+      </nav>
+```
+
+En `_CONTROLADOR`, agregar cerca de las otras referencias del DOM:
+
+```javascript
+  var POR_PAGINA = 25;
+  var pagina = 1;
+  var barraPag = document.getElementById('paginacion');
+  var estadoPag = document.getElementById('pag-estado');
+  var antesPag = document.getElementById('pag-antes');
+  var despuesPag = document.getElementById('pag-despues');
+```
+
+Reemplazar el cuerpo de `pintar` por:
+
+```javascript
+  function pintar(f) {
+    var visibles = buscar(EQUIPOS, f);
+    var pag = paginar(visibles, pagina, POR_PAGINA);
+    pagina = pag.pagina;
+    var enPantalla = new Set(pag.slugs);
+    Object.keys(tarjetas).forEach(function (slug) {
+      tarjetas[slug].hidden = !enPantalla.has(slug);
+    });
+
+    conteo.textContent = visibles.length;
+    vacio.hidden = visibles.length !== 0;
+    rejilla.hidden = visibles.length === 0;
+    barraPag.hidden = pag.paginas < 2;
+    if (pag.paginas > 1) {
+      var desde = (pag.pagina - 1) * POR_PAGINA + 1;
+      var hasta = desde + pag.slugs.length - 1;
+      estadoPag.textContent = desde + '–' + hasta + ' de ' + visibles.length;
+      antesPag.disabled = pag.pagina === 1;
+      despuesPag.disabled = pag.pagina === pag.paginas;
+    }
+
+    var cuentas = contarFacetas(EQUIPOS, f);
+    var mapa = { esp: cuentas.especialidades, marca: cuentas.marcas, tipo: cuentas.tipos };
+    document.querySelectorAll('.faceta').forEach(function (panel) {
+      var c = mapa[panel.dataset.faceta];
+      panel.querySelectorAll('label').forEach(function (label) {
+        var n = c[label.dataset.valor] || 0;
+        label.querySelector('.n').textContent = n;
+        var casilla = label.querySelector('input');
+        label.dataset.vacia = (n === 0 && !casilla.checked) ? '1' : '0';
+        casilla.disabled = n === 0 && !casilla.checked;
+      });
+    });
+    escribirURL(f);
+  }
+
+  // Cambiar de filtro devuelve a la primera página: quedarse en la 7 después de
+  // filtrar a 30 resultados desorienta.
+  function pintarDesdeElPrincipio(f) {
+    pagina = 1;
+    pintar(f);
+  }
+
+  function irAPagina(n) {
+    pagina = n;
+    pintar(leerCasillas());
+    rejilla.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }
+
+  antesPag.addEventListener('click', function () { irAPagina(pagina - 1); });
+  despuesPag.addEventListener('click', function () { irAPagina(pagina + 1); });
+```
+
+Cambiar los tres disparadores de filtro para que usen `pintarDesdeElPrincipio`:
+
+```javascript
+  input.addEventListener('input', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { pintarDesdeElPrincipio(leerCasillas()); }, 120);
+  });
+  document.querySelectorAll('.faceta input').forEach(function (c) {
+    c.addEventListener('change', function () { pintarDesdeElPrincipio(leerCasillas()); });
+  });
+```
+
+Y en `leerURL`/`escribirURL`, llevar la página en la URL para que se pueda compartir:
+
+```javascript
+  // en leerURL, agregar al objeto devuelto:
+  //   pagina: parseInt(p.get('pagina') || '1', 10)
+  // en escribirURL, antes de armar el query string:
+  //   if (pagina > 1) p.set('pagina', pagina);
+```
+
+En `aplicar(f)`, poner `pagina = f.pagina || 1;` antes de llamar a `pintar(f)`.
+
+- [ ] **Step 9: Regenerar y correr todo**
+
+Run: `python public/mockups/_build_catalogo.py && python -m pytest tests/ -v && node --test "tests/*.test.mjs"`
+Expected: PASS en todo. Las fichas se regeneran también; deben seguir siendo 215, y las
+imágenes 215.
+
+- [ ] **Step 10: Commit**
+
+```bash
+git add public/mockups/_buscador.mjs public/mockups/_catalogo.css
+git add public/mockups/_build_catalogo.py tests/ public/equipos.html public/equipos
+git commit -m "Pagina el catalogo de a 25 y le da scroll propio a las facetas"
+```
+
+---
+
 ### Task 8: Conectar la home con el catálogo
 
 Las especialidades de la home dejan de listar equipos inventados y pasan a mostrar conteos reales enlazados al catálogo.
