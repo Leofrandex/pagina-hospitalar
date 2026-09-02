@@ -19,6 +19,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
 from _catalogo_map import equipo_desde_producto, slugificar  # noqa: E402
+from _rutas import ruta_larga  # noqa: E402
 
 API = "https://hospitalarve.com/wp-json/wc/store/v1"
 SALIDA_JSON = os.path.join(HERE, "_catalogo.json")
@@ -61,16 +62,6 @@ def traer(ruta):
     return todo
 
 
-def _ruta_larga(ruta):
-    """Algunos slugs superan los 260 caracteres que Windows exige sin este
-    prefijo (MAX_PATH). No afecta a Linux/Mac, donde no se usa este prefijo."""
-    if os.name == "nt":
-        absoluta = os.path.abspath(ruta)
-        if not absoluta.startswith("\\\\?\\"):
-            return "\\\\?\\" + absoluta
-    return ruta
-
-
 def _url_segura(url):
     """Codifica los caracteres que WordPress dejó crudos en el nombre del archivo.
 
@@ -82,7 +73,7 @@ def _url_segura(url):
 
 
 def bajar_imagen(url, destino):
-    destino = _ruta_larga(destino)
+    destino = ruta_larga(destino)
     if os.path.exists(destino):
         return True
     url = _url_segura(url)

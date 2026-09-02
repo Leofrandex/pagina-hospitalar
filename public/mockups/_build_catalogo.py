@@ -9,6 +9,8 @@ import os
 import re
 import urllib.parse
 
+from _rutas import ruta_larga
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 PUBLIC = os.path.normpath(os.path.join(HERE, ".."))
 WHATSAPP = "584241941573"
@@ -17,18 +19,6 @@ WHATSAPP = "584241941573"
 def _leer(nombre):
     with open(os.path.join(HERE, nombre), encoding="utf-8") as f:
         return f.read()
-
-
-def _ruta_larga(ruta):
-    """Algunos slugs superan los 260 caracteres que Windows exige sin este
-    prefijo (MAX_PATH). No afecta a Linux/Mac, donde no se usa este prefijo.
-
-    Mismo criterio que `_ruta_larga` de `_fetch_catalogo.py`."""
-    if os.name == "nt":
-        absoluta = os.path.abspath(ruta)
-        if not absoluta.startswith("\\\\?\\"):
-            return "\\\\?\\" + absoluta
-    return ruta
 
 
 def cargar_catalogo():
@@ -295,9 +285,9 @@ def main():
     os.makedirs(carpeta, exist_ok=True)
     for viejo in os.listdir(carpeta):
         if viejo.endswith(".html"):
-            os.remove(_ruta_larga(os.path.join(carpeta, viejo)))
+            os.remove(ruta_larga(os.path.join(carpeta, viejo)))
     for e in catalogo["equipos"]:
-        ruta = _ruta_larga(os.path.join(carpeta, "%s.html" % e["slug"]))
+        ruta = ruta_larga(os.path.join(carpeta, "%s.html" % e["slug"]))
         with open(ruta, "w", encoding="utf-8") as f:
             f.write(pagina_ficha(e, catalogo))
 
